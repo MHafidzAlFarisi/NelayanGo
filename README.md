@@ -3,5 +3,5 @@ Aplikasi desktop untuk pencatatan tangkapan harian tiap nelayan dengan penyediaa
 
 Kelompok 6
 Anggota 1: Ammar Ali Yasir
-Anggota 2: Muhammad Hafidz Al Farisi
+Anggota 2: Muhammad Hafidz Al Farisi (23/519650/TK/57256)
 Anggota 3: Nicholas Shane Pangihutan Siahaan (23/520590/TK/57399)
