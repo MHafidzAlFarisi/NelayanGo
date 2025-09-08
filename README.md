@@ -5,3 +5,4 @@ Kelompok 6
 - Anggota 1: Ammar Ali Yasir (23/520644/TK/57406)
 - Anggota 2: Muhammad Hafidz Al Farisi (23/519650/TK/57256)
 - Anggota 3: Nicholas Shane Pangihutan Siahaan (23/520590/TK/57399)
+<img width="1141" height="904" alt="Untitled Diagram-Class Diagram drawio" src="https://github.com/user-attachments/assets/68583886-d8bc-4a96-b8e9-6d4a18c9b0c8" />
