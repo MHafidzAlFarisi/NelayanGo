@@ -76,7 +76,7 @@ namespace NelayanGo.Helpers
             }
         }
 
-        public static void NavigateToHargaPasar(Window? currentWindow = null)
+        public static void NavigateKeHargaPasar(Window? currentWindow = null)
         {
             try
             {
@@ -107,14 +107,14 @@ namespace NelayanGo.Helpers
                 case "Home":
                     NavigateKeHome(currentWindow);
                     break;
-                case "HasilTangkapan":
-                    NavigateToDaftarTangapan(currentWindow);
+                case "Daftar Tangkapan":
+                    NavigateKeDaftarTangkapan(currentWindow);
                     break;
                 case "Maps":
                     NavigateKePeta(currentWindow);
                     break;
-                case "HargaPasar":
-                    NavigateToHargaPasar(currentWindow);
+                case "Harga pasar":
+                    NavigateKeHargaPasar(currentWindow);
                     break;
                 default:
                     MessageBox.Show("Tujuan navigasi tidak dikenal.", "Error Navigasi", MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -124,22 +124,6 @@ namespace NelayanGo.Helpers
         /// <summary>
         /// Membuka DaftarTangapanWindow (Hasil Tangkapan).
         /// </summary>
-        public static void NavigateToDaftarTangapan(Window? currentWindow = null)
-        {
-            try
-            {
-                var daftarWindow = new DaftarTangapanWindow();
-                daftarWindow.Show();
-                if (currentWindow != null)
-                {
-                    currentWindow.Close();
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Gagal membuka jendela Daftar Tangkapan: {ex.Message}", "Error Navigasi", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
 
         // TODO: Tambahkan metode lain di sini (e.g., NavigateToMaps, NavigateToHargaPasar)
     }

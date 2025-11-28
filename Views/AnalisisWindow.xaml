@@ -157,7 +157,7 @@
                             <Button Content="HASIL TANGKAPAN" 
                                     Style="{StaticResource BlueButton}"
                                     Margin="0,15,0,0"
-                                    HorizontalAlignment="Center"/>
+                                    HorizontalAlignment="Center" Click="Button_Click"/>
                         </StackPanel>
                     </Grid>
                 </Border>
@@ -204,7 +204,7 @@
                         </Grid.ColumnDefinitions>
                         <TextBlock Grid.Column="0" FontSize="18" FontWeight="SemiBold" Text="Profit Harian : "/>
                         <TextBlock Grid.Column="0" FontSize="18" FontWeight="Bold" Margin="120,0,0,0" Text="{Binding ProfitHarian, StringFormat=Rp. {0:N0}}"/>
-                        <TextBlock Grid.Column="1" Text="detail" FontSize="12" Foreground="#42A5F5" VerticalAlignment="Center" Cursor="Hand"/>
+                        <TextBlock x:Name="Detail" Cursor="Hand" MouseLeftButtonDown="HargaPasarLink_MouseLeftButtonDown" Grid.Column="1" Text="detail" FontSize="12" Foreground="#42A5F5" VerticalAlignment="Bottom" Margin="0,0,0,4"/>
                     </Grid>
                 </Border>
 

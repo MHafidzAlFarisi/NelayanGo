@@ -36,6 +36,11 @@ namespace NelayanGo.Views
         {
             NavigationHelper.NavigateFromHeaderClick(sender, "Harga pasar");
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationHelper.NavigateFromHeaderClick(sender, "Daftar Tangkapan");
+        }
     }
 
 }
