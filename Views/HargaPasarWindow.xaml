@@ -70,10 +70,10 @@
 
             <!-- Navigasi -->
             <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
-                <TextBlock Text="Home" Foreground="White" VerticalAlignment="Center" Margin="20,0,20,0"/>
-                <TextBlock Text="Hasil Tangkapan" Foreground="White" VerticalAlignment="Center" Margin="0,0,20,0"/>
-                <TextBlock Text="Maps" Foreground="White" VerticalAlignment="Center" Margin="0,0,20,0"/>
-                <TextBlock Text="Harga Pasar" Foreground="White" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,20,0"/>
+                <TextBlock x:Name="HomeLink" Cursor="Hand" MouseLeftButtonDown="HomeLink_MouseLeftButtonDown" Text="Home" Foreground="White" VerticalAlignment="Center" Margin="20,0,20,0"/>
+                <TextBlock x:Name="HasilTangkapanLink" Cursor="Hand" MouseLeftButtonDown="HasilTangkapanLink_MouseLeftButtonDown" Text="Hasil Tangkapan" Foreground="White" VerticalAlignment="Center" Margin="0,0,20,0"/>
+                <TextBlock x:Name="MapsLink" Cursor="Hand" MouseLeftButtonDown="MapsLink_MouseLeftButtonDown" Text="Maps" Foreground="White" VerticalAlignment="Center" Margin="0,0,20,0"/>
+                <TextBlock x:Name="HargaPasarLink" Cursor="Hand" MouseLeftButtonDown="HargaPasarLink_MouseLeftButtonDown" Text="Harga Pasar" Foreground="White" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,20,0"/>
             </StackPanel>
 
             <!-- Info Pengguna -->
