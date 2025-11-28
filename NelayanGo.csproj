@@ -1,0 +1,58 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <Platforms>AnyCPU;ARM64;x64</Platforms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Resource\Nunito\Nunito-Italic-VariableFont_wght.ttf" />
+    <None Remove="Resource\Nunito\Nunito-VariableFont_wght.ttf" />
+    <None Remove="Resource\Nunito\static\Nunito-Black.ttf" />
+    <None Remove="Resource\Nunito\static\Nunito-BlackItalic.ttf" />
+    <None Remove="Resource\Nunito\static\Nunito-Bold.ttf" />
+    <None Remove="Resource\Nunito\static\Nunito-BoldItalic.ttf" />
+    <None Remove="Resource\Nunito\static\Nunito-ExtraBold.ttf" />
+    <None Remove="Resource\Nunito\static\Nunito-ExtraBoldItalic.ttf" />
+    <None Remove="Resource\Nunito\static\Nunito-ExtraLight.ttf" />
+    <None Remove="Resource\Nunito\static\Nunito-ExtraLightItalic.ttf" />
+    <None Remove="Resource\Nunito\static\Nunito-Italic.ttf" />
+    <None Remove="Resource\Nunito\static\Nunito-Light.ttf" />
+    <None Remove="Resource\Nunito\static\Nunito-LightItalic.ttf" />
+    <None Remove="Resource\Nunito\static\Nunito-Medium.ttf" />
+    <None Remove="Resource\Nunito\static\Nunito-MediumItalic.ttf" />
+    <None Remove="Resource\Nunito\static\Nunito-Regular.ttf" />
+    <None Remove="Resource\Nunito\static\Nunito-SemiBold.ttf" />
+    <None Remove="Resource\Nunito\static\Nunito-SemiBoldItalic.ttf" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resource\Nunito\Nunito-Italic-VariableFont_wght.ttf" />
+    <EmbeddedResource Include="Resource\Nunito\Nunito-VariableFont_wght.ttf" />
+    <EmbeddedResource Include="Resource\Nunito\static\Nunito-Black.ttf" />
+    <EmbeddedResource Include="Resource\Nunito\static\Nunito-BlackItalic.ttf" />
+    <EmbeddedResource Include="Resource\Nunito\static\Nunito-Bold.ttf" />
+    <EmbeddedResource Include="Resource\Nunito\static\Nunito-BoldItalic.ttf" />
+    <EmbeddedResource Include="Resource\Nunito\static\Nunito-ExtraBold.ttf" />
+    <EmbeddedResource Include="Resource\Nunito\static\Nunito-ExtraBoldItalic.ttf" />
+    <EmbeddedResource Include="Resource\Nunito\static\Nunito-ExtraLight.ttf" />
+    <EmbeddedResource Include="Resource\Nunito\static\Nunito-ExtraLightItalic.ttf" />
+    <EmbeddedResource Include="Resource\Nunito\static\Nunito-Italic.ttf" />
+    <EmbeddedResource Include="Resource\Nunito\static\Nunito-Light.ttf" />
+    <EmbeddedResource Include="Resource\Nunito\static\Nunito-LightItalic.ttf" />
+    <EmbeddedResource Include="Resource\Nunito\static\Nunito-Medium.ttf" />
+    <EmbeddedResource Include="Resource\Nunito\static\Nunito-MediumItalic.ttf" />
+    <EmbeddedResource Include="Resource\Nunito\static\Nunito-Regular.ttf" />
+    <EmbeddedResource Include="Resource\Nunito\static\Nunito-SemiBold.ttf" />
+    <EmbeddedResource Include="Resource\Nunito\static\Nunito-SemiBoldItalic.ttf" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Npgsql" Version="10.0.0" />
+  </ItemGroup>
+
+</Project>
