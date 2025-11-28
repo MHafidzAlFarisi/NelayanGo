@@ -2,10 +2,12 @@
 
 namespace NelayanGo.Models
 {
-    // Model untuk daftar harga per kilo di pasar
-    public class HargaIkanModel
+    public class HargalkanModel
     {
-        public string NamaIkan { get; set; } = string.Empty;
+        public string Id { get; set; }
+        public string NamaIkan { get; set; }
         public decimal HargaPerKilo { get; set; }
+        public string Wilayah { get; set; }
+        public DateTime TanggalUpdate { get; set; }
     }
 }
