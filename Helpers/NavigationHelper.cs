@@ -1,6 +1,7 @@
 using System.Windows;
 using System.Windows.Input;
 using System;
+using NelayanGo.Views;
 
 namespace NelayanGo.Helpers
 {
@@ -41,8 +42,8 @@ namespace NelayanGo.Helpers
         {
             try
             {
-                var analisisWindow = new AnalisisWindow();
-                analisisWindow.Show();
+                var daftarTangapanWindow = new DaftarTangapanWindow();
+                daftarTangapanWindow.Show();
 
                 // Tutup jendela saat ini jika parameter currentWindow diberikan
                 if (currentWindow != null)

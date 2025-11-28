@@ -1,4 +1,5 @@
 ﻿using NelayanGo.Helpers;
+using NelayanGo.ViewModels;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -22,6 +23,7 @@ namespace NelayanGo.Views
             InitializeComponent();
             //var inputWindow = new InputTangapanWindow();
             //inputWindow.Show();
+            DataContext = new ViewModelsNelayan();
         }
         private void HomeLink_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {

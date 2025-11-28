@@ -1,9 +1,9 @@
-﻿<Window x:Class="NelayanGo.DaftarTangapanWindow"
+﻿<Window x:Class="NelayanGo.Views.DaftarTangapanWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:vm="clr-namespace:NelayanGo.ViewModels;assembly=NelayanGo"
+        xmlns:vm="clr-namespace:NelayanGo.ViewModels"
         mc:Ignorable="d"
         Title="NELAYAN GO - Daftar Tangkapan Hari Ini" Height="700" Width="1200"
         Background="#F0F0F0">

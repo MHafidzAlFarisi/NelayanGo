@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Input;
 
-namespace NelayanGo
+namespace NelayanGo.Views
 {
     /// <summary>
     /// Interaction logic for HargaPasarWindow.xaml
