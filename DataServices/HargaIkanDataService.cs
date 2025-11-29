@@ -3,32 +3,25 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using NelayanGo.Models;
 using Npgsql;
-using System.Collections.Generic;
+using NelayanGo.Models;
 
 namespace NelayanGo.DataServices
 {
     public class HargaIkanDataService
     {
-        private const string ConnectionString =
-            "Host=db.hnamnhkbtnvbowmreddz.supabase.co;" +
-            "Port=5432;" +
-            "Username=postgres;" +
-            "Password=CsPTsy1wSr9Aejn5;" +
-            "Database=postgres;" +
-            "SslMode=Require;Trust Server Certificate=true;";
-
-        public List<HargalkanModel> GetAll()
+        // READ ALL
+        public List<HargaIkanModel> GetAll()
         {
             const string sql = @"
-            SELECT ""KodeIkan"", ""NamaIkan"", ""Hargalkan"", ""Wilayah"", ""TanggalUpdate""
-            FROM ""Hargalkan""
-            ORDER BY ""TanggalUpdate"" DESC";
+                SELECT ""KodeIkan"", ""NamaIkan"", ""HargaIkan"",
+                       ""Wilayah"", ""TanggalUpdate"", ""ID_Admin""
+                FROM ""HargaIkan""
+                ORDER BY ""TanggalUpdate"" DESC;";
 
-            var result = new List<HargalkanModel>();
+            var list = new List<HargaIkanModel>();
 
-            using var conn = new NpgsqlConnection(ConnectionString);
+            using var conn = new NpgsqlConnection(DatabaseConfig.ConnectionString);
             conn.Open();
 
             using var cmd = new NpgsqlCommand(sql, conn);
@@ -36,76 +29,81 @@ namespace NelayanGo.DataServices
 
             while (reader.Read())
             {
-                result.Add(new HargalkanModel
+                list.Add(new HargaIkanModel
                 {
-                    KodeIkan = (int)reader.GetInt64(reader.GetOrdinal("KodeIkan")),
+                    KodeIkan = reader.GetInt64(reader.GetOrdinal("KodeIkan")),
                     NamaIkan = reader["NamaIkan"]?.ToString() ?? "",
-                    // kolom Hargalkan = bigint, convert ke decimal
-                    HargaIkan = Convert.ToDecimal(reader["Hargalkan"]),
+                    HargaIkan = Convert.ToDecimal(reader["HargaIkan"]),
                     Wilayah = reader["Wilayah"]?.ToString() ?? "",
-                    TanggalUpdate = reader.GetDateTime(reader.GetOrdinal("TanggalUpdate"))
+                    TanggalUpdate = reader.GetDateTime(reader.GetOrdinal("TanggalUpdate")),
+                    ID_Admin = reader.GetInt64(reader.GetOrdinal("ID_Admin"))
                 });
             }
 
-            return result;
+            return list;
         }
 
-        public void Insert(HargalkanModel model, long adminId)
+        // INSERT
+        public void Insert(HargaIkanModel model)
         {
             const string sql = @"
-            INSERT INTO ""Hargalkan""
-            (""NamaIkan"", ""Hargalkan"", ""Wilayah"", ""TanggalUpdate"", ""ID_Admin"")
-            VALUES (@nama, @harga, @wilayah, @tanggal, @idAdmin);";
+                INSERT INTO ""HargaIkan""
+                (""NamaIkan"", ""HargaIkan"", ""Wilayah"", ""TanggalUpdate"", ""ID_Admin"")
+                VALUES (@nama, @harga, @wilayah, @tgl, @admin);";
 
-            using var conn = new NpgsqlConnection(ConnectionString);
+            using var conn = new NpgsqlConnection(DatabaseConfig.ConnectionString);
             conn.Open();
 
             using var cmd = new NpgsqlCommand(sql, conn);
             cmd.Parameters.AddWithValue("nama", model.NamaIkan);
             cmd.Parameters.AddWithValue("harga", Convert.ToInt64(model.HargaIkan));
             cmd.Parameters.AddWithValue("wilayah", model.Wilayah);
-            cmd.Parameters.AddWithValue("tanggal", model.TanggalUpdate);
-            cmd.Parameters.AddWithValue("idAdmin", adminId);
+            cmd.Parameters.AddWithValue("tgl", model.TanggalUpdate);
+            cmd.Parameters.AddWithValue("admin", model.ID_Admin);
 
             cmd.ExecuteNonQuery();
         }
 
-        public void Update(HargalkanModel model)
+        // UPDATE
+        public void Update(HargaIkanModel model)
         {
             const string sql = @"
-            UPDATE ""Hargalkan""
-            SET ""NamaIkan"" = @nama,
-                ""Hargalkan"" = @harga,
-                ""Wilayah"" = @wilayah,
-                ""TanggalUpdate"" = @tanggal
-            WHERE ""KodeIkan"" = @id;";
+                UPDATE ""HargaIkan""
+                SET ""NamaIkan"" = @nama,
+                    ""HargaIkan"" = @harga,
+                    ""Wilayah"" = @wilayah,
+                    ""TanggalUpdate"" = @tgl
+                WHERE ""KodeIkan"" = @id;";
 
-            using var conn = new NpgsqlConnection(ConnectionString);
+            using var conn = new NpgsqlConnection(DatabaseConfig.ConnectionString);
             conn.Open();
 
             using var cmd = new NpgsqlCommand(sql, conn);
             cmd.Parameters.AddWithValue("nama", model.NamaIkan);
             cmd.Parameters.AddWithValue("harga", Convert.ToInt64(model.HargaIkan));
             cmd.Parameters.AddWithValue("wilayah", model.Wilayah);
-            cmd.Parameters.AddWithValue("tanggal", model.TanggalUpdate);
+            cmd.Parameters.AddWithValue("tgl", model.TanggalUpdate);
             cmd.Parameters.AddWithValue("id", model.KodeIkan);
 
             cmd.ExecuteNonQuery();
         }
 
-        public void Delete(long id)
+        // DELETE
+        public void Delete(long kodeIkan)
         {
-            const string sql = @"DELETE FROM ""Hargalkan"" WHERE ""KodeIkan"" = @id;";
+            const string sql = @"DELETE FROM ""HargaIkan"" WHERE ""KodeIkan"" = @id;";
 
-            using var conn = new NpgsqlConnection(ConnectionString);
+            using var conn = new NpgsqlConnection(DatabaseConfig.ConnectionString);
             conn.Open();
 
             using var cmd = new NpgsqlCommand(sql, conn);
-            cmd.Parameters.AddWithValue("id", id);
+            cmd.Parameters.AddWithValue("id", kodeIkan);
             cmd.ExecuteNonQuery();
         }
-
     }
 }
+
+
+
 
 

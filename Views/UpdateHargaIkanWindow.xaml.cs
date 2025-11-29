@@ -1,95 +1,67 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using System;
 using System.Globalization;
+using System.Windows;
+using NelayanGo.DataServices;
+using NelayanGo.Models;
 
-namespace NelayanGo
+namespace NelayanGo.Views
 {
     public partial class UpdateHargaIkanWindow : Window
     {
-        // misalnya kamu mau tahu ID record yang di-edit
-        public int KodeIkan { get; }
+        private readonly HargaIkanDataService _service = new();
+        private readonly HargaIkanModel _model;
 
-        public string NamaIkanBaru { get; private set; } = string.Empty;
-        public decimal HargaIkanBaru{ get; private set; }
-
-        // ctor default kalau mau dipakai bebas
-        public UpdateHargaIkanWindow()
+        public UpdateHargaIkanWindow(HargaIkanModel model)
         {
             InitializeComponent();
+            _model = model;
+
+            // Prefill
+            txtNamaIkan.Text = _model.NamaIkan;
+            txtHargaIkan.Text = _model.HargaIkan.ToString(CultureInfo.InvariantCulture);
         }
 
-        // ctor dengan data awal (paling sering dipakai)
-        public UpdateHargaIkanWindow(int id, string namaAwal, decimal hargaAwal)
-            : this()
+        private void BtnSimpan_Click(object sender, RoutedEventArgs e)
         {
-            KodeIkan = id;
-            NamaIkanTextBox.Text = namaAwal;
-            HargaTextBox.Text = hargaAwal.ToString(CultureInfo.InvariantCulture);
-        }
-
-        private void BatalButton_Click(object sender, RoutedEventArgs e)
-        {
-            DialogResult = false;
-            Close();
-        }
-
-        private void KirimButton_Click(object sender, RoutedEventArgs e)
-        {
-            var nama = NamaIkanTextBox.Text.Trim();
-            var hargaText = HargaTextBox.Text.Trim();
-
-            if (string.IsNullOrWhiteSpace(nama))
+            if (string.IsNullOrWhiteSpace(txtNamaIkan.Text) ||
+                string.IsNullOrWhiteSpace(txtHargaIkan.Text))
             {
-                MessageBox.Show("Nama ikan tidak boleh kosong.",
-                                "Validasi",
-                                MessageBoxButton.OK,
-                                MessageBoxImage.Warning);
-                NamaIkanTextBox.Focus();
+                MessageBox.Show("Nama ikan, harga, dan wilayah wajib diisi.");
                 return;
             }
 
             if (!decimal.TryParse(
-                    hargaText,
-                    NumberStyles.Number,
+                    txtHargaIkan.Text,
+                    NumberStyles.Any,
                     CultureInfo.InvariantCulture,
                     out var harga))
             {
-                MessageBox.Show("Harga ikan harus berupa angka.",
-                                "Validasi",
-                                MessageBoxButton.OK,
-                                MessageBoxImage.Warning);
-                HargaTextBox.Focus();
+                MessageBox.Show("Format harga tidak valid.");
                 return;
             }
 
-            if (harga <= 0)
+            _model.NamaIkan = txtNamaIkan.Text.Trim();
+            _model.HargaIkan = harga;
+            _model.Wilayah = "";
+            _model.TanggalUpdate = DateTime.UtcNow;
+
+            try
             {
-                MessageBox.Show("Harga ikan harus lebih dari 0.",
-                                "Validasi",
-                                MessageBoxButton.OK,
-                                MessageBoxImage.Warning);
-                HargaTextBox.Focus();
-                return;
+                _service.Update(_model);
+                MessageBox.Show("Data harga ikan berhasil diperbarui.");
+                DialogResult = true;
+                Close();
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Gagal mengubah data:\n{ex.Message}");
+            }
+        }
 
-            NamaIkanBaru = nama;
-            HargaIkanBaru = harga;
-
-            DialogResult = true;
+        private void BtnBatal_Click(object sender, RoutedEventArgs e)
+        {
+            DialogResult = false;
             Close();
         }
     }
 }
-

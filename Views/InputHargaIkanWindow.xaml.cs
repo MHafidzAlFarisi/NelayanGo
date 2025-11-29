@@ -1,86 +1,69 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using System;
 using System.Globalization;
+using System.Windows;
+using NelayanGo.DataServices;
+using NelayanGo.Models;
 
-namespace NelayanGo
+namespace NelayanGo.Views
 {
     public partial class InputHargaIkanWindow : Window
     {
-        // --- hasil yang bisa dibaca dari luar setelah ShowDialog() ---
-        public string NamaIkan { get; private set; } = string.Empty;
-        public decimal HargaIkan{ get; private set; }
+        private readonly HargaIkanDataService _service = new();
+        private readonly long _adminId;
+        private readonly string _adminWilayah;
 
-        public InputHargaIkanWindow()
+        public InputHargaIkanWindow(long adminId, string adminWilayah)
         {
             InitializeComponent();
+            _adminId = adminId;
+            _adminWilayah = adminWilayah ?? string.Empty;
         }
 
-        // Tombol BATAL
-        private void BatalButton_Click(object sender, RoutedEventArgs e)
+        private void BtnSimpan_Click(object sender, RoutedEventArgs e)
         {
-            DialogResult = false;   // menandakan user batal
-            Close();
-        }
-
-        // Tombol KIRIM
-        private void KirimButton_Click(object sender, RoutedEventArgs e)
-        {
-            var nama = NamaIkanTextBox.Text.Trim();
-            var hargaText = HargaTextBox.Text.Trim();
-
-            if (string.IsNullOrWhiteSpace(nama))
+            if (string.IsNullOrWhiteSpace(txtNamaIkan.Text) ||
+                string.IsNullOrWhiteSpace(txtHargaIkan.Text))
             {
-                MessageBox.Show("Nama ikan tidak boleh kosong.",
-                                "Validasi",
-                                MessageBoxButton.OK,
-                                MessageBoxImage.Warning);
-                NamaIkanTextBox.Focus();
+                MessageBox.Show("Nama ikan dan harga wajib diisi.");
                 return;
             }
 
             if (!decimal.TryParse(
-                    hargaText,
-                    NumberStyles.Number,
+                    txtHargaIkan.Text,
+                    NumberStyles.Any,
                     CultureInfo.InvariantCulture,
                     out var harga))
             {
-                MessageBox.Show("Harga ikan harus berupa angka (contoh: 15000 atau 15000.50).",
-                                "Validasi",
-                                MessageBoxButton.OK,
-                                MessageBoxImage.Warning);
-                HargaTextBox.Focus();
+                MessageBox.Show("Format harga tidak valid.");
                 return;
             }
 
-            if (harga <= 0)
+            var model = new HargaIkanModel
             {
-                MessageBox.Show("Harga ikan harus lebih dari 0.",
-                                "Validasi",
-                                MessageBoxButton.OK,
-                                MessageBoxImage.Warning);
-                HargaTextBox.Focus();
-                return;
+                NamaIkan = txtNamaIkan.Text.Trim(),
+                HargaIkan = harga,
+                Wilayah = _adminWilayah,
+                TanggalUpdate = DateTime.UtcNow,
+                ID_Admin = _adminId
+            };
+
+            try
+            {
+                _service.Insert(model);
+                MessageBox.Show("Data harga ikan berhasil ditambahkan.");
+                DialogResult = true; // supaya AdminHargaIkanWindow tahu harus reload
+                Close();
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Gagal menyimpan data:\n{ex.Message}");
+            }
+        }
 
-            // simpan ke properti hasil
-            NamaIkan = nama;
-            HargaIkan = harga;
-
-            DialogResult = true;    // sukses submit
+        private void BtnBatal_Click(object sender, RoutedEventArgs e)
+        {
+            DialogResult = false;
             Close();
         }
     }
 }
-

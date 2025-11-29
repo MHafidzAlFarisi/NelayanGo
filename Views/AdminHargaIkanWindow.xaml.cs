@@ -1,87 +1,102 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using System.Windows;
+using NelayanGo.Models;
 using NelayanGo.ViewModels;
 
-namespace NelayanGo
+namespace NelayanGo.Views
 {
     public partial class AdminHargaIkanWindow : Window
     {
-        private AdminHargaIkanViewModel Vm => DataContext as AdminHargaIkanViewModel;
+        private AdminHargaIkanViewModel _vm;
+        private ICollectionView _view;
+
+        private readonly long _currentAdminId = 1;      // TODO: nanti dari auth
+        private readonly string _currentAdminWilayah = "Bantul"; // TODO: nanti dari admin login
 
         public AdminHargaIkanWindow()
         {
             InitializeComponent();
+
+            _vm = DataContext as AdminHargaIkanViewModel 
+                  ?? throw new InvalidOperationException("DataContext harus AdminHargaIkanViewModel");
+
+            // View untuk search/filter
+            _view = CollectionViewSource.GetDefaultView(_vm.DaftarHarga);
         }
 
         private void InputHargaButton_Click(object sender, RoutedEventArgs e)
         {
-            var win = new InputHargaIkanWindow() { Owner = this };
+            var win = new Views.InputHargaIkanWindow(_currentAdminId, _currentAdminWilayah);
+            var result = win.ShowDialog();
 
-            if (win.ShowDialog() == true)
+            if (result == true)
             {
-                Vm.AddHargaBaru(win.NamaIkan, win.HargaIkan);
+                _vm.LoadData();
+                _view.Refresh();
             }
         }
 
         private void UpdateHargaButton_Click(object sender, RoutedEventArgs e)
         {
-            if (Vm.SelectedHarga == null)
+            if (_vm.SelectedHarga == null)
             {
-                MessageBox.Show("Pilih data yang mau diupdate.", "Info",
-                    MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("Pilih data yang ingin diupdate dulu.");
                 return;
             }
 
-            var sel = Vm.SelectedHarga;
+            var win = new Views.UpdateHargaIkanWindow(_vm.SelectedHarga);
+            var result = win.ShowDialog();
 
-            var win = new UpdateHargaIkanWindow(
-                sel.KodeIkan, sel.NamaIkan, sel.HargaIkan)
+            if (result == true)
             {
-                Owner = this
-            };
-
-            if (win.ShowDialog() == true)
-            {
-                Vm.UpdateHarga(win.KodeIkan, win.NamaIkanBaru, win.HargaIkanBaru);
+                _vm.LoadData();
+                _view.Refresh();
             }
         }
 
         private void DeleteHargaButton_Click(object sender, RoutedEventArgs e)
         {
-            if (Vm.SelectedHarga == null)
+            if (_vm.SelectedHarga == null)
             {
-                MessageBox.Show("Pilih data yang mau dihapus.", "Info",
-                    MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("Pilih data yang ingin dihapus dulu.");
                 return;
             }
 
-            if (MessageBox.Show(
-                    "Yakin ingin menghapus harga ikan ini?",
-                    "Konfirmasi",
-                    MessageBoxButton.YesNo,
-                    MessageBoxImage.Warning) == MessageBoxResult.Yes)
-            {
-                Vm.DeleteHarga(Vm.SelectedHarga.KodeIkan);
-            }
+            var confirm = MessageBox.Show(
+                $"Yakin ingin menghapus { _vm.SelectedHarga.NamaIkan }?",
+                "Konfirmasi Hapus",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning);
+
+            if (confirm != MessageBoxResult.Yes) return;
+
+            _vm.DeleteHarga(_vm.SelectedHarga.KodeIkan);
+            _view.Refresh();
         }
 
-        private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        private void SearchTextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
         {
-            // sementara kosong, nanti bisa aku bikinin filternya
+            var text = SearchTextBox.Text?.Trim().ToLower() ?? "";
+
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                _view.Filter = null;  // tampilkan semua
+            }
+            else
+            {
+                _view.Filter = item =>
+                {
+                    if (item is not HargaIkanModel h) return false;
+
+                    return (h.NamaIkan?.ToLower().Contains(text) ?? false)
+                           || (h.Wilayah?.ToLower().Contains(text) ?? false)
+                           || h.KodeIkan.ToString().Contains(text);
+                };
+            }
+
+            _view.Refresh();
         }
     }
-
 }
-

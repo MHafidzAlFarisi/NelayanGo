@@ -9,7 +9,7 @@ namespace NelayanGo.ViewModels
     public class HargaPasarViewModel : INotifyPropertyChanged
     {
         // Data untuk tabel DAFTAR HARGA IKAN (Kiri)
-        public ObservableCollection<HargalkanModel> DaftarHarga { get; set; }
+        public ObservableCollection<HargaIkanModel> DaftarHarga { get; set; }
 
         // Data untuk tabel PROFIT TANGKAPAN HARI INI (Kanan)
         public ObservableCollection<ProfitModel> DaftarProfit { get; set; }
@@ -29,7 +29,7 @@ namespace NelayanGo.ViewModels
 
         public HargaPasarViewModel()
         {
-            DaftarHarga = new ObservableCollection<HargalkanModel>();
+            DaftarHarga = new ObservableCollection<HargaIkanModel>();
             DaftarProfit = new ObservableCollection<ProfitModel>();
             LoadData();
         }
@@ -37,13 +37,13 @@ namespace NelayanGo.ViewModels
         private void LoadData()
         {
             // 1. Muat Data Harga Ikan (Kiri)
-            DaftarHarga.Add(new HargalkanModel { NamaIkan = "Tongkol", HargaIkan = 12000 });
-            DaftarHarga.Add(new HargalkanModel { NamaIkan = "Kakap", HargaIkan = 13000 });
-            DaftarHarga.Add(new HargalkanModel { NamaIkan = "Bandeng", HargaIkan = 11000 });
-            DaftarHarga.Add(new HargalkanModel { NamaIkan = "Kerapu", HargaIkan = 15000 });
-            DaftarHarga.Add(new HargalkanModel { NamaIkan = "Trenggiri", HargaIkan = 14000 });
-            DaftarHarga.Add(new HargalkanModel { NamaIkan = "Layang", HargaIkan = 13000 });
-            DaftarHarga.Add(new HargalkanModel { NamaIkan = "Teri", HargaIkan = 10000 });
+            DaftarHarga.Add(new HargaIkanModel { NamaIkan = "Tongkol", HargaIkan = 12000 });
+            DaftarHarga.Add(new HargaIkanModel { NamaIkan = "Kakap", HargaIkan = 13000 });
+            DaftarHarga.Add(new HargaIkanModel { NamaIkan = "Bandeng", HargaIkan = 11000 });
+            DaftarHarga.Add(new HargaIkanModel { NamaIkan = "Kerapu", HargaIkan = 15000 });
+            DaftarHarga.Add(new HargaIkanModel { NamaIkan = "Trenggiri", HargaIkan = 14000 });
+            DaftarHarga.Add(new HargaIkanModel { NamaIkan = "Layang", HargaIkan = 13000 });
+            DaftarHarga.Add(new HargaIkanModel { NamaIkan = "Teri", HargaIkan = 10000 });
 
             // 2. Muat Data Profit (Kanan) - Menggunakan data statis seperti di gambar
             // Catatan: Dalam aplikasi nyata, data ini harus dihitung dari DaftarHarga dan data tangkapan.
