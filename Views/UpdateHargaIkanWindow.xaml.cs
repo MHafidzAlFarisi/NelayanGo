@@ -19,10 +19,10 @@ namespace NelayanGo
     public partial class UpdateHargaIkanWindow : Window
     {
         // misalnya kamu mau tahu ID record yang di-edit
-        public string IdHarga { get; }
+        public int KodeIkan { get; }
 
         public string NamaIkanBaru { get; private set; } = string.Empty;
-        public decimal HargaBaruPerKg { get; private set; }
+        public decimal HargaIkanBaru{ get; private set; }
 
         // ctor default kalau mau dipakai bebas
         public UpdateHargaIkanWindow()
@@ -31,10 +31,10 @@ namespace NelayanGo
         }
 
         // ctor dengan data awal (paling sering dipakai)
-        public UpdateHargaIkanWindow(string id, string namaAwal, decimal hargaAwal)
+        public UpdateHargaIkanWindow(int id, string namaAwal, decimal hargaAwal)
             : this()
         {
-            IdHarga = id;
+            KodeIkan = id;
             NamaIkanTextBox.Text = namaAwal;
             HargaTextBox.Text = hargaAwal.ToString(CultureInfo.InvariantCulture);
         }
@@ -85,7 +85,7 @@ namespace NelayanGo
             }
 
             NamaIkanBaru = nama;
-            HargaBaruPerKg = harga;
+            HargaIkanBaru = harga;
 
             DialogResult = true;
             Close();

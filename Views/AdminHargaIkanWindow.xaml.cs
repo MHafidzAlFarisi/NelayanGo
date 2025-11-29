@@ -31,7 +31,7 @@ namespace NelayanGo
 
             if (win.ShowDialog() == true)
             {
-                Vm.AddHargaBaru(win.NamaIkan, win.HargaPerKg);
+                Vm.AddHargaBaru(win.NamaIkan, win.HargaIkan);
             }
         }
 
@@ -47,14 +47,14 @@ namespace NelayanGo
             var sel = Vm.SelectedHarga;
 
             var win = new UpdateHargaIkanWindow(
-                sel.Id, sel.NamaIkan, sel.HargaPerKilo)
+                sel.KodeIkan, sel.NamaIkan, sel.HargaIkan)
             {
                 Owner = this
             };
 
             if (win.ShowDialog() == true)
             {
-                Vm.UpdateHarga(win.IdHarga, win.NamaIkanBaru, win.HargaBaruPerKg);
+                Vm.UpdateHarga(win.KodeIkan, win.NamaIkanBaru, win.HargaIkanBaru);
             }
         }
 
@@ -73,7 +73,7 @@ namespace NelayanGo
                     MessageBoxButton.YesNo,
                     MessageBoxImage.Warning) == MessageBoxResult.Yes)
             {
-                Vm.DeleteHarga(Vm.SelectedHarga.Id);
+                Vm.DeleteHarga(Vm.SelectedHarga.KodeIkan);
             }
         }
 
