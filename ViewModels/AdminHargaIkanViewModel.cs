@@ -26,9 +26,9 @@ namespace NelayanGo.ViewModels
             {
                 new HargalkanModel()
                 {
-                    Id = "ADM-00-0001",
+                    KodeIkan = 0001,
                     NamaIkan = "Tongkol",
-                    HargaPerKilo = 15000,
+                    HargaIkan = 15000,
                     Wilayah = "Bantul",
                     TanggalUpdate = DateTime.Now
                 }
@@ -39,28 +39,28 @@ namespace NelayanGo.ViewModels
         {
             DaftarHarga.Add(new HargalkanModel()
             {
-                Id = Guid.NewGuid().ToString(),
+                KodeIkan = 0001,
                 NamaIkan = nama,
-                HargaPerKilo = harga,
+                HargaIkan = harga,
                 TanggalUpdate = DateTime.Now,
                 Wilayah = "Bantul"
             });
         }
 
-        public void UpdateHarga(string id, string nama, decimal harga)
+        public void UpdateHarga(int id, string nama, decimal harga)
         {
-            var item = DaftarHarga.FirstOrDefault(x => x.Id == id);
+            var item = DaftarHarga.FirstOrDefault(x => x.KodeIkan == id);
             if (item != null)
             {
                 item.NamaIkan = nama;
-                item.HargaPerKilo = harga;
+                item.HargaIkan = harga;
                 item.TanggalUpdate = DateTime.Now;
             }
         }
 
-        public void DeleteHarga(string id)
+        public void DeleteHarga(int id)
         {
-            var item = DaftarHarga.FirstOrDefault(x => x.Id == id);
+            var item = DaftarHarga.FirstOrDefault(x => x.KodeIkan == id);
             if (item != null)
                 DaftarHarga.Remove(item);
         }

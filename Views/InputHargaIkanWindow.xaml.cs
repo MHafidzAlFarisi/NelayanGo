@@ -20,7 +20,7 @@ namespace NelayanGo
     {
         // --- hasil yang bisa dibaca dari luar setelah ShowDialog() ---
         public string NamaIkan { get; private set; } = string.Empty;
-        public decimal HargaPerKg { get; private set; }
+        public decimal HargaIkan{ get; private set; }
 
         public InputHargaIkanWindow()
         {
@@ -76,7 +76,7 @@ namespace NelayanGo
 
             // simpan ke properti hasil
             NamaIkan = nama;
-            HargaPerKg = harga;
+            HargaIkan = harga;
 
             DialogResult = true;    // sukses submit
             Close();
