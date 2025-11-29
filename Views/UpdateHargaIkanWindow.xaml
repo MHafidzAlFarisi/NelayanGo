@@ -1,4 +1,4 @@
-﻿<Window x:Class="NelayanGo.UpdateHargaIkanWindow"
+﻿<Window x:Class="NelayanGo.Views.UpdateHargaIkanWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -196,12 +196,12 @@
 
                         <TextBlock Style="{StaticResource InputLabel}"
                                    Text="Nama Ikan *"/>
-                        <TextBox x:Name="NamaIkanTextBox"
+                        <TextBox x:Name="txtNamaIkan"
                                  Style="{StaticResource InputField}"/>
 
                         <TextBlock Style="{StaticResource InputLabel}"
                                    Text="Harga Ikan (Rp/Kg) *"/>
-                        <TextBox x:Name="HargaTextBox"
+                        <TextBox x:Name="txtHargaIkan"
                                  Style="{StaticResource InputField}"/>
                     </StackPanel>
                 </Border>
@@ -213,13 +213,13 @@
                     <Button Content="BATAL"
                             Width="150" Height="45"
                             Style="{StaticResource RedButton}"
-                            Click="BatalButton_Click"/>
+                            Click="BtnBatal_Click"/>
 
                     <Button Content="KIRIM"
                             Width="150" Height="45"
                             Margin="20,0,0,0"
                             Style="{StaticResource BlueButton}"
-                            Click="KirimButton_Click"/>
+                            Click="BtnSimpan_Click"/>
                 </StackPanel>
             </Grid>
         </Grid>

@@ -1,68 +1,104 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using NelayanGo.DataServices;
 using NelayanGo.Models;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Windows.Input;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
 
 namespace NelayanGo.ViewModels
 {
     public class AdminHargaIkanViewModel : INotifyPropertyChanged
     {
+        private readonly HargaIkanDataService _service = new();
+
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public ObservableCollection<HargalkanModel> DaftarHarga { get; set; }
-        public HargalkanModel SelectedHarga { get; set; }
-
-        public AdminHargaIkanViewModel()
+        private ObservableCollection<HargaIkanModel> _daftarHarga;
+        public ObservableCollection<HargaIkanModel> DaftarHarga
         {
-            DaftarHarga = new ObservableCollection<HargalkanModel>()
+            get => _daftarHarga;
+            set
             {
-                new HargalkanModel()
-                {
-                    KodeIkan = 0001,
-                    NamaIkan = "Tongkol",
-                    HargaIkan = 15000,
-                    Wilayah = "Bantul",
-                    TanggalUpdate = DateTime.Now
-                }
-            };
-        }
-
-        public void AddHargaBaru(string nama, decimal harga)
-        {
-            DaftarHarga.Add(new HargalkanModel()
-            {
-                KodeIkan = 0001,
-                NamaIkan = nama,
-                HargaIkan = harga,
-                TanggalUpdate = DateTime.Now,
-                Wilayah = "Bantul"
-            });
-        }
-
-        public void UpdateHarga(int id, string nama, decimal harga)
-        {
-            var item = DaftarHarga.FirstOrDefault(x => x.KodeIkan == id);
-            if (item != null)
-            {
-                item.NamaIkan = nama;
-                item.HargaIkan = harga;
-                item.TanggalUpdate = DateTime.Now;
+                _daftarHarga = value;
+                OnPropertyChanged(nameof(DaftarHarga));
             }
         }
 
-        public void DeleteHarga(int id)
+        private HargaIkanModel _selectedHarga;
+        public HargaIkanModel SelectedHarga
         {
-            var item = DaftarHarga.FirstOrDefault(x => x.KodeIkan == id);
-            if (item != null)
-                DaftarHarga.Remove(item);
+            get => _selectedHarga;
+            set
+            {
+                _selectedHarga = value;
+                OnPropertyChanged(nameof(SelectedHarga));
+            }
+        }
+
+        public AdminHargaIkanViewModel()
+        {
+            DaftarHarga = new ObservableCollection<HargaIkanModel>();
+            LoadData();
+        }
+
+        public void LoadData()
+        {
+            DaftarHarga.Clear();
+
+            try
+            {
+                var data = _service.GetAll();
+                foreach (var item in data)
+                    DaftarHarga.Add(item);
+            }
+            catch (Exception ex)
+            {
+                System.Windows.MessageBox.Show($"Gagal load data harga ikan:\n{ex.Message}");
+            }
+        }
+
+        public void AddHarga(HargaIkanModel modelBaru)
+        {
+            try
+            {
+                _service.Insert(modelBaru);
+                LoadData();
+            }
+            catch (Exception ex)
+            {
+                System.Windows.MessageBox.Show($"Gagal menambah data:\n{ex.Message}");
+            }
+        }
+
+        public void UpdateHarga(HargaIkanModel modelUpdate)
+        {
+            try
+            {
+                _service.Update(modelUpdate);
+                LoadData();
+            }
+            catch (Exception ex)
+            {
+                System.Windows.MessageBox.Show($"Gagal mengubah data:\n{ex.Message}");
+            }
+        }
+
+        public void DeleteHarga(long kodeIkan)
+        {
+            try
+            {
+                _service.Delete(kodeIkan);
+                LoadData();
+            }
+            catch (Exception ex)
+            {
+                System.Windows.MessageBox.Show($"Gagal menghapus data:\n{ex.Message}");
+            }
+        }
+
+        private void OnPropertyChanged(string propName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
         }
     }
 }
