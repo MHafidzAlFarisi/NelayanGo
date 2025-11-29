@@ -24,6 +24,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		HargaPasarViewModel.cs = HargaPasarViewModel.cs
 		HargaPasarWindow.xaml.cs = HargaPasarWindow.xaml.cs
 		InputTangapanWindow.xaml.cs = InputTangapanWindow.xaml.cs
+		LoginWindow.xaml.cs = LoginWindow.xaml.cs
 		PetaWindow.xaml.cs = PetaWindow.xaml.cs
 		ProfitModel.cs = ProfitModel.cs
 	EndProjectSection

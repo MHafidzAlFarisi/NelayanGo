@@ -31,5 +31,9 @@ namespace NelayanGo.Views
             NavigationHelper.NavigateKeHome(this); // Pass 'this' jika Anda ingin MainWindow ditutup
         }
 
+        private void LogoutLink_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            NavigationHelper.NavigateKeLogin(this);
+        }
     }
 }

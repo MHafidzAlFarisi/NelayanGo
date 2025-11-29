@@ -35,7 +35,7 @@
                     FontSize="20" FontWeight="Bold" Height="28"/>
             </Grid>
             <TextBlock x:Name="HomeLink" Text="Home" FontFamily="{StaticResource ResourceKey=nunito}" Foreground="White" Margin="335,20,355,20" Grid.Column="1" Grid.ColumnSpan="2" Cursor="Hand" MouseLeftButtonDown="HomeLink_MouseLeftButtonDown"/>
-            <TextBlock Text="Logout" FontFamily="{StaticResource nunito}" Foreground="White" Margin="57,21,250,23" Grid.Column="2"/>
+            <TextBlock x:Name="LogoutLink" Cursor="Hand" MouseLeftButtonDown="LogoutLink_MouseLeftButtonDown" Text="Logout" FontFamily="{StaticResource nunito}" Foreground="White" Margin="57,21,250,23" Grid.Column="2"/>
             <!-- Binding ke Model Nelayan di dalam ViewModel -->
             <TextBlock Text="{Binding CurrentNelayan.Nama}" Background="Red" Foreground="White" FontSize="14" Grid.Column="2" Margin="189,10,7,33"/>
             <TextBlock Text="{Binding CurrentNelayan.KodeIdentik}" Background="Blue" Foreground="White" FontSize="12" Grid.Column="2" Margin="189,29,7,12" />

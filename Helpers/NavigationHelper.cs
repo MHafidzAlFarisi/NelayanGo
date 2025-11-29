@@ -2,6 +2,7 @@ using System.Windows;
 using System.Windows.Input;
 using System;
 using NelayanGo.Views;
+using System.Linq.Expressions;
 
 namespace NelayanGo.Helpers
 {
@@ -95,6 +96,24 @@ namespace NelayanGo.Helpers
             }
         }
 
+        public static void NavigateKeLogin(Window? currentWindow = null)
+        {
+            try
+            {
+                var loginWindow = new LoginWindow();
+                loginWindow.Show();
+                if (currentWindow != null)
+                {
+                    currentWindow.Close();
+                }
+            }
+
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Gagal membuka jendelaLogin: {ex.Message}", "Error Navigasi", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
         /// <param name="destinationName">Nama tujuan: "Home", "HasilTangkapan", "Maps", "HargaPasar".</param>
         public static void NavigateFromHeaderClick(object sender, string destinationName)
         {
@@ -115,6 +134,9 @@ namespace NelayanGo.Helpers
                     break;
                 case "Harga pasar":
                     NavigateKeHargaPasar(currentWindow);
+                    break;
+                case "Logout":
+                    NavigateKeLogin(currentWindow);
                     break;
                 default:
                     MessageBox.Show("Tujuan navigasi tidak dikenal.", "Error Navigasi", MessageBoxButton.OK, MessageBoxImage.Warning);
