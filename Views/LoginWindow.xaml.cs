@@ -1,68 +1,71 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
-using NelayanGo.Views; // Asumsikan MainWindow ada di Views
+using NelayanGo.ViewModels;
 
 namespace NelayanGo.Views
 {
     public partial class LoginWindow : Window
     {
+        private readonly LoginViewModel _viewModel;
+
         public LoginWindow()
         {
             InitializeComponent();
+
+            // Set DataContext ke ViewModel baru
+            _viewModel = new LoginViewModel();
+            DataContext = _viewModel;
+
+            // Dengarkan event sukses dari ViewModel
+            _viewModel.OnLoginSuccess += NavigateToMain;
         }
 
+        // Dipanggil ketika tombol Login diklik (dari XAML)
         private void LoginButton_Click(object sender, RoutedEventArgs e)
         {
-            // TODO: Tambahkan logika autentikasi di sini
+            // 1. Ambil password dari PasswordBox dan masukkan ke ViewModel
+            _viewModel.Password = PasswordBoxControl.Password;
 
-            // Contoh: Setelah login berhasil, tampilkan MainWindow dan tutup LoginWindow
-            var email = EmailTextBox.Text;
-            var password = PasswordBox.Password;
+            // 2. Jalankan Command Login di ViewModel secara manual
+            if (_viewModel.LoginCommand.CanExecute(null))
+            {
+                _viewModel.LoginCommand.Execute(null);
+            }
+        }
 
-            // Jika autentikasi berhasil (logika sederhana untuk demonstrasi)
-            if (!string.IsNullOrEmpty(email) && !string.IsNullOrEmpty(password))
+        // Navigasi ke Halaman Utama
+        private void NavigateToMain()
+        {
+            // Pastikan dijalankan di thread UI utama
+            Application.Current.Dispatcher.Invoke(() =>
             {
                 var mainWindow = new MainWindow();
                 mainWindow.Show();
-                this.Close(); // Tutup jendela login
-            }
-            else
-            {
-                MessageBox.Show("Email atau Password tidak boleh kosong.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-            try
-            {
-                var client = SupabaseClient.Client;
-
-                var session = await client.Auth.SignIn(email, password);
-
-                if (session != null && session.User != null)
-                {
-                    var mainWindow = new MainWindow();
-                    mainWindow.Show();
-                    Close();
-                }
-                else
-                {
-                    MessageBox.Show("Login gagal.");
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Login error: {ex.Message}");
-            }
+                this.Close();
+            });
         }
 
+        // Handler untuk Google Sign In (Sekarang ditangani ViewModel via Command di XAML)
+        // Namun jika tombol Anda di XAML menggunakan Click="...", ubah menjadi Command="{Binding GoogleLoginCommand}"
+        // Atau panggil manual seperti ini:
         private void GoogleSignIn_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Membuka proses Sign In dengan Google...", "Info");
-            // TODO: Implementasi integrasi Google Sign-In
+            if (_viewModel.GoogleLoginCommand.CanExecute(null))
+            {
+                _viewModel.GoogleLoginCommand.Execute(null);
+            }
         }
 
         private void DaftarLink_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            MessageBox.Show("Membuka halaman Pendaftaran...", "Info");
-            // TODO: Buka jendela Pendaftaran (misalnya, new DaftarWindow().Show())
+            MessageBox.Show("Fitur pendaftaran belum diimplementasikan.");
+            // new RegisterWindow().Show();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
