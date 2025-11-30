@@ -121,6 +121,12 @@ namespace NelayanGo.Views
             
         }
 
+        private void IconTanggal_Click(object sender, MouseButtonEventArgs e)
+        {
+            dpTanggal.IsDropDownOpen = true;
+            dpTanggal.Focus();
+        }
+
         private void BtnSimpan_Click(object sender, RoutedEventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txtNamaIkan.Text) ||
