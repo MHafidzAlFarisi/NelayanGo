@@ -75,7 +75,7 @@ Untuk menjalankan aplikasi ini, ikuti langkah-langkah di bawah ini:
 
 ---
 
-## 🔑 Informasi Akses Demo (Poin 1.b: Akses Demo)
+## 🔑 Informasi Akses Demo 
 
 Untuk keperluan penilaian dan demonstrasi, Anda dapat menggunakan akun yang telah disediakan di bawah ini:
 
