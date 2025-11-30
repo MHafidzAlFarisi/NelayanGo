@@ -31,24 +31,24 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Resource\Nunito\Nunito-Italic-VariableFont_wght.ttf" />
-    <EmbeddedResource Include="Resource\Nunito\Nunito-VariableFont_wght.ttf" />
-    <EmbeddedResource Include="Resource\Nunito\static\Nunito-Black.ttf" />
-    <EmbeddedResource Include="Resource\Nunito\static\Nunito-BlackItalic.ttf" />
-    <EmbeddedResource Include="Resource\Nunito\static\Nunito-Bold.ttf" />
-    <EmbeddedResource Include="Resource\Nunito\static\Nunito-BoldItalic.ttf" />
-    <EmbeddedResource Include="Resource\Nunito\static\Nunito-ExtraBold.ttf" />
-    <EmbeddedResource Include="Resource\Nunito\static\Nunito-ExtraBoldItalic.ttf" />
-    <EmbeddedResource Include="Resource\Nunito\static\Nunito-ExtraLight.ttf" />
-    <EmbeddedResource Include="Resource\Nunito\static\Nunito-ExtraLightItalic.ttf" />
-    <EmbeddedResource Include="Resource\Nunito\static\Nunito-Italic.ttf" />
-    <EmbeddedResource Include="Resource\Nunito\static\Nunito-Light.ttf" />
-    <EmbeddedResource Include="Resource\Nunito\static\Nunito-LightItalic.ttf" />
-    <EmbeddedResource Include="Resource\Nunito\static\Nunito-Medium.ttf" />
-    <EmbeddedResource Include="Resource\Nunito\static\Nunito-MediumItalic.ttf" />
-    <EmbeddedResource Include="Resource\Nunito\static\Nunito-Regular.ttf" />
-    <EmbeddedResource Include="Resource\Nunito\static\Nunito-SemiBold.ttf" />
-    <EmbeddedResource Include="Resource\Nunito\static\Nunito-SemiBoldItalic.ttf" />
+    <Resource Include="Resource\Nunito\Nunito-Italic-VariableFont_wght.ttf" />
+    <Resource Include="Resource\Nunito\Nunito-VariableFont_wght.ttf" />
+    <Resource Include="Resource\Nunito\static\Nunito-Black.ttf" />
+    <Resource Include="Resource\Nunito\static\Nunito-BlackItalic.ttf" />
+    <Resource Include="Resource\Nunito\static\Nunito-Bold.ttf" />
+    <Resource Include="Resource\Nunito\static\Nunito-BoldItalic.ttf" />
+    <Resource Include="Resource\Nunito\static\Nunito-ExtraBold.ttf" />
+    <Resource Include="Resource\Nunito\static\Nunito-ExtraBoldItalic.ttf" />
+    <Resource Include="Resource\Nunito\static\Nunito-ExtraLight.ttf" />
+    <Resource Include="Resource\Nunito\static\Nunito-ExtraLightItalic.ttf" />
+    <Resource Include="Resource\Nunito\static\Nunito-Italic.ttf" />
+    <Resource Include="Resource\Nunito\static\Nunito-Light.ttf" />
+    <Resource Include="Resource\Nunito\static\Nunito-LightItalic.ttf" />
+    <Resource Include="Resource\Nunito\static\Nunito-Medium.ttf" />
+    <Resource Include="Resource\Nunito\static\Nunito-MediumItalic.ttf" />
+    <Resource Include="Resource\Nunito\static\Nunito-Regular.ttf" />
+    <Resource Include="Resource\Nunito\static\Nunito-SemiBold.ttf" />
+    <Resource Include="Resource\Nunito\static\Nunito-SemiBoldItalic.ttf" />
   </ItemGroup>
 
   <ItemGroup>
