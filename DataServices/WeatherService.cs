@@ -16,7 +16,7 @@ namespace NelayanGo.DataServices
 
     public static class WeatherService
     {
-        private const string API_KEY = "MASUKKAN_API_KEY_OPENWEATHERMAP_DISINI";
+        private const string API_KEY = "13d352asiegni3";
 
         // Fungsi untuk mendapatkan cuaca (Simulasi/Mockup agar langsung jalan tanpa API Key)
         // Jika ingin data asli, uncomment bagian HTTP Client

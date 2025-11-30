@@ -143,7 +143,7 @@ namespace NelayanGo.ViewModels
 
         private void SetCurrentLocation()
         {
-            StartLat = -6.1754; StartLng = 106.8272;
+            StartLat = -7.765752; StartLng = 110.371722;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
