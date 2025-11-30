@@ -45,16 +45,11 @@ namespace NelayanGo.Views
                     return;
                 }
 
-                // JANGAN simpan sesi di sini agar user dipaksa login nanti
-                // AppSession.CurrentUser = user; <--- HAPUS atau COMMENT baris ini jika ada
-
                 MessageBox.Show("Registrasi berhasil! Silakan lengkapi data diri Anda sebelum Login.", "Sukses");
 
                 // Buka Input Data
                 var inputDataWindow = new InputDataNelayanWindow(user.Id);
 
-                // PERBAIKAN: Gunakan ShowDialog() agar InputDataNelayanWindow bisa menggunakan 'DialogResult'
-                // Jika menggunakan .Show(), baris 'DialogResult = true' di InputDataNelayanWindow akan error.
                 inputDataWindow.ShowDialog();
 
                 this.Close();

@@ -3,7 +3,7 @@ using NelayanGo.DataServices;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using System.Windows; // Untuk AppSession (Pastikan namespace-nya sesuai)
+using System.Windows;
 
 namespace NelayanGo.ViewModels
 {
@@ -17,14 +17,6 @@ namespace NelayanGo.ViewModels
             get => _currentNelayan;
             set { _currentNelayan = value; OnPropertyChanged(nameof(CurrentNelayan)); }
         }
-
-        // Properti Statistik (Tetap Dummy/Default dulu)
-        public int TotalWaktuAktifHari { get; set; } = 0;
-        public int TotalJarakBerlayarKM { get; set; } = 0;
-        public int TotalBeratTangkapanTON { get; set; } = 0;
-        public int TotalJumlahBerlayar { get; set; } = 0;
-        public int TotalJamBerlayarJAM { get; set; } = 0;
-        public int TotalJenisTangkapan { get; set; } = 0;
 
         public ViewModelsNelayan()
         {

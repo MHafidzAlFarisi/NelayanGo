@@ -7,8 +7,6 @@ namespace NelayanGo.Models
         [JsonIgnore]
         public long Id { get; set; }
 
-        // --- PERBAIKAN DI SINI ---
-        // Ubah dari long menjadi string agar cocok dengan UUID Supabase
         [JsonPropertyName("user_id")]
         public long UserId { get; set; }
 

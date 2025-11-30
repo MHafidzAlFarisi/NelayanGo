@@ -15,7 +15,9 @@ namespace NelayanGo.ViewModels
             get => _currentNelayan;
             set { _currentNelayan = value; OnPropertyChanged(nameof(CurrentNelayan)); }
         }
+
         private readonly HargaIkanDataService _service = new();
+        private readonly NelayanDataService _profilService = new(); // <-- added
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -44,7 +46,23 @@ namespace NelayanGo.ViewModels
         public AdminHargaIkanViewModel()
         {
             DaftarHarga = new ObservableCollection<HargaIkanModel>();
+
+            LoadUserProfile();
+
             LoadData();
+        }
+
+        private async void LoadUserProfile()
+        {
+            if (AppSession.CurrentUser != null && long.TryParse(AppSession.CurrentUser.Id, out var userId))
+            {
+                var profil = await _profilService.GetProfilByUserId(userId);
+                CurrentNelayan = profil ?? new NelayanModel { Nama = AppSession.CurrentUser.Username, KodeIdentik = "Belum Input Data" };
+            }
+            else
+            {
+                CurrentNelayan = new NelayanModel { Nama = "Tamu", KodeIdentik = "---" };
+            }
         }
 
         public void LoadData()

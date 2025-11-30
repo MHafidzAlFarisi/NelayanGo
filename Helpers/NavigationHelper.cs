@@ -6,10 +6,6 @@ using System.Linq.Expressions;
 
 namespace NelayanGo.Helpers
 {
-    /// <summary>
-    /// Helper class statis untuk mengelola navigasi antar Window (jendela)
-    /// dalam aplikasi WPF.
-    /// </summary>
     public static class NavigationHelper
     {
         // ----------------------------------------------------
@@ -131,6 +127,42 @@ namespace NelayanGo.Helpers
             }
         }
 
+        public static void NavigateKeAdminProfil(Window? currentWindow = null)
+        {
+            try
+            {
+                var adminProfil = new AdminProfileWindow();
+                adminProfil.Show();
+                if (currentWindow != null)
+                {
+                    currentWindow.Close();
+                }
+            }
+
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Gagal membuka jendelaLogin: {ex.Message}", "Error Navigasi", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        public static void NavigateKeHargaIkan(Window? currentWindow = null)
+        {
+            try
+            {
+                var adminHargaIkan = new AdminHargaIkanWindow();
+                adminHargaIkan.Show();
+                if (currentWindow != null)
+                {
+                    currentWindow.Close();
+                }
+            }
+
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Gagal membuka jendelaLogin: {ex.Message}", "Error Navigasi", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
         /// <param name="destinationName">Nama tujuan: "Home", "HasilTangkapan", "Maps", "HargaPasar".</param>
         public static void NavigateFromHeaderClick(object sender, string destinationName)
         {
@@ -154,6 +186,12 @@ namespace NelayanGo.Helpers
                     break;
                 case "Profil":
                     NavigateKeProfil(currentWindow);
+                    break;
+                case "Admin Profil":
+                    NavigateKeAdminProfil(currentWindow);
+                    break;
+                case "Harga Ikan":
+                    NavigateKeHargaIkan(currentWindow);
                     break;
                 case "Logout":
                     NavigateKeLogin(currentWindow);
