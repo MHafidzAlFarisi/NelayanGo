@@ -39,7 +39,7 @@ Proyek ini dibangun di atas prinsip PBO. Struktur utama terbagi menjadi lapisan 
 
 ---
 
-## 🚀 Instalasi & Setup (Poin 1.c: Dokumentasi Penggunaan)
+## 🚀 Instalasi & Setup
 
 Untuk menjalankan aplikasi ini, ikuti langkah-langkah di bawah ini:
 
