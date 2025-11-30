@@ -135,6 +135,17 @@ namespace NelayanGo.Views
 
             DialogResult = true; Close();
         }
+        private void IconTanggal_Click(object sender, MouseButtonEventArgs e)
+        {
+            // Membuka dropdown kalender secara programatis
+            if (dpTanggal != null)
+            {
+                dpTanggal.IsDropDownOpen = !dpTanggal.IsDropDownOpen; // Toggle (buka/tutup)
+
+                // Opsional: Agar DatePicker langsung fokus setelah dibuka
+                dpTanggal.Focus();
+            }
+        }
 
         private void BatalButton_Click(object sender, RoutedEventArgs e) { DialogResult = false; Close(); }
     }

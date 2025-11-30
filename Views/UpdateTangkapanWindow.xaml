@@ -176,11 +176,12 @@
                                         BorderThickness="1"
                                         Background="White"/>
 
-                            <TextBlock Grid.Column="1"
-                                       Text="📅"
+                            <TextBlock
                                        FontSize="20"
-                                       VerticalAlignment="Center"
-                                       Margin="-35,0,10,0"/>
+                                       VerticalAlignment="Top"
+                                       Margin="753,4,8,0"
+                                       Cursor="Hand" 
+                                       MouseLeftButtonDown="IconTanggal_Click"/>
                         </Grid>
 
                         <!-- Lokasi -->
