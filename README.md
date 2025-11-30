@@ -9,6 +9,10 @@
 ## 📝 Deskripsi Proyek
 NelayanGo adalah aplikasi *desktop* berbasis **C# WPF** yang dirancang untuk mendigitalisasi proses pencatatan hasil tangkapan harian bagi nelayan. Aplikasi ini terintegrasi dengan data cuaca perairan *real-time* untuk membantu nelayan mengoptimalkan jadwal dan keamanan pelayaran.
 
+Alur Penggunaan:
+
+<img width="958" height="475" alt="image" src="https://github.com/user-attachments/assets/8e0ede79-5fc4-4312-ab10-fe0db9cf1c19" />
+
 ## ✨ Fitur Utama
 1.  **Pencatatan Tangkapan Harian:** Input tangkapan harian dengan perhitungan harga otomatis bagi user.
 2.  **Prakiraan Cuaca Perairan:** Perkiraan cuaca, kecepatan angin, dan suhu.
@@ -58,6 +62,7 @@ Untuk menjalankan aplikasi ini, ikuti langkah-langkah di bawah ini:
     ```
 2.  **Buat Database:**
     Buat Database dengan kolom seperti di gambar:
+    
     <img width="453" height="804" alt="image" src="https://github.com/user-attachments/assets/496840bf-46df-4f08-95b3-106f3a8da4b4" />
  
 4.  **Konfigurasi Environment:**
