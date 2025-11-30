@@ -68,7 +68,6 @@ namespace NelayanGo.ViewModels
             }
         }
 
-        // ... (Properti Koordinat & Cuaca Lainnya Tetap Sama) ...
 
         public double StartLat
         {

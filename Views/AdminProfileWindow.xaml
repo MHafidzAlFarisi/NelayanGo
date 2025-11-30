@@ -10,7 +10,7 @@
         Background="#E0E0E0">
 
     <Window.DataContext>
-        <vm:AdminProfileViewModel/>
+        <vm:ViewModelsNelayan/>
     </Window.DataContext>
 
     <Window.Resources>
@@ -100,40 +100,18 @@
                         VerticalAlignment="Center"
                         HorizontalAlignment="Left"
                         Margin="20,0,0,0">
-                <TextBlock Text="Harga Ikan"
-                           Foreground="White"
-                           FontSize="15"
-                           Margin="0,0,30,0"/>
-                <TextBlock Text="Log Out"
-                           Foreground="White"
-                           FontSize="15"/>
+                <TextBlock x:Name="HargaIkanLink" Cursor="Hand" MouseLeftButtonDown="HargaIkanLink_MouseLeftButtonDown" Text="Harga Ikan" Foreground="White" VerticalAlignment="Center" Margin="20,0,20,0"/>
+                <TextBlock x:Name="LogOutLink" Cursor="Hand" MouseLeftButtonDown="LogOutLink_MouseLeftButtonDown" Text="Log Out" Foreground="White" VerticalAlignment="Center" Margin="0,0,20,0"/>
             </StackPanel>
 
-            <!-- Profil admin kanan -->
-            <StackPanel Grid.Column="2"
-                        Orientation="Horizontal"
-                        HorizontalAlignment="Right"
-                        Margin="0,0,20,0">
-                <Border CornerRadius="50"
-                        Width="34" Height="34"
-                        Background="White"
-                        VerticalAlignment="Center"
-                        Margin="0,0,10,0">
-                    <TextBlock Text="👤"
-                               FontSize="18"
-                               HorizontalAlignment="Center"
-                               VerticalAlignment="Center"
-                               Margin="0,0,0,2"/>
+            <!-- Info Pengguna -->
+            <StackPanel Cursor="Hand" MouseLeftButtonDown="ProfileHeader_Click" Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,20,0">
+                <Border CornerRadius="50" Width="30" Height="30" Background="White" VerticalAlignment="Center" Margin="0,0,10,0">
+                    <TextBlock Text="👤" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 </Border>
                 <StackPanel VerticalAlignment="Center">
-                    <!-- Binding ke nama & kode admin -->
-                    <TextBlock Text="{Binding CurrentAdmin.Nama}"
-                               Foreground="White"
-                               FontSize="14"
-                               FontWeight="SemiBold"/>
-                    <TextBlock Text="{Binding CurrentAdmin.KodeIdentik}"
-                               Foreground="White"
-                               FontSize="12"/>
+                    <TextBlock Text="{Binding CurrentNelayan.Nama}" Foreground="White" FontSize="14" FontWeight="SemiBold"/>
+                    <TextBlock Text="Admin" Foreground="White" FontSize="12"/>
                 </StackPanel>
             </StackPanel>
         </Grid>
@@ -154,292 +132,200 @@
                 <!-- data lengkap -->
             </Grid.ColumnDefinitions>
 
-            <!-- KIRI: FOTO / AVATAR -->
-            <Border Grid.Row="0" Grid.Column="0"
-                    Height="220" Width="220"
-                    Background="#F5F5F5"
-                    CornerRadius="10"
-                    BorderBrush="#DDDDDD"
-                    BorderThickness="1"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Top"
-                    Effect="{StaticResource ShadowDepth1}">
-                <StackPanel HorizontalAlignment="Center"
-                            VerticalAlignment="Center">
-                    <TextBlock Text="Foto Profil"
-                               FontSize="14"
-                               Foreground="#666"
-                               HorizontalAlignment="Center"/>
-                </StackPanel>
-            </Border>
-
-            <!-- KANAN: DATA LENGKAP -->
-            <StackPanel Grid.Row="0" Grid.Column="1"
-                        Margin="20,0,0,0">
-                <!-- Title bar DATA LENGKAP -->
-                <Border Background="#0B3C82"
-                        CornerRadius="8,8,8,8"
-                        Padding="10,6"
-                        Margin="0,0,0,8">
-                    <TextBlock Text="DATA LENGKAP"
-                               Foreground="White"
-                               FontSize="18"
-                               FontWeight="Bold"
-                               HorizontalAlignment="Center"/>
-                </Border>
-
-                <!-- CARD DATA -->
-                <Border Background="#E6F2FF"
-                        CornerRadius="8"
-                        Padding="10,10"
-                        Effect="{StaticResource ShadowDepth1}">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="170"/>
-                            <ColumnDefinition Width="10"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-
-                        <!-- 13 baris -->
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-
-                        <!-- 0: Nama -->
-                        <TextBlock Grid.Row="0" Grid.Column="0"
-                                   Style="{StaticResource ProfileLabel}"
-                                   Text="Nama"/>
-                        <TextBlock Grid.Row="0" Grid.Column="1"
-                                   Style="{StaticResource ProfileLabel}"
-                                   Text=":"/>
-                        <TextBlock Grid.Row="0" Grid.Column="2"
-                                   Style="{StaticResource ProfileValue}"
-                                   Text="{Binding CurrentAdmin.Nama}"/>
-
-                        <!-- 1: Kode Identik -->
-                        <TextBlock Grid.Row="1" Grid.Column="0"
-                                   Background="White"
-                                   Style="{StaticResource ProfileLabel}"
-                                   Text="Kode Identik"/>
-                        <TextBlock Grid.Row="1" Grid.Column="1"
-                                   Background="White"
-                                   Style="{StaticResource ProfileLabel}"
-                                   Text=":"/>
-                        <TextBlock Grid.Row="1" Grid.Column="2"
-                                   Background="White"
-                                   Style="{StaticResource ProfileValue}"
-                                   Text="{Binding CurrentAdmin.KodeIdentik}"/>
-
-                        <!-- 2: Wilayah -->
-                        <TextBlock Grid.Row="2" Grid.Column="0"
-                                   Style="{StaticResource ProfileLabel}"
-                                   Text="Wilayah"/>
-                        <TextBlock Grid.Row="2" Grid.Column="1"
-                                   Style="{StaticResource ProfileLabel}"
-                                   Text=":"/>
-                        <TextBlock Grid.Row="2" Grid.Column="2"
-                                   Style="{StaticResource ProfileValue}"
-                                   Text="{Binding CurrentAdmin.Wilayah}"/>
-
-                        <!-- 3: Tahun Bergabung -->
-                        <TextBlock Grid.Row="3" Grid.Column="0"
-                                   Background="White"
-                                   Style="{StaticResource ProfileLabel}"
-                                   Text="Tahun Bergabung"/>
-                        <TextBlock Grid.Row="3" Grid.Column="1"
-                                   Background="White"
-                                   Style="{StaticResource ProfileLabel}"
-                                   Text=":"/>
-                        <TextBlock Grid.Row="3" Grid.Column="2"
-                                   Background="White"
-                                   Style="{StaticResource ProfileValue}"
-                                   Text="{Binding CurrentAdmin.TahunBergabung}"/>
-
-                        <!-- 4: Status -->
-                        <TextBlock Grid.Row="4" Grid.Column="0"
-                                   Style="{StaticResource ProfileLabel}"
-                                   Text="Status"/>
-                        <TextBlock Grid.Row="4" Grid.Column="1"
-                                   Style="{StaticResource ProfileLabel}"
-                                   Text=":"/>
-                        <TextBlock Grid.Row="4" Grid.Column="2"
-                                   Style="{StaticResource ProfileValue}"
-                                   Text="{Binding CurrentAdmin.Status}"/>
-
-                        <!-- 5: NIK -->
-                        <TextBlock Grid.Row="5" Grid.Column="0"
-                                   Background="White"
-                                   Style="{StaticResource ProfileLabel}"
-                                   Text="NIK"/>
-                        <TextBlock Grid.Row="5" Grid.Column="1"
-                                   Background="White"
-                                   Style="{StaticResource ProfileLabel}"
-                                   Text=":"/>
-                        <TextBlock Grid.Row="5" Grid.Column="2"
-                                   Background="White"
-                                   Style="{StaticResource ProfileValue}"
-                                   Text="{Binding CurrentAdmin.NIK}"/>
-
-                        <!-- 6: Tanggal Lahir -->
-                        <TextBlock Grid.Row="6" Grid.Column="0"
-                                   Style="{StaticResource ProfileLabel}"
-                                   Text="Tanggal Lahir"/>
-                        <TextBlock Grid.Row="6" Grid.Column="1"
-                                   Style="{StaticResource ProfileLabel}"
-                                   Text=":"/>
-                        <TextBlock Grid.Row="6" Grid.Column="2"
-                                   Style="{StaticResource ProfileValue}"
-                                   Text="{Binding CurrentAdmin.TanggalLahir}"/>
-
-                        <!-- 7: Tempat Lahir -->
-                        <TextBlock Grid.Row="7" Grid.Column="0"
-                                   Background="White"
-                                   Style="{StaticResource ProfileLabel}"
-                                   Text="Tempat Lahir"/>
-                        <TextBlock Grid.Row="7" Grid.Column="1"
-                                   Background="White"
-                                   Style="{StaticResource ProfileLabel}"
-                                   Text=":"/>
-                        <TextBlock Grid.Row="7" Grid.Column="2"
-                                   Background="White"
-                                   Style="{StaticResource ProfileValue}"
-                                   Text="{Binding CurrentAdmin.TempatLahir}"/>
-
-                        <!-- 8: Alamat KTP -->
-                        <TextBlock Grid.Row="8" Grid.Column="0"
-                                   Style="{StaticResource ProfileLabel}"
-                                   Text="Alamat KTP"/>
-                        <TextBlock Grid.Row="8" Grid.Column="1"
-                                   Style="{StaticResource ProfileLabel}"
-                                   Text=":"/>
-                        <TextBlock Grid.Row="8" Grid.Column="2"
-                                   Style="{StaticResource ProfileValue}"
-                                   Text="{Binding CurrentAdmin.AlamatKTP}"/>
-
-                        <!-- 9: Nomor Telepon -->
-                        <TextBlock Grid.Row="9" Grid.Column="0"
-                                   Background="White"
-                                   Style="{StaticResource ProfileLabel}"
-                                   Text="Nomor Telepon"/>
-                        <TextBlock Grid.Row="9" Grid.Column="1"
-                                   Background="White"
-                                   Style="{StaticResource ProfileLabel}"
-                                   Text=":"/>
-                        <TextBlock Grid.Row="9" Grid.Column="2"
-                                   Background="White"
-                                   Style="{StaticResource ProfileValue}"
-                                   Text="{Binding CurrentAdmin.NomorTelepon}"/>
-
-                        <!-- 10: Agama -->
-                        <TextBlock Grid.Row="10" Grid.Column="0"
-                                   Style="{StaticResource ProfileLabel}"
-                                   Text="Agama"/>
-                        <TextBlock Grid.Row="10" Grid.Column="1"
-                                   Style="{StaticResource ProfileLabel}"
-                                   Text=":"/>
-                        <TextBlock Grid.Row="10" Grid.Column="2"
-                                   Style="{StaticResource ProfileValue}"
-                                   Text="{Binding CurrentAdmin.Agama}"/>
-
-                        <!-- 11: Golongan Darah -->
-                        <TextBlock Grid.Row="11" Grid.Column="0"
-                                   Background="White"
-                                   Style="{StaticResource ProfileLabel}"
-                                   Text="Golongan Darah"/>
-                        <TextBlock Grid.Row="11" Grid.Column="1"
-                                   Background="White"
-                                   Style="{StaticResource ProfileLabel}"
-                                   Text=":"/>
-                        <TextBlock Grid.Row="11" Grid.Column="2"
-                                   Background="White"
-                                   Style="{StaticResource ProfileValue}"
-                                   Text="{Binding CurrentAdmin.GolonganDarah}"/>
-
-                        <!-- 12: Email -->
-                        <TextBlock Grid.Row="12" Grid.Column="0"
-                                   Style="{StaticResource ProfileLabel}"
-                                   Text="Email"/>
-                        <TextBlock Grid.Row="12" Grid.Column="1"
-                                   Style="{StaticResource ProfileLabel}"
-                                   Text=":"/>
-                        <TextBlock Grid.Row="12" Grid.Column="2"
-                                   Style="{StaticResource ProfileValue}"
-                                   Text="{Binding CurrentAdmin.Email}"/>
-                    </Grid>
-                </Border>
+            <!-- Kiri: FOTO PROFIL -->
+            <StackPanel Grid.Column="0">
+                <Border Height="200" Width="200" Background="#F0F0F0" 
+                            CornerRadius="10" BorderBrush="LightGray" BorderThickness="1" 
+                            />
             </StackPanel>
 
-            <!-- ================= BAGIAN INFO BAWAH ================= -->
-            <Grid Grid.Row="1" Grid.ColumnSpan="2"
-                  Margin="0,30,0,0">
+            <!-- Kanan: DATA LENGKAP & INFO -->
+            <Grid Grid.Column="2">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="40"/>
-                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                    <!-- Title Data Lengkap -->
+                    <RowDefinition Height="Auto"/>
+                    <!-- Data Table -->
+                    <RowDefinition Height="30"/>
+                    <!-- Spacing -->
+                    <RowDefinition Height="Auto"/>
+                    <!-- Title Info -->
+                    <RowDefinition Height="Auto"/>
+                    <!-- Info Cards -->
                 </Grid.RowDefinitions>
 
-                <!-- Header INFO -->
-                <Border Grid.Row="0"
-                        Background="#0B3C82"
-                        CornerRadius="10,10,10,10"
-                        Margin="0,0,0,0">
-                    <TextBlock Text="INFO"
-                               Foreground="White"
-                               FontSize="18"
-                               FontWeight="Bold"
-                               HorizontalAlignment="Center"
-                               VerticalAlignment="Center"/>
+                <!-- Title Data Lengkap -->
+                <Border Grid.Row="0" Background="#0B3C82" CornerRadius="5,5,0,0" Padding="10">
+                    <TextBlock Text="DATA LENGKAP" Foreground="White" FontFamily="{DynamicResource nunito}" 
+                                   FontSize="18" FontWeight="Bold" TextAlignment="Center"/>
                 </Border>
 
-                <!-- Isi INFO -->
-                <Border Grid.Row="1"
-                        Background="#E1E1E1"
-                        CornerRadius="0,0,10,10"
-                        Margin="0,-5,0,0"
-                        Padding="20,20">
+                <!-- Data Table -->
+                <Border Grid.Row="1" Background="#E6F2FF" CornerRadius="0,0,5,5" Padding="20">
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="160"/>
+                            <ColumnDefinition Width="20"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
-                        <!-- Kolom 0: TOTAL WAKTU AKTIF (HARI) -->
-                        <StackPanel Grid.Column="0"
-                                    VerticalAlignment="Center">
-                            <TextBlock Style="{StaticResource InfoNumber}"
-                                       Text="{Binding TotalWaktuAktifHari}"/>
-                            <TextBlock Style="{StaticResource InfoLabel}"
-                                       Text="TOTAL WAKTU AKTIF (HARI)"/>
-                        </StackPanel>
+                        <!-- We use an ItemsControl or simple StackPanel for rows to avoid repetitive Grid defs -->
+                        <StackPanel Grid.ColumnSpan="3">
+                            <!-- Helper Style for Rows -->
+                            <StackPanel.Resources>
+                                <Style TargetType="Grid">
+                                    <Setter Property="Margin" Value="0,0,0,8"/>
+                                </Style>
+                                <Style x:Key="LabelStyle" TargetType="TextBlock">
+                                    <Setter Property="FontFamily" Value="{DynamicResource nunito}"/>
+                                    <Setter Property="FontWeight" Value="SemiBold"/>
+                                    <Setter Property="Width" Value="160"/>
+                                </Style>
+                                <Style x:Key="SeparatorStyle" TargetType="TextBlock">
+                                    <Setter Property="FontFamily" Value="{DynamicResource nunito}"/>
+                                    <Setter Property="Width" Value="20"/>
+                                    <Setter Property="Text" Value=":"/>
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                </Style>
+                                <Style x:Key="ValueStyle" TargetType="TextBlock">
+                                    <Setter Property="FontFamily" Value="{DynamicResource nunito}"/>
+                                    <Setter Property="TextWrapping" Value="Wrap"/>
+                                    <!-- Crucial for long text -->
+                                </Style>
+                            </StackPanel.Resources>
 
-                        <!-- Kolom 1: TOTAL HARGA IKAN YANG DIINPUT -->
-                        <StackPanel Grid.Column="1"
-                                    VerticalAlignment="Center">
-                            <TextBlock Style="{StaticResource InfoNumber}"
-                                       Text="{Binding TotalHargaIkanDiinput}"/>
-                            <TextBlock Style="{StaticResource InfoLabel}"
-                                       Text="TOTAL HARGA IKAN YANG DIINPUT"/>
-                        </StackPanel>
+                            <!-- Row 1: Nama -->
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="160"/>
+                                    <ColumnDefinition Width="20"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Nama" Style="{StaticResource LabelStyle}"/>
+                                <TextBlock Style="{StaticResource SeparatorStyle}" Grid.Column="1"/>
+                                <TextBlock Text="{Binding CurrentNelayan.Nama}" Style="{StaticResource ValueStyle}" Grid.Column="2"/>
+                            </Grid>
 
-                        <!-- Kolom 2: TOTAL NELAYAN DI WILAYAH -->
-                        <StackPanel Grid.Column="2"
-                                    VerticalAlignment="Center">
-                            <TextBlock Style="{StaticResource InfoNumber}"
-                                       Text="{Binding TotalNelayanDiWilayah}"/>
-                            <TextBlock Style="{StaticResource InfoLabel}"
-                                       Text="TOTAL NELAYAN DI BANTUL"/>
+                            <!-- Row 2: Wilayah -->
+                            <Grid Background="White">
+                                <!-- Alternating background manually applied or via converter -->
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="160"/>
+                                    <ColumnDefinition Width="20"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Wilayah" Style="{StaticResource LabelStyle}"/>
+                                <TextBlock Style="{StaticResource SeparatorStyle}" Grid.Column="1"/>
+                                <TextBlock Text="{Binding CurrentNelayan.Wilayah}" Style="{StaticResource ValueStyle}" Grid.Column="2"/>
+                            </Grid>
+
+                            <!-- Row 3: Tahun Bergabung -->
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="160"/>
+                                    <ColumnDefinition Width="20"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Tahun Bergabung" Style="{StaticResource LabelStyle}"/>
+                                <TextBlock Style="{StaticResource SeparatorStyle}" Grid.Column="1"/>
+                                <TextBlock Text="{Binding CurrentNelayan.TahunBergabung}" Style="{StaticResource ValueStyle}" Grid.Column="2"/>
+                            </Grid>
+
+                            <!-- Row 4: Status -->
+                            <Grid Background="White">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="160"/>
+                                    <ColumnDefinition Width="20"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Status" Style="{StaticResource LabelStyle}"/>
+                                <TextBlock Style="{StaticResource SeparatorStyle}" Grid.Column="1"/>
+                                <TextBlock Text="{Binding CurrentNelayan.Status}" Style="{StaticResource ValueStyle}" Grid.Column="2"/>
+                            </Grid>
+
+                            <!-- Row 5: NIK -->
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="160"/>
+                                    <ColumnDefinition Width="20"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="NIK" Style="{StaticResource LabelStyle}"/>
+                                <TextBlock Style="{StaticResource SeparatorStyle}" Grid.Column="1"/>
+                                <TextBlock Text="{Binding CurrentNelayan.NIK}" Style="{StaticResource ValueStyle}" Grid.Column="2"/>
+                            </Grid>
+
+                            <!-- Row 6: Tanggal Lahir -->
+                            <Grid Background="White">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="160"/>
+                                    <ColumnDefinition Width="20"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Tanggal Lahir" Style="{StaticResource LabelStyle}"/>
+                                <TextBlock Style="{StaticResource SeparatorStyle}" Grid.Column="1"/>
+                                <TextBlock Text="{Binding CurrentNelayan.TanggalLahir}" Style="{StaticResource ValueStyle}" Grid.Column="2"/>
+                            </Grid>
+
+                            <!-- Row 7: Tempat Lahir -->
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="160"/>
+                                    <ColumnDefinition Width="20"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Tempat Lahir" Style="{StaticResource LabelStyle}"/>
+                                <TextBlock Style="{StaticResource SeparatorStyle}" Grid.Column="1"/>
+                                <TextBlock Text="{Binding CurrentNelayan.TempatLahir}" Style="{StaticResource ValueStyle}" Grid.Column="2"/>
+                            </Grid>
+
+                            <!-- Row 8: Alamat KTP -->
+                            <Grid Background="White">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="160"/>
+                                    <ColumnDefinition Width="20"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Alamat KTP" Style="{StaticResource LabelStyle}"/>
+                                <TextBlock Style="{StaticResource SeparatorStyle}" Grid.Column="1"/>
+                                <TextBlock Text="{Binding CurrentNelayan.AlamatKTP}" Style="{StaticResource ValueStyle}" Grid.Column="2"/>
+                            </Grid>
+
+                            <!-- Row 9: Nomor Telepon -->
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="160"/>
+                                    <ColumnDefinition Width="20"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Nomor Telepon" Style="{StaticResource LabelStyle}"/>
+                                <TextBlock Style="{StaticResource SeparatorStyle}" Grid.Column="1"/>
+                                <TextBlock Text="{Binding CurrentNelayan.NomorTelepon}" Style="{StaticResource ValueStyle}" Grid.Column="2"/>
+                            </Grid>
+
+                            <!-- Row 10: Agama -->
+                            <Grid Background="White">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="160"/>
+                                    <ColumnDefinition Width="20"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Agama" Style="{StaticResource LabelStyle}"/>
+                                <TextBlock Style="{StaticResource SeparatorStyle}" Grid.Column="1"/>
+                                <TextBlock Text="{Binding CurrentNelayan.Agama}" Style="{StaticResource ValueStyle}" Grid.Column="2"/>
+                            </Grid>
+
+                            <!-- Row 11: Golongan Darah -->
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="160"/>
+                                    <ColumnDefinition Width="20"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Golongan Darah" Style="{StaticResource LabelStyle}"/>
+                                <TextBlock Style="{StaticResource SeparatorStyle}" Grid.Column="1"/>
+                                <TextBlock Text="{Binding CurrentNelayan.GolonganDarah}" Style="{StaticResource ValueStyle}" Grid.Column="2"/>
+                            </Grid>
                         </StackPanel>
                     </Grid>
                 </Border>

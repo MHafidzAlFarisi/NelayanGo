@@ -1,76 +1,86 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using NelayanGo.Models; // Pastikan namespace ini ada
+using NelayanGo.Models;
+using NelayanGo.DataServices;
 
 namespace NelayanGo.ViewModels
 {
     public class AdminProfileViewModel : INotifyPropertyChanged
     {
-        // 1. Ganti 'Nelayan' menjadi 'NelayanModel'
-        private NelayanModel? _currentAdmin;
+        private readonly NelayanDataService _profilService = new();
 
-        public NelayanModel? CurrentAdmin
+        // Expose CurrentNelayan for bindings in AdminProfileWindow.xaml
+        private NelayanModel? _currentNelayan;
+        public NelayanModel? CurrentNelayan
         {
-            get => _currentAdmin;
-            set { _currentAdmin = value; OnPropertyChanged(nameof(CurrentAdmin)); }
-        }
-
-        // 2. Tambahkan Properti Statistik (Karena tidak ada di NelayanModel/Database)
-        // Ini sesuai dengan Binding di AdminProfileWindow.xaml Anda sebelumnya
-
-        private string _totalWaktuAktifHari = "0";
-        public string TotalWaktuAktifHari
-        {
-            get => _totalWaktuAktifHari;
-            set { _totalWaktuAktifHari = value; OnPropertyChanged(nameof(TotalWaktuAktifHari)); }
-        }
-
-        private string _totalHargaIkanDiinput = "0";
-        public string TotalHargaIkanDiinput
-        {
-            get => _totalHargaIkanDiinput;
-            set { _totalHargaIkanDiinput = value; OnPropertyChanged(nameof(TotalHargaIkanDiinput)); }
-        }
-
-        private string _totalNelayanDiWilayah = "0";
-        public string TotalNelayanDiWilayah
-        {
-            get => _totalNelayanDiWilayah;
-            set { _totalNelayanDiWilayah = value; OnPropertyChanged(nameof(TotalNelayanDiWilayah)); }
+            get => _currentNelayan;
+            set { _currentNelayan = value; OnPropertyChanged(); }
         }
 
         public AdminProfileViewModel()
         {
-            // Load Data Dummy agar tidak error saat dijalankan
-            LoadDummyData();
+            // Try load real profile; fallback to dummy if not available.
+            LoadUserProfile();
         }
 
-        private void LoadDummyData()
+        private async void LoadUserProfile()
         {
-            // Set Data Profil Admin
-            CurrentAdmin = new NelayanModel
+            // If there is a logged-in user, try to fetch profile from service
+            if (AppSession.CurrentUser != null && long.TryParse(AppSession.CurrentUser.Id, out long userId))
             {
-                Nama = "FIKRI HOIRUL (Admin)",
-                Wilayah = "Bantul, Yogyakarta",
-                Status = "Active",
-                NIK = "3400000000000001",
-                TanggalLahir = "1995-05-12",
-                TempatLahir = "Bantul",
-                AlamatKTP = "Jl. Parangtritis Km 12",
-                NomorTelepon = "0812-3456-7890",
-                Agama = "Islam",
-                GolonganDarah = "O",
-            };
+                try
+                {
+                    var profil = await _profilService.GetProfilByUserId(userId);
+                    if (profil != null)
+                    {
+                        CurrentNelayan = profil;
+                        return;
+                    }
+                }
+                catch
+                {
+                    // Ignore and fall back to dummy below
+                }
 
-            // Set Data Statistik
-            TotalWaktuAktifHari = "1,245 Hari";
-            TotalHargaIkanDiinput = "Rp 4.5 M";
-            TotalNelayanDiWilayah = "342 Orang";
+                // fallback when service returned null
+                CurrentNelayan = new NelayanModel
+                {
+                    Nama = AppSession.CurrentUser.Username,
+                    Wilayah = "Belum Input Wilayah",
+                    Status = "Unknown",
+                    NIK = "-",
+                    TanggalLahir = "-",
+                    TempatLahir = "-",
+                    AlamatKTP = "-",
+                    NomorTelepon = "-",
+                    Agama = "-",
+                    GolonganDarah = "-",
+                    KodeIdentik = "Belum Input Data"
+                };
+            }
+            else
+            {
+                // No logged-in user: show guest/dummy profile
+                CurrentNelayan = new NelayanModel
+                {
+                    Nama = "Tamu",
+                    KodeIdentik = "---",
+                    Wilayah = "-",
+                    Status = "-",
+                    NIK = "-",
+                    TanggalLahir = "-",
+                    TempatLahir = "-",
+                    AlamatKTP = "-",
+                    NomorTelepon = "-",
+                    Agama = "-",
+                    GolonganDarah = "-"
+                };
+            }
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
-        protected void OnPropertyChanged(string prop) =>
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
+        protected void OnPropertyChanged([CallerMemberName] string propName = "") =>
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
     }
 }

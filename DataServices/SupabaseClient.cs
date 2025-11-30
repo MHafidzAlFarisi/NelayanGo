@@ -11,7 +11,6 @@ namespace NelayanGo.DataServices
 
         private static Supabase.Client? _client;
 
-        // Static constructor → dipanggil sekali SEBELUM class ini digunakan
         static SupabaseConfig()
         {
             EnvLoader.Load();
