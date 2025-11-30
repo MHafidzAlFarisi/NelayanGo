@@ -82,7 +82,7 @@ namespace NelayanGo.Views
 
             if (string.IsNullOrWhiteSpace(text))
             {
-                _view.Filter = null;  // tampilkan semua
+                _view.Filter = null;  // tampiikan semua
             }
             else
             {
