@@ -31,8 +31,24 @@ namespace NelayanGo.DataServices
             return ExecuteSelect(sql, param);
         }
 
+        // --- READ: 1 user & 1 tanggal ---
+        public List<IkanTangkapanModel> GetByUserAndDate(long userId, DateTime date)
+        {
+            const string sql = @"
+                SELECT *
+                FROM ""IkanTangkapan""
+                WHERE ""ID_User"" = @userId
+                  AND CAST(""JamTangkap"" AS DATE) = @tgl
+                ORDER BY ""JamTangkap"" DESC;";
+
+            var pUser = new NpgsqlParameter("userId", userId);
+            var pTgl = new NpgsqlParameter("tgl", date.Date);
+
+            return ExecuteSelect(sql, pUser, pTgl);
+        }
+
         // Helper umum untuk SELECT
-        private List<IkanTangkapanModel> ExecuteSelect(string sql, NpgsqlParameter? param)
+        private List<IkanTangkapanModel> ExecuteSelect(string sql, params NpgsqlParameter[]? parameters)
         {
             var list = new List<IkanTangkapanModel>();
 
@@ -40,8 +56,8 @@ namespace NelayanGo.DataServices
             conn.Open();
 
             using var cmd = new NpgsqlCommand(sql, conn);
-            if (param != null)
-                cmd.Parameters.Add(param);
+            if (parameters != null)
+                cmd.Parameters.AddRange(parameters);
 
             using var reader = cmd.ExecuteReader();
             while (reader.Read())

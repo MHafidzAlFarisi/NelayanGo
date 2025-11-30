@@ -1,31 +1,33 @@
-﻿using NelayanGo.Models;
-using NelayanGo.DataServices; // Tambahkan namespace DataServices
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System;
+using NelayanGo.DataServices;
+using NelayanGo.Models;
 
 namespace NelayanGo.ViewModels
 {
     public class HargaPasarViewModel : INotifyPropertyChanged
     {
-        private readonly NelayanDataService _profilService = new(); // Service profil
+        private readonly NelayanDataService _profilService = new();
+        private readonly HargaIkanDataService _hargaService = new();
+        private readonly IkanTangkapanDataService _tangkapanService = new();
 
-        public ObservableCollection<HargaIkanModel> DaftarHarga { get; set; }
-        public ObservableCollection<ProfitModel> DaftarProfit { get; set; }
+        public ObservableCollection<HargaIkanModel> DaftarHarga { get; } = new();
+        public ObservableCollection<ProfitModel> DaftarProfit { get; } = new();
 
         private NelayanModel? _currentNelayan;
         public NelayanModel? CurrentNelayan
         {
             get => _currentNelayan;
-            set { _currentNelayan = value; OnPropertyChanged(nameof(CurrentNelayan)); }
+            private set { _currentNelayan = value; OnPropertyChanged(nameof(CurrentNelayan)); }
         }
 
         private decimal _totalPendapatan;
         public decimal TotalPendapatan
         {
             get => _totalPendapatan;
-            set
+            private set
             {
                 _totalPendapatan = value;
                 OnPropertyChanged(nameof(TotalPendapatan));
@@ -34,22 +36,17 @@ namespace NelayanGo.ViewModels
 
         public HargaPasarViewModel()
         {
-            DaftarHarga = new ObservableCollection<HargaIkanModel>();
-            DaftarProfit = new ObservableCollection<ProfitModel>();
-
-            LoadUserProfile(); // Load Header
-            LoadData();
+            LoadUserProfile(); // Header
+            LoadHargaIkan();   // Data harga pasar
+            LoadProfitHariIni(); // Profit berdasarkan tangkapan hari ini
         }
 
         private async void LoadUserProfile()
         {
-            if (AppSession.CurrentUser != null && long.TryParse(AppSession.CurrentUser.Id, out long userId))
+            if (AppSession.CurrentUser != null && long.TryParse(AppSession.CurrentUser.Id, out var userId))
             {
                 var profil = await _profilService.GetProfilByUserId(userId);
-                if (profil != null)
-                    CurrentNelayan = profil;
-                else
-                    CurrentNelayan = new NelayanModel { Nama = AppSession.CurrentUser.Username, KodeIdentik = "Belum Input Data" };
+                CurrentNelayan = profil ?? new NelayanModel { Nama = AppSession.CurrentUser.Username, KodeIdentik = "Belum Input Data" };
             }
             else
             {
@@ -57,31 +54,55 @@ namespace NelayanGo.ViewModels
             }
         }
 
-        private void LoadData()
+        private void LoadHargaIkan()
         {
-            // Data Dummy Harga & Profit (Sama seperti sebelumnya)
-            DaftarHarga.Add(new HargaIkanModel { NamaIkan = "Tongkol", HargaIkan = 12000 });
-            DaftarHarga.Add(new HargaIkanModel { NamaIkan = "Kakap", HargaIkan = 13000 });
-            DaftarHarga.Add(new HargaIkanModel { NamaIkan = "Bandeng", HargaIkan = 11000 });
-            DaftarHarga.Add(new HargaIkanModel { NamaIkan = "Kerapu", HargaIkan = 15000 });
-            DaftarHarga.Add(new HargaIkanModel { NamaIkan = "Trenggiri", HargaIkan = 14000 });
-            DaftarHarga.Add(new HargaIkanModel { NamaIkan = "Layang", HargaIkan = 13000 });
-            DaftarHarga.Add(new HargaIkanModel { NamaIkan = "Teri", HargaIkan = 10000 });
-
-            DaftarProfit.Add(new ProfitModel { NamaIkan = "Tongkol", BeratTangkapan = 10.00m, Harga = 120000 });
-            DaftarProfit.Add(new ProfitModel { NamaIkan = "Kakap", BeratTangkapan = 10.00m, Harga = 130000 });
-            DaftarProfit.Add(new ProfitModel { NamaIkan = "Bandeng", BeratTangkapan = 10.00m, Harga = 110000 });
-            DaftarProfit.Add(new ProfitModel { NamaIkan = "Kerapu", BeratTangkapan = 10.00m, Harga = 150000 });
-            DaftarProfit.Add(new ProfitModel { NamaIkan = "Trenggiri", BeratTangkapan = 10.00m, Harga = 140000 });
-            DaftarProfit.Add(new ProfitModel { NamaIkan = "Layang", BeratTangkapan = 10.00m, Harga = 130000 });
-            DaftarProfit.Add(new ProfitModel { NamaIkan = "Teri", BeratTangkapan = 10.00m, Harga = 100000 });
-
-            CalculateTotal();
+            try
+            {
+                DaftarHarga.Clear();
+                var list = _hargaService.GetAll();
+                foreach (var h in list)
+                    DaftarHarga.Add(h);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Gagal memuat harga ikan: {ex.Message}");
+            }
         }
 
-        private void CalculateTotal()
+        private void LoadProfitHariIni()
         {
-            TotalPendapatan = DaftarProfit.Sum(p => p.Harga);
+            try
+            {
+                DaftarProfit.Clear();
+                TotalPendapatan = 0;
+
+                if (AppSession.CurrentUser == null || !long.TryParse(AppSession.CurrentUser.Id, out var userId))
+                {
+                    Console.WriteLine("Tidak ada user login, daftar profit kosong.");
+                    return;
+                }
+
+                var today = DateTime.Today;
+                var tangkapanList = _tangkapanService.GetByUserAndDate(userId, today);
+
+                foreach (var t in tangkapanList)
+                {
+                    var item = new ProfitModel
+                    {
+                        NamaIkan = t.NamaIkan,
+                        BeratTangkapan = Convert.ToDecimal(t.BeratKg),
+                        Harga = Convert.ToDecimal(t.TotalHargaIkan)
+                    };
+
+                    DaftarProfit.Add(item);
+                }
+
+                TotalPendapatan = DaftarProfit.Sum(p => p.Harga);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Gagal memuat profit tangkapan hari ini: {ex.Message}");
+            }
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;

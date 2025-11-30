@@ -1,214 +1,359 @@
-﻿using NelayanGo.Models;
 using NelayanGo.DataServices;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Linq;
+using NelayanGo.Models;
+using OxyPlot;
+using OxyPlot.Axes;
+using OxyPlot.Series;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
-using System.Windows;
-using System.Threading.Tasks;
+using System.Linq;
 
 namespace NelayanGo.ViewModels
 {
     public class AnalisisViewModel : INotifyPropertyChanged
     {
-        private readonly IkanTangkapanDataService _service = new();
+        private readonly IkanTangkapanDataService _tangkapanService = new();
         private readonly NelayanDataService _profilService = new();
+
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         private NelayanModel? _currentNelayan;
         public NelayanModel? CurrentNelayan
         {
             get => _currentNelayan;
-            set { _currentNelayan = value; OnPropertyChanged(nameof(CurrentNelayan)); }
+            private set
+            {
+                _currentNelayan = value;
+                OnPropertyChanged(nameof(CurrentNelayan));
+            }
         }
 
-        // ... (Properti Lainnya Tetap Sama, disingkat agar fokus) ...
-        public ObservableCollection<TangkapanHarianPoint> DataHarian { get; set; } = new();
-        public ObservableCollection<TangkapanTahunanBar> DataTahunan { get; set; } = new();
-        public ObservableCollection<JenisTangkapanBar> DataJenisTangkapan { get; set; } = new();
-
-        private string _statsHarian = "-";
-        public string StatsHarian
-        {
-            get => _statsHarian;
-            set { _statsHarian = value; OnPropertyChanged(nameof(StatsHarian)); }
-        }
-
-        private string _statsTahunan = "-";
-        public string StatsTahunan
-        {
-            get => _statsTahunan;
-            set { _statsTahunan = value; OnPropertyChanged(nameof(StatsTahunan)); }
-        }
-
+        // ===== PROPERTY TEKS =====
         private decimal _profitHarian;
         public decimal ProfitHarian
         {
             get => _profitHarian;
-            set { _profitHarian = value; OnPropertyChanged(nameof(ProfitHarian)); }
+            private set
+            {
+                if (_profitHarian != value)
+                {
+                    _profitHarian = value;
+                    OnPropertyChanged(nameof(ProfitHarian));
+                }
+            }
+        }
+
+        private string _statsHarian = "Belum ada data tangkapan hari ini.";
+        public string StatsHarian
+        {
+            get => _statsHarian;
+            private set
+            {
+                if (_statsHarian != value)
+                {
+                    _statsHarian = value;
+                    OnPropertyChanged(nameof(StatsHarian));
+                }
+            }
+        }
+
+        private string _statsTahunan = "Belum ada data tangkapan tahun ini.";
+        public string StatsTahunan
+        {
+            get => _statsTahunan;
+            private set
+            {
+                if (_statsTahunan != value)
+                {
+                    _statsTahunan = value;
+                    OnPropertyChanged(nameof(StatsTahunan));
+                }
+            }
+        }
+
+        // ===== PLOT MODEL =====
+        private PlotModel _plotHarian = new() { Title = "Tangkapan Harian" };
+        public PlotModel PlotHarian
+        {
+            get => _plotHarian;
+            private set { _plotHarian = value; OnPropertyChanged(nameof(PlotHarian)); }
+        }
+
+        private PlotModel _plotTahunan = new() { Title = "Tangkapan Tahunan" };
+        public PlotModel PlotTahunan
+        {
+            get => _plotTahunan;
+            private set { _plotTahunan = value; OnPropertyChanged(nameof(PlotTahunan)); }
+        }
+
+        private PlotModel _plotJenis = new() { Title = "Jenis Tangkapan Terbanyak" };
+        public PlotModel PlotJenis
+        {
+            get => _plotJenis;
+            private set { _plotJenis = value; OnPropertyChanged(nameof(PlotJenis)); }
         }
 
         public AnalisisViewModel()
         {
-            // [PENTING] Set nilai awal agar tidak kosong/blank saat loading
-            CurrentNelayan = new NelayanModel
-            {
-                Nama = "Memuat...",
-                KodeIdentik = "..."
-            };
-
-            LoadRealData();
-            LoadUserProfile();
+            LoadProfil();
+            LoadAnalisis();
         }
 
-        private async void LoadUserProfile()
+        private async void LoadProfil()
         {
-            // Cek apakah ada user yang login di sesi ini
-            if (AppSession.CurrentUser != null)
+            var user = AppSession.CurrentUser;
+            if (user != null && long.TryParse(user.Id, out var userId))
             {
-                string usernameLogin = AppSession.CurrentUser.Username;
-
-                if (long.TryParse(AppSession.CurrentUser.Id, out long userId))
+                var profil = await _profilService.GetProfilByUserId(userId);
+                CurrentNelayan = profil ?? new NelayanModel
                 {
-                    // Ambil data profil asli dari database
-                    var profil = await _profilService.GetProfilByUserId(userId);
-
-                    if (profil != null)
-                    {
-                        // Jika ada profil, tampilkan
-                        CurrentNelayan = profil;
-                    }
-                    else
-                    {
-                        // Jika profil belum diisi, tampilkan Username dari Login
-                        CurrentNelayan = new NelayanModel
-                        {
-                            Nama = usernameLogin,
-                            KodeIdentik = "Belum Input Data"
-                        };
-                    }
-                }
-            }
-            else
-            {
-                // Jika tidak ada sesi login (misal debug langsung ke window ini)
-                CurrentNelayan = new NelayanModel
-                {
-                    Nama = "Tamu (Debug)",
-                    KodeIdentik = "---"
+                    Nama = user.Username,
+                    KodeIdentik = "Belum Input Data"
                 };
             }
-        }
-
-        // ... (Sisa fungsi LoadRealData, ProcessDailyData, dll SAMA PERSIS seperti sebelumnya) ...
-        // ... (Pastikan fungsi-fungsi tersebut tetap ada di file Anda) ...
-
-        public void LoadRealData()
-        {
-            try
+            else
             {
-                long userId = 1;
-                if (AppSession.CurrentUser != null && long.TryParse(AppSession.CurrentUser.Id, out long parsedId))
-                {
-                    userId = parsedId;
-                }
-
-                var rawData = _service.GetByUser(userId);
-                if (rawData == null || !rawData.Any())
-                {
-                    StatsHarian = "Belum ada data.";
-                    return;
-                }
-
-                ProcessDailyData(rawData);
-                ProcessYearlyData(rawData);
-                ProcessCatchTypeData(rawData);
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Error Load Analisis: {ex.Message}");
+                CurrentNelayan = new NelayanModel { Nama = "Tamu", KodeIdentik = "---" };
             }
         }
 
-        private void ProcessDailyData(List<IkanTangkapanModel> rawData)
+        private void LoadAnalisis()
         {
-            var today = DateTime.Now.Date;
-            var todaysCatch = rawData.Where(x => x.JamTangkap.Date == today).ToList();
+            var user = AppSession.CurrentUser;
+            if (user == null || !long.TryParse(user.Id, out var userId))
+            {
+                StatsHarian = "Silakan login untuk melihat analisis tangkapan.";
+                StatsTahunan = "Silakan login untuk melihat analisis tangkapan.";
+                ProfitHarian = 0;
+                SetupEmptyPlots();
+                return;
+            }
 
-            var grouped = todaysCatch
-                .GroupBy(x => x.JamTangkap.Hour)
-                .Select(g => new TangkapanHarianPoint
-                {
-                    Jam = $"{g.Key:00}.00",
-                    BeratKg = g.Sum(x => x.BeratKg)
-                })
-                .OrderBy(x => x.Jam)
+            var allData = _tangkapanService.GetByUser(userId);
+
+            if (allData == null || allData.Count == 0)
+            {
+                StatsHarian = "Belum ada data tangkapan.";
+                StatsTahunan = "Belum ada data tangkapan.";
+                ProfitHarian = 0;
+                SetupEmptyPlots();
+                return;
+            }
+
+            var today = DateTime.Today;
+            var thisYear = today.Year;
+
+            // ===================== HARIAN =====================
+            var dataHarian = allData
+                .Where(t => t.JamTangkap.Date == today)
                 .ToList();
 
-            DataHarian.Clear();
-            foreach (var item in grouped) DataHarian.Add(item);
-
-            if (todaysCatch.Any())
+            if (dataHarian.Count == 0)
             {
-                double totalBerat = todaysCatch.Sum(x => x.BeratKg);
-                double rerata = totalBerat / todaysCatch.Count;
-                ProfitHarian = todaysCatch.Sum(x => (decimal)x.TotalHargaIkan);
-
-                StatsHarian = $"Jumlah : {totalBerat} kg\n" +
-                              $"Rerata : {rerata:F1} kg\n" +
-                              $"Total : Rp {ProfitHarian:N0}";
+                StatsHarian = "Belum ada tangkapan yang dicatat untuk hari ini.";
+                ProfitHarian = 0;
+                PlotHarian = CreateEmptyPlot("Tangkapan Harian");
             }
             else
             {
-                StatsHarian = "Tidak ada tangkapan hari ini.";
-                ProfitHarian = 0;
+                var totalKgHarian = dataHarian.Sum(t => (double)t.BeratKg);
+                var totalRupiahHarian = dataHarian.Sum(t => (decimal)t.TotalHargaIkan);
+
+                var jenisHarian = dataHarian
+                    .GroupBy(t => string.IsNullOrWhiteSpace(t.NamaIkan) ? "(Tidak diketahui)" : t.NamaIkan)
+                    .OrderByDescending(g => g.Sum(x => x.BeratKg))
+                    .First().Key;
+
+                ProfitHarian = totalRupiahHarian;
+
+                StatsHarian =
+                    $"- Total tangkapan hari ini: {totalKgHarian:N2} kg\n" +
+                    $"- Total transaksi: {dataHarian.Count} kali\n" +
+                    $"- Ikan terbanyak: {jenisHarian}\n" +
+                    $"- Total pendapatan: Rp {totalRupiahHarian:N0}";
+
+                PlotHarian = CreateHarianPlot(dataHarian);
             }
-        }
 
-        private void ProcessYearlyData(List<IkanTangkapanModel> rawData)
-        {
-            var thisYear = DateTime.Now.Year;
-            var yearsCatch = rawData.Where(x => x.JamTangkap.Year == thisYear).ToList();
-
-            var grouped = yearsCatch
-                .GroupBy(x => x.JamTangkap.Month)
-                .Select(g => new TangkapanTahunanBar
-                {
-                    Bulan = CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(g.Key),
-                    BeratTon = (double)g.Sum(x => x.BeratKg) / 1000.0
-                })
+            // ===================== TAHUNAN =====================
+            var dataTahunan = allData
+                .Where(t => t.JamTangkap.Year == thisYear)
                 .ToList();
 
-            DataTahunan.Clear();
-            foreach (var item in grouped) DataTahunan.Add(item);
-
-            if (yearsCatch.Any())
+            if (dataTahunan.Count == 0)
             {
-                double totalTon = yearsCatch.Sum(x => x.BeratKg) / 1000.0;
-                StatsTahunan = $"Total Tahun Ini : {totalTon:F3} ton";
+                StatsTahunan = "Belum ada data tangkapan pada tahun ini.";
+                PlotTahunan = CreateEmptyPlot("Tangkapan Tahunan");
             }
+            else
+            {
+                var totalKgTahun = dataTahunan.Sum(t => (double)t.BeratKg);
+                var totalRupiahTahun = dataTahunan.Sum(t => (decimal)t.TotalHargaIkan);
+
+                var grupBulan = dataTahunan
+                    .GroupBy(t => t.JamTangkap.Month)
+                    .Select(g => new
+                    {
+                        Bulan = g.Key,
+                        Pendapatan = g.Sum(x => (decimal)x.TotalHargaIkan)
+                    })
+                    .OrderByDescending(x => x.Pendapatan)
+                    .First();
+
+                var namaBulan = new DateTime(thisYear, grupBulan.Bulan, 1)
+                    .ToString("MMMM", new CultureInfo("id-ID"));
+
+                var jenisTahunan = dataTahunan
+                    .GroupBy(t => string.IsNullOrWhiteSpace(t.NamaIkan) ? "(Tidak diketahui)" : t.NamaIkan)
+                    .OrderByDescending(g => g.Sum(x => x.BeratKg))
+                    .First().Key;
+
+                StatsTahunan =
+                    $"- Total tangkapan tahun ini: {totalKgTahun:N2} kg\n" +
+                    $"- Total pendapatan: Rp {totalRupiahTahun:N0}\n" +
+                    $"- Bulan tertinggi: {namaBulan}\n" +
+                    $"- Ikan paling sering ditangkap: {jenisTahunan}";
+
+                PlotTahunan = CreateTahunanPlot(dataTahunan, thisYear);
+            }
+
+            // ===================== JENIS TANGKAPAN (TAHUN INI) =====================
+            PlotJenis = CreateJenisPlot(
+                dataTahunan.Count > 0 ? dataTahunan : allData);
         }
 
-        private void ProcessCatchTypeData(List<IkanTangkapanModel> rawData)
+        // -------- Plot Helpers --------
+
+        private PlotModel CreateEmptyPlot(string title)
         {
-            var grouped = rawData
-                .GroupBy(x => x.NamaIkan)
-                .Select(g => new JenisTangkapanBar
-                {
-                    NamaIkan = g.Key,
-                    TotalKg = g.Sum(x => x.BeratKg)
-                })
-                .OrderByDescending(x => x.TotalKg)
-                .Take(5)
+            var pm = new PlotModel { Title = title };
+            pm.Axes.Add(new CategoryAxis { Position = AxisPosition.Bottom });
+            pm.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = 0 });
+            return pm;
+        }
+
+        private PlotModel CreateHarianPlot(List<IkanTangkapanModel> dataHarian)
+        {
+            var pm = new PlotModel { Title = "Tangkapan Harian (kg per jam)" };
+
+            var grouped = dataHarian
+                .GroupBy(t => t.JamTangkap.Hour)
+                .OrderBy(g => g.Key)
                 .ToList();
 
-            DataJenisTangkapan.Clear();
-            foreach (var item in grouped) DataJenisTangkapan.Add(item);
+            var catAxis = new CategoryAxis { Position = AxisPosition.Bottom };
+            var valueAxis = new LinearAxis { Position = AxisPosition.Left, Minimum = 0, Title = "Kg" };
+
+            var series = new LineSeries
+            {
+                MarkerType = MarkerType.Circle,
+                MarkerSize = 4
+            };
+
+            int index = 0;
+            foreach (var g in grouped)
+            {
+                var label = $"{g.Key:00}.00";
+                catAxis.Labels.Add(label);
+
+                double kg = g.Sum(x => (double)x.BeratKg);
+                series.Points.Add(new DataPoint(index, kg));
+                index++;
+            }
+
+            pm.Axes.Add(catAxis);
+            pm.Axes.Add(valueAxis);
+            pm.Series.Add(series);
+
+            return pm;
         }
 
-        public event PropertyChangedEventHandler? PropertyChanged;
-        protected virtual void OnPropertyChanged(string name)
-            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        private PlotModel CreateTahunanPlot(List<IkanTangkapanModel> dataTahunan, int year)
+        {
+            var pm = new PlotModel { Title = "Tangkapan Tahunan (kg per bulan)" };
+            var culture = new CultureInfo("id-ID");
+
+            var grouped = dataTahunan
+                .GroupBy(t => t.JamTangkap.Month)
+                .OrderBy(g => g.Key)
+                .ToList();
+
+            var catAxis = new CategoryAxis { Position = AxisPosition.Bottom };
+            var valueAxis = new LinearAxis { Position = AxisPosition.Left, Minimum = 0, Title = "Kg" };
+
+            var series = new LineSeries
+            {
+                MarkerType = MarkerType.Circle,
+                MarkerSize = 4,
+                StrokeThickness = 2
+            };
+
+            int index = 0;
+            foreach (var g in grouped)
+            {
+                string label = new DateTime(year, g.Key, 1).ToString("MMM", culture);
+                catAxis.Labels.Add(label);
+
+                double kg = g.Sum(x => (double)x.BeratKg);
+                series.Points.Add(new DataPoint(index, kg));
+                index++;
+            }
+
+            pm.Axes.Add(catAxis);
+            pm.Axes.Add(valueAxis);
+            pm.Series.Add(series);
+
+            return pm;
+        }
+
+        private PlotModel CreateJenisPlot(List<IkanTangkapanModel> data)
+        {
+            var pm = new PlotModel { Title = "Jenis Tangkapan (kg)" };
+
+            if (data.Count == 0)
+                return pm;
+
+            var grouped = data
+                .GroupBy(t => string.IsNullOrWhiteSpace(t.NamaIkan) ? "(Tidak diketahui)" : t.NamaIkan)
+                .OrderByDescending(g => g.Sum(x => x.BeratKg))
+                .Take(6)
+                .ToList();
+
+            var catAxis = new CategoryAxis { Position = AxisPosition.Bottom };
+            var valueAxis = new LinearAxis { Position = AxisPosition.Left, Minimum = 0, Title = "Kg" };
+
+            var series = new LineSeries
+            {
+                MarkerType = MarkerType.Circle,
+                MarkerSize = 4,
+                StrokeThickness = 2
+            };
+
+            int index = 0;
+            foreach (var g in grouped)
+            {
+                catAxis.Labels.Add(g.Key);
+                double kg = g.Sum(x => (double)x.BeratKg);
+                series.Points.Add(new DataPoint(index, kg));
+                index++;
+            }
+
+            pm.Axes.Add(catAxis);
+            pm.Axes.Add(valueAxis);
+            pm.Series.Add(series);
+
+            return pm;
+        }
+
+        private void SetupEmptyPlots()
+        {
+            PlotHarian = CreateEmptyPlot("Tangkapan Harian");
+            PlotTahunan = CreateEmptyPlot("Tangkapan Tahunan");
+            PlotJenis = CreateEmptyPlot("Jenis Tangkapan Terbanyak");
+        }
+
+        private void OnPropertyChanged(string propertyName)
+            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }
