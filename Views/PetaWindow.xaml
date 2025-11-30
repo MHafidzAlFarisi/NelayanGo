@@ -58,16 +58,15 @@
                 <TextBlock x:Name="HasilTangkapanLink" Cursor="Hand" MouseLeftButtonDown="HasilTangkapanLink_MouseLeftButtonDown" Text="Hasil Tangkapan" Foreground="White" VerticalAlignment="Center" Margin="0,0,20,0"/>
                 <TextBlock x:Name="MapsLink" Cursor="Hand" MouseLeftButtonDown="MapsLink_MouseLeftButtonDown" Text="Maps" Foreground="White" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,20,0"/>
                 <TextBlock x:Name="HargaPasarLink" Cursor="Hand" MouseLeftButtonDown="HargaPasarLink_MouseLeftButtonDown" Text="Harga Pasar" Foreground="White" VerticalAlignment="Center" Margin="0,0,20,0"/>
-                <TextBlock x:Name="LogOutLink" Cursor="Hand" MouseLeftButtonDown="LogOutLink_MouseLeftButtonDown" Text="Log Out" Foreground="White" VerticalAlignment="Center" Margin="0,0,20,0"/>
             </StackPanel>
-            <!-- Info Pengguna -->
+
             <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,20,0">
                 <Border CornerRadius="50" Width="30" Height="30" Background="White" VerticalAlignment="Center" Margin="0,0,10,0">
                     <TextBlock Text="👤" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,4"/>
                 </Border>
-                <StackPanel VerticalAlignment="Center">
-                    <TextBlock Text="FIKRI HOIRUL" Foreground="White" FontSize="14" FontWeight="SemiBold"/>
-                    <TextBlock Text="TGL-32" Foreground="White" FontSize="12"/>
+                <StackPanel VerticalAlignment="Center" Cursor="Hand" MouseLeftButtonDown="ProfileHeader_Click">
+                    <TextBlock Text="{Binding CurrentNelayan.Nama}" Foreground="White" FontSize="14" FontWeight="SemiBold"/>
+                    <TextBlock Text="Nelayan" Foreground="White" FontSize="12"/>
                 </StackPanel>
             </StackPanel>
         </Grid>

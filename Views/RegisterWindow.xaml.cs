@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using NelayanGo.DataServices;
+using NelayanGo.Models;
 
 namespace NelayanGo.Views
 {
@@ -40,13 +41,22 @@ namespace NelayanGo.Views
 
                 if (user == null)
                 {
-                    MessageBox.Show("Username atau email sudah digunakan.");
+                    MessageBox.Show("Gagal mendaftar. Username atau email mungkin sudah digunakan.");
                     return;
                 }
 
-                MessageBox.Show("Registrasi berhasil. Silakan login.");
-                var login = new LoginWindow();
-                login.Show();
+                // JANGAN simpan sesi di sini agar user dipaksa login nanti
+                // AppSession.CurrentUser = user; <--- HAPUS atau COMMENT baris ini jika ada
+
+                MessageBox.Show("Registrasi berhasil! Silakan lengkapi data diri Anda sebelum Login.", "Sukses");
+
+                // Buka Input Data
+                var inputDataWindow = new InputDataNelayanWindow(user.Id);
+
+                // PERBAIKAN: Gunakan ShowDialog() agar InputDataNelayanWindow bisa menggunakan 'DialogResult'
+                // Jika menggunakan .Show(), baris 'DialogResult = true' di InputDataNelayanWindow akan error.
+                inputDataWindow.ShowDialog();
+
                 this.Close();
             }
             catch (Exception ex)

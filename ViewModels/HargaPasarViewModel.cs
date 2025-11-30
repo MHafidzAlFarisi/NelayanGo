@@ -1,24 +1,27 @@
-﻿using NelayanGo.DataServices;
-using NelayanGo.Models;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using NelayanGo.DataServices;
+using NelayanGo.Models;
 
 namespace NelayanGo.ViewModels
 {
     public class HargaPasarViewModel : INotifyPropertyChanged
     {
+        private readonly NelayanDataService _profilService = new();
         private readonly HargaIkanDataService _hargaService = new();
         private readonly IkanTangkapanDataService _tangkapanService = new();
 
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        // Tabel kiri
         public ObservableCollection<HargaIkanModel> DaftarHarga { get; } = new();
+        public ObservableCollection<ProfitModel> DaftarProfit { get; } = new();
 
-        // Tabel kanan
-        public ObservableCollection<HargaPasarProfitItem> DaftarProfit { get; } = new();
+        private NelayanModel? _currentNelayan;
+        public NelayanModel? CurrentNelayan
+        {
+            get => _currentNelayan;
+            private set { _currentNelayan = value; OnPropertyChanged(nameof(CurrentNelayan)); }
+        }
 
         private decimal _totalPendapatan;
         public decimal TotalPendapatan
@@ -26,18 +29,29 @@ namespace NelayanGo.ViewModels
             get => _totalPendapatan;
             private set
             {
-                if (_totalPendapatan != value)
-                {
-                    _totalPendapatan = value;
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(TotalPendapatan)));
-                }
+                _totalPendapatan = value;
+                OnPropertyChanged(nameof(TotalPendapatan));
             }
         }
 
         public HargaPasarViewModel()
         {
-            LoadHargaIkan();
-            LoadProfitHariIni();
+            LoadUserProfile(); // Header
+            LoadHargaIkan();   // Data harga pasar
+            LoadProfitHariIni(); // Profit berdasarkan tangkapan hari ini
+        }
+
+        private async void LoadUserProfile()
+        {
+            if (AppSession.CurrentUser != null && long.TryParse(AppSession.CurrentUser.Id, out var userId))
+            {
+                var profil = await _profilService.GetProfilByUserId(userId);
+                CurrentNelayan = profil ?? new NelayanModel { Nama = AppSession.CurrentUser.Username, KodeIdentik = "Belum Input Data" };
+            }
+            else
+            {
+                CurrentNelayan = new NelayanModel { Nama = "Tamu", KodeIdentik = "---" };
+            }
         }
 
         private void LoadHargaIkan()
@@ -62,25 +76,22 @@ namespace NelayanGo.ViewModels
                 DaftarProfit.Clear();
                 TotalPendapatan = 0;
 
-                var user = AppSession.CurrentUser;
-                if (user == null)
+                if (AppSession.CurrentUser == null || !long.TryParse(AppSession.CurrentUser.Id, out var userId))
                 {
                     Console.WriteLine("Tidak ada user login, daftar profit kosong.");
                     return;
                 }
 
                 var today = DateTime.Today;
-
-                var tangkapanList = _tangkapanService.GetByUserAndDate(user.Id, today);
+                var tangkapanList = _tangkapanService.GetByUserAndDate(userId, today);
 
                 foreach (var t in tangkapanList)
                 {
-                    // mapping sesuai model-mu
-                    var item = new HargaPasarProfitItem
+                    var item = new ProfitModel
                     {
                         NamaIkan = t.NamaIkan,
-                        BeratTangkapan = t.BeratKg,               
-                        Harga = Convert.ToDecimal(t.TotalHargaIkan) 
+                        BeratTangkapan = Convert.ToDecimal(t.BeratKg),
+                        Harga = Convert.ToDecimal(t.TotalHargaIkan)
                     };
 
                     DaftarProfit.Add(item);
@@ -92,6 +103,12 @@ namespace NelayanGo.ViewModels
             {
                 Console.WriteLine($"Gagal memuat profit tangkapan hari ini: {ex.Message}");
             }
+        }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

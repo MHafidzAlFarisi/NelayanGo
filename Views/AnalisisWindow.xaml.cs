@@ -1,4 +1,5 @@
-﻿using System.Windows;
+using System.Linq;
+using System.Windows;
 using System.Windows.Input;
 using NelayanGo.Helpers;
 
@@ -36,14 +37,18 @@ namespace NelayanGo.Views
             NavigationHelper.NavigateFromHeaderClick(sender, "Daftar Tangkapan");
         }
 
-        private void LogOutLink_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void ProfileHeader_Click(object sender, MouseButtonEventArgs e)
+        {
+            NavigationHelper.NavigateFromHeaderClick(sender, "Profil");
+        }
+
+        private void LogOutLink_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             var result = MessageBox.Show(
                 "Anda yakin ingin logout?",
                 "Konfirmasi Logout",
                 MessageBoxButton.YesNo,
-                MessageBoxImage.Question
-            );
+                MessageBoxImage.Question);
 
             if (result != MessageBoxResult.Yes)
                 return;
@@ -59,6 +64,5 @@ namespace NelayanGo.Views
                 .ToList()
                 .ForEach(w => w.Close());
         }
-
     }
 }

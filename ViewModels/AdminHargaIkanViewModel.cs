@@ -9,6 +9,12 @@ namespace NelayanGo.ViewModels
 {
     public class AdminHargaIkanViewModel : INotifyPropertyChanged
     {
+        private NelayanModel? _currentNelayan;
+        public NelayanModel? CurrentNelayan
+        {
+            get => _currentNelayan;
+            set { _currentNelayan = value; OnPropertyChanged(nameof(CurrentNelayan)); }
+        }
         private readonly HargaIkanDataService _service = new();
 
         public event PropertyChangedEventHandler PropertyChanged;

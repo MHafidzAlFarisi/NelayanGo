@@ -1,60 +1,93 @@
-﻿using NelayanGo.DataServices;
+using NelayanGo.DataServices;
 using NelayanGo.Models;
+using OxyPlot;
+using OxyPlot.Axes;
+using OxyPlot.Series;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
-using OxyPlot;
-using OxyPlot.Axes;
-using OxyPlot.Series;
 
 namespace NelayanGo.ViewModels
 {
     public class AnalisisViewModel : INotifyPropertyChanged
     {
         private readonly IkanTangkapanDataService _tangkapanService = new();
+        private readonly NelayanDataService _profilService = new();
 
         public event PropertyChangedEventHandler? PropertyChanged;
+
+        private NelayanModel? _currentNelayan;
+        public NelayanModel? CurrentNelayan
+        {
+            get => _currentNelayan;
+            private set
+            {
+                _currentNelayan = value;
+                OnPropertyChanged(nameof(CurrentNelayan));
+            }
+        }
 
         // ===== PROPERTY TEKS =====
         private decimal _profitHarian;
         public decimal ProfitHarian
         {
             get => _profitHarian;
-            private set { if (_profitHarian != value) { _profitHarian = value; OnPropertyChanged(nameof(ProfitHarian)); } }
+            private set
+            {
+                if (_profitHarian != value)
+                {
+                    _profitHarian = value;
+                    OnPropertyChanged(nameof(ProfitHarian));
+                }
+            }
         }
 
         private string _statsHarian = "Belum ada data tangkapan hari ini.";
         public string StatsHarian
         {
             get => _statsHarian;
-            private set { if (_statsHarian != value) { _statsHarian = value; OnPropertyChanged(nameof(StatsHarian)); } }
+            private set
+            {
+                if (_statsHarian != value)
+                {
+                    _statsHarian = value;
+                    OnPropertyChanged(nameof(StatsHarian));
+                }
+            }
         }
 
         private string _statsTahunan = "Belum ada data tangkapan tahun ini.";
         public string StatsTahunan
         {
             get => _statsTahunan;
-            private set { if (_statsTahunan != value) { _statsTahunan = value; OnPropertyChanged(nameof(StatsTahunan)); } }
+            private set
+            {
+                if (_statsTahunan != value)
+                {
+                    _statsTahunan = value;
+                    OnPropertyChanged(nameof(StatsTahunan));
+                }
+            }
         }
 
         // ===== PLOT MODEL =====
-        private PlotModel _plotHarian = new PlotModel { Title = "Tangkapan Harian" };
+        private PlotModel _plotHarian = new() { Title = "Tangkapan Harian" };
         public PlotModel PlotHarian
         {
             get => _plotHarian;
             private set { _plotHarian = value; OnPropertyChanged(nameof(PlotHarian)); }
         }
 
-        private PlotModel _plotTahunan = new PlotModel { Title = "Tangkapan Tahunan" };
+        private PlotModel _plotTahunan = new() { Title = "Tangkapan Tahunan" };
         public PlotModel PlotTahunan
         {
             get => _plotTahunan;
             private set { _plotTahunan = value; OnPropertyChanged(nameof(PlotTahunan)); }
         }
 
-        private PlotModel _plotJenis = new PlotModel { Title = "Jenis Tangkapan Terbanyak" };
+        private PlotModel _plotJenis = new() { Title = "Jenis Tangkapan Terbanyak" };
         public PlotModel PlotJenis
         {
             get => _plotJenis;
@@ -63,13 +96,32 @@ namespace NelayanGo.ViewModels
 
         public AnalisisViewModel()
         {
+            LoadProfil();
             LoadAnalisis();
+        }
+
+        private async void LoadProfil()
+        {
+            var user = AppSession.CurrentUser;
+            if (user != null && long.TryParse(user.Id, out var userId))
+            {
+                var profil = await _profilService.GetProfilByUserId(userId);
+                CurrentNelayan = profil ?? new NelayanModel
+                {
+                    Nama = user.Username,
+                    KodeIdentik = "Belum Input Data"
+                };
+            }
+            else
+            {
+                CurrentNelayan = new NelayanModel { Nama = "Tamu", KodeIdentik = "---" };
+            }
         }
 
         private void LoadAnalisis()
         {
             var user = AppSession.CurrentUser;
-            if (user == null)
+            if (user == null || !long.TryParse(user.Id, out var userId))
             {
                 StatsHarian = "Silakan login untuk melihat analisis tangkapan.";
                 StatsTahunan = "Silakan login untuk melihat analisis tangkapan.";
@@ -78,7 +130,7 @@ namespace NelayanGo.ViewModels
                 return;
             }
 
-            var allData = _tangkapanService.GetByUser(user.Id);
+            var allData = _tangkapanService.GetByUser(userId);
 
             if (allData == null || allData.Count == 0)
             {
@@ -109,17 +161,17 @@ namespace NelayanGo.ViewModels
                 var totalRupiahHarian = dataHarian.Sum(t => (decimal)t.TotalHargaIkan);
 
                 var jenisHarian = dataHarian
-                    .GroupBy(t => t.NamaIkan)
+                    .GroupBy(t => string.IsNullOrWhiteSpace(t.NamaIkan) ? "(Tidak diketahui)" : t.NamaIkan)
                     .OrderByDescending(g => g.Sum(x => x.BeratKg))
                     .First().Key;
 
                 ProfitHarian = totalRupiahHarian;
 
                 StatsHarian =
-                    $"• Total tangkapan hari ini: {totalKgHarian:N2} kg\n" +
-                    $"• Total transaksi: {dataHarian.Count} kali\n" +
-                    $"• Ikan terbanyak: {jenisHarian}\n" +
-                    $"• Total pendapatan: Rp {totalRupiahHarian:N0}";
+                    $"- Total tangkapan hari ini: {totalKgHarian:N2} kg\n" +
+                    $"- Total transaksi: {dataHarian.Count} kali\n" +
+                    $"- Ikan terbanyak: {jenisHarian}\n" +
+                    $"- Total pendapatan: Rp {totalRupiahHarian:N0}";
 
                 PlotHarian = CreateHarianPlot(dataHarian);
             }
@@ -153,15 +205,15 @@ namespace NelayanGo.ViewModels
                     .ToString("MMMM", new CultureInfo("id-ID"));
 
                 var jenisTahunan = dataTahunan
-                    .GroupBy(t => t.NamaIkan)
+                    .GroupBy(t => string.IsNullOrWhiteSpace(t.NamaIkan) ? "(Tidak diketahui)" : t.NamaIkan)
                     .OrderByDescending(g => g.Sum(x => x.BeratKg))
                     .First().Key;
 
                 StatsTahunan =
-                    $"• Total tangkapan tahun ini: {totalKgTahun:N2} kg\n" +
-                    $"• Total pendapatan: Rp {totalRupiahTahun:N0}\n" +
-                    $"• Bulan tertinggi: {namaBulan}\n" +
-                    $"• Ikan paling sering ditangkap: {jenisTahunan}";
+                    $"- Total tangkapan tahun ini: {totalKgTahun:N2} kg\n" +
+                    $"- Total pendapatan: Rp {totalRupiahTahun:N0}\n" +
+                    $"- Bulan tertinggi: {namaBulan}\n" +
+                    $"- Ikan paling sering ditangkap: {jenisTahunan}";
 
                 PlotTahunan = CreateTahunanPlot(dataTahunan, thisYear);
             }
@@ -230,7 +282,6 @@ namespace NelayanGo.ViewModels
             var catAxis = new CategoryAxis { Position = AxisPosition.Bottom };
             var valueAxis = new LinearAxis { Position = AxisPosition.Left, Minimum = 0, Title = "Kg" };
 
-            // pakai LineSeries, bukan ColumnSeries
             var series = new LineSeries
             {
                 MarkerType = MarkerType.Circle,
@@ -294,7 +345,6 @@ namespace NelayanGo.ViewModels
 
             return pm;
         }
-
 
         private void SetupEmptyPlots()
         {

@@ -96,6 +96,23 @@ namespace NelayanGo.Helpers
             }
         }
 
+        public static void NavigateKeProfil(Window? currentWindow = null)
+        {
+            try
+            {
+                var mainWindow = new MainWindow();
+                mainWindow.Show();
+                if (currentWindow != null)
+                {
+                    currentWindow.Close();
+                }
+            }
+
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Gagal membuka jendelaLogin: {ex.Message}", "Error Navigasi", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
         public static void NavigateKeLogin(Window? currentWindow = null)
         {
             try
@@ -134,6 +151,9 @@ namespace NelayanGo.Helpers
                     break;
                 case "Harga pasar":
                     NavigateKeHargaPasar(currentWindow);
+                    break;
+                case "Profil":
+                    NavigateKeProfil(currentWindow);
                     break;
                 case "Logout":
                     NavigateKeLogin(currentWindow);

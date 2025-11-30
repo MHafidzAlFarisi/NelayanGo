@@ -11,10 +11,27 @@ namespace NelayanGo.ViewModels
     public class DaftarTangkapanViewModel : INotifyPropertyChanged
     {
         private readonly IkanTangkapanDataService _service = new();
+        private readonly NelayanDataService _profilService = new(); // Tambahkan service profil
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        public long CurrentUserId { get; } = AppSession.CurrentUser?.Id ?? 0;
+        private NelayanModel? _currentNelayan;
+        public NelayanModel? CurrentNelayan
+        {
+            get => _currentNelayan;
+            set { _currentNelayan = value; OnPropertyChanged(nameof(CurrentNelayan)); }
+        }
+
+        // Ambil ID dari sesi login
+        public long CurrentUserId
+        {
+            get
+            {
+                if (AppSession.CurrentUser != null && long.TryParse(AppSession.CurrentUser.Id, out long id))
+                    return id;
+                return 1; // Default fallback
+            }
+        }
 
         private ObservableCollection<IkanTangkapanModel> _daftarTangkapan =
             new ObservableCollection<IkanTangkapanModel>();
@@ -41,19 +58,34 @@ namespace NelayanGo.ViewModels
 
         public DaftarTangkapanViewModel()
         {
+            LoadUserProfile(); // Load header profile
             LoadData();
         }
 
-        // === LOAD DATA, HANYA UNTUK USER INI ===
+        private async void LoadUserProfile()
+        {
+            if (AppSession.CurrentUser != null)
+            {
+                string username = AppSession.CurrentUser.Username;
+                var profil = await _profilService.GetProfilByUserId(CurrentUserId);
+
+                if (profil != null)
+                    CurrentNelayan = profil;
+                else
+                    CurrentNelayan = new NelayanModel { Nama = username, KodeIdentik = "Belum Input Data" };
+            }
+            else
+            {
+                CurrentNelayan = new NelayanModel { Nama = "Tamu", KodeIdentik = "---" };
+            }
+        }
+
         public void LoadData()
         {
             DaftarTangkapan.Clear();
-
             try
             {
-                // sementara pakai user dummy
                 var data = _service.GetByUser(CurrentUserId);
-
                 foreach (var item in data)
                     DaftarTangkapan.Add(item);
             }
@@ -63,15 +95,12 @@ namespace NelayanGo.ViewModels
             }
         }
 
-        // === CREATE ===
         public void Add(IkanTangkapanModel model)
         {
             try
             {
-                // pastikan selalu milik user saat ini
                 model.ID_User = CurrentUserId;
                 model.TanggalInput = DateTime.UtcNow;
-
                 _service.Insert(model);
                 LoadData();
             }
@@ -81,14 +110,11 @@ namespace NelayanGo.ViewModels
             }
         }
 
-        // === UPDATE ===
         public void Update(IkanTangkapanModel model)
         {
             try
             {
-                // pastikan ID_User tetap user ini
                 model.ID_User = CurrentUserId;
-
                 _service.Update(model);
                 LoadData();
             }
@@ -98,7 +124,6 @@ namespace NelayanGo.ViewModels
             }
         }
 
-        // === DELETE ===
         public void DeleteSelected()
         {
             if (SelectedTangkapan == null)
