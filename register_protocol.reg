@@ -1,0 +1,12 @@
+Windows Registry Editor Version 5.00
+
+[HKEY_CLASSES_ROOT\nelayango]
+@="URL:NelayanGo Protocol"
+"URL Protocol"=""
+
+[HKEY_CLASSES_ROOT\nelayango\shell]
+
+[HKEY_CLASSES_ROOT\nelayango\shell\open]
+
+[HKEY_CLASSES_ROOT\nelayango\shell\open\command]
+@="\"C:\\Users\\HP\\source\\repos\\nelayan\\NelayanGo\\bin\\Debug\\net8.0-windows\\NelayanGo.exe\" \"%1\""
