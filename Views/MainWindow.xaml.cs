@@ -35,5 +35,9 @@ namespace NelayanGo.Views
         {
             NavigationHelper.NavigateKeLogin(this);
         }
+        private void ProfileHeader_Click(object sender, MouseButtonEventArgs e)
+        {
+            NavigationHelper.NavigateFromHeaderClick(sender, "Profil");
+        }
     }
 }

@@ -51,7 +51,6 @@ namespace NelayanGo.Views
                 MessageBox.Show($"Gagal memuat daftar harga ikan:\n{ex.Message}");
             }
         }
-
         private void BtnSimpan_Click(object sender, RoutedEventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txtNamaIkan.Text) ||
@@ -139,7 +138,6 @@ namespace NelayanGo.Views
             Close();
         }
 
-        // =========== Suggest Nama Ikan ===========
 
         private void txtNamaIkan_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
         {

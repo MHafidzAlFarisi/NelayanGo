@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:Views="clr-namespace:NelayanGo.Views"
         mc:Ignorable="d"
         Title="NELAYAN GO - Input Tangkapan"
         Height="700" Width="1200"
@@ -85,17 +86,17 @@
                         Orientation="Horizontal"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Center">
-                <TextBlock Text="Home" Foreground="White" Margin="20,0,20,0"/>
-                <TextBlock Text="Hasil Tangkapan" Foreground="White" FontWeight="Bold" Margin="0,0,20,0"/>
-                <TextBlock Text="Maps" Foreground="White" Margin="0,0,20,0"/>
-                <TextBlock Text="Harga Pasar" Foreground="White" Margin="0,0,20,0"/>
+                <TextBlock x:Name="HomeLink" Cursor="Hand" MouseLeftButtonDown="HomeLink_MouseLeftButtonDown" Text="Home" Foreground="White" VerticalAlignment="Center" Margin="20,0,20,0"/>
+                <TextBlock x:Name="HasilTangkapanLink" Cursor="Hand" MouseLeftButtonDown="HasilTangkapanLink_MouseLeftButtonDown" Text="Hasil Tangkapan" Foreground="White" VerticalAlignment="Center" Margin="0,0,20,0"/>
+                <TextBlock x:Name="MapsLink" Cursor="Hand" MouseLeftButtonDown="MapsLink_MouseLeftButtonDown" Text="Maps" Foreground="White" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,20,0"/>
+                <TextBlock x:Name="HargaPasarLink" Cursor="Hand" MouseLeftButtonDown="HargaPasarLink_MouseLeftButtonDown" Text="Harga Pasar" Foreground="White" VerticalAlignment="Center" Margin="0,0,20,0"/>
             </StackPanel>
 
             <StackPanel Grid.Column="2"
                         Orientation="Horizontal"
                         HorizontalAlignment="Right"
                         Margin="0,0,20,0">
-                <StackPanel VerticalAlignment="Center">
+                <StackPanel VerticalAlignment="Center" Cursor="Hand" MouseLeftButtonDown="ProfileHeader_Click">
                     <TextBlock Text="FIKRI HOIRUL"
                                Foreground="White"
                                FontSize="14"

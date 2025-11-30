@@ -59,8 +59,8 @@
                 <TextBlock x:Name="MapsLink" Cursor="Hand" MouseLeftButtonDown="MapsLink_MouseLeftButtonDown" Text="Maps" Foreground="White" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,20,0"/>
                 <TextBlock x:Name="HargaPasarLink" Cursor="Hand" MouseLeftButtonDown="HargaPasarLink_MouseLeftButtonDown" Text="Harga Pasar" Foreground="White" VerticalAlignment="Center" Margin="0,0,20,0"/>
             </StackPanel>
-            <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,20,0">
-                <StackPanel VerticalAlignment="Center">
+            <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Left" Margin="143,0,0,0" Height="60" VerticalAlignment="Top">
+                <StackPanel VerticalAlignment="Center" Cursor="Hand" MouseLeftButtonDown="ProfileHeader_Click">
                     <TextBlock Text="FIKRI HOIRUL" Foreground="White" FontSize="14" FontWeight="SemiBold"/>
                     <TextBlock Text="TGL-32" Foreground="White" FontSize="12"/>
                 </StackPanel>

@@ -1,5 +1,7 @@
 ﻿using NelayanGo.DataServices;
 using NelayanGo.Models;
+using NelayanGo.Helpers;
+using System.Windows.Input;
 using System;
 using System.Globalization;
 using System.Windows;
@@ -84,6 +86,29 @@ namespace NelayanGo.Views
             }
         }
 
+        private void HomeLink_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            NavigationHelper.NavigateFromHeaderClick(sender, "Home");
+        }
+
+        private void HasilTangkapanLink_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+
+            NavigationHelper.NavigateFromHeaderClick(sender, "Daftar Tangkapan");
+        }
+
+        private void MapsLink_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            NavigationHelper.NavigateFromHeaderClick(sender, "Maps");
+        }
+        private void HargaPasarLink_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            NavigationHelper.NavigateFromHeaderClick(sender, "Harga pasar");
+        }
+        private void ProfileHeader_Click(object sender, MouseButtonEventArgs e)
+        {
+            NavigationHelper.NavigateFromHeaderClick(sender, "Profil");
+        }
         private void KirimButton_Click(object sender, RoutedEventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txtNamaIkan.Text) ||
@@ -164,4 +189,5 @@ namespace NelayanGo.Views
             Close();
         }
     }
+
 }

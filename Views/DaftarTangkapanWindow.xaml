@@ -51,16 +51,20 @@
                         HorizontalAlignment="Left"
                         VerticalAlignment="Center">
                 <TextBlock Text="Home"
+                           x:Name="HomeLink" Cursor="Hand" MouseLeftButtonDown="HomeLink_MouseLeftButtonDown"
                            Foreground="White"
                            Margin="20,0,20,0"/>
                 <TextBlock Text="Hasil Tangkapan"
+                           x:Name="HasilTangkapanLink" Cursor="Hand" MouseLeftButtonDown="HasilTangkapanLink_MouseLeftButtonDown"
                            Foreground="White"
                            FontWeight="Bold"
                            Margin="0,0,20,0"/>
                 <TextBlock Text="Maps"
+                           x:Name="MapsLink" Cursor="Hand" MouseLeftButtonDown="MapsLink_MouseLeftButtonDown"
                            Foreground="White"
                            Margin="0,0,20,0"/>
                 <TextBlock Text="Harga Pasar"
+                           x:Name="HargaPasarLink" Cursor="Hand" MouseLeftButtonDown="HargaPasarLink_MouseLeftButtonDown"
                            Foreground="White"
                            Margin="0,0,20,0"/>
             </StackPanel>
@@ -70,7 +74,7 @@
                         Orientation="Horizontal"
                         HorizontalAlignment="Right"
                         Margin="0,0,20,0">
-                <StackPanel VerticalAlignment="Center">
+                <StackPanel VerticalAlignment="Center" Cursor="Hand" MouseLeftButtonDown="ProfileHeader_Click">
                     <TextBlock Text="FIKRI HOIRUL"
                                Foreground="White"
                                FontSize="14"

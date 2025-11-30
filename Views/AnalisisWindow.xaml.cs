@@ -41,6 +41,10 @@ namespace NelayanGo.Views
         {
             NavigationHelper.NavigateFromHeaderClick(sender, "Daftar Tangkapan");
         }
+        private void ProfileHeader_Click(object sender, MouseButtonEventArgs e)
+        {
+            NavigationHelper.NavigateFromHeaderClick(sender, "Profil");
+        }
     }
 
 }

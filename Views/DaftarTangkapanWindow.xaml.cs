@@ -2,7 +2,9 @@
 using System.Windows;
 using System.Windows.Data;
 using NelayanGo.Models;
+using NelayanGo.Helpers;
 using NelayanGo.ViewModels;
+using System.Windows.Input;
 
 namespace NelayanGo.Views
 {
@@ -98,6 +100,30 @@ namespace NelayanGo.Views
         private void dgTangkapan_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
 
+        }
+
+        private void HomeLink_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            NavigationHelper.NavigateFromHeaderClick(sender, "Home");
+        }
+
+        private void HasilTangkapanLink_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+
+            NavigationHelper.NavigateFromHeaderClick(sender, "Daftar Tangkapan");
+        }
+
+        private void MapsLink_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            NavigationHelper.NavigateFromHeaderClick(sender, "Maps");
+        }
+        private void HargaPasarLink_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            NavigationHelper.NavigateFromHeaderClick(sender, "Harga pasar");
+        }
+        private void ProfileHeader_Click(object sender, MouseButtonEventArgs e)
+        {
+            NavigationHelper.NavigateFromHeaderClick(sender, "Profil");
         }
     }
 }

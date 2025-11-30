@@ -37,9 +37,11 @@
             <TextBlock x:Name="HomeLink" Text="Home" FontFamily="{DynamicResource nunito}" Foreground="White" Margin="335,20,355,20" Grid.Column="1" Grid.ColumnSpan="2" Cursor="Hand" MouseLeftButtonDown="HomeLink_MouseLeftButtonDown"/>
             <TextBlock x:Name="LogoutLink" Cursor="Hand" MouseLeftButtonDown="LogoutLink_MouseLeftButtonDown" Text="Logout" FontFamily="{DynamicResource nunito}" Foreground="White" Margin="57,21,250,23" Grid.Column="2"/>
             <!-- Binding ke Model Nelayan di dalam ViewModel -->
+            <StackPanel VerticalAlignment="Center" Cursor="Hand" MouseLeftButtonDown="ProfileHeader_Click">
             <TextBlock Text="{Binding CurrentNelayan.Nama}" Background="Red" Foreground="White" FontSize="14" Grid.Column="2" Margin="189,10,7,33"/>
             <TextBlock Text="{Binding CurrentNelayan.KodeIdentik}" Background="Blue" Foreground="White" FontSize="12" Grid.Column="2" Margin="189,29,7,12" />
             <Image Source="image/profilbiru.png" Height="30" Margin="26,18,85,12" Grid.Column="2"/>
+                </StackPanel>
         </Grid>
 
         <!-- === KONTEN UTAMA (ROW 1) === -->
