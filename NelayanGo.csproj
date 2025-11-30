@@ -7,9 +7,13 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
     <Platforms>AnyCPU;ARM64;x64</Platforms>
+    <UserSecretsId>6a35eff4-07d9-468e-ace0-d35e13f2cbf6</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="image\bg.jpg" />
+    <None Remove="image\Google.jpg" />
+    <None Remove="image\logo_real.jpg" />
     <None Remove="Resource\Nunito\Nunito-Italic-VariableFont_wght.ttf" />
     <None Remove="Resource\Nunito\Nunito-VariableFont_wght.ttf" />
     <None Remove="Resource\Nunito\static\Nunito-Black.ttf" />
@@ -52,7 +56,26 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="6.0.1" />
     <PackageReference Include="Npgsql" Version="10.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="image\bg.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="image\Google.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="image\logo_real.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update=".env">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

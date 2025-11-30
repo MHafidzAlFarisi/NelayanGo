@@ -1,12 +1,10 @@
-﻿using System;
-
-namespace NelayanGo.Models
+﻿namespace NelayanGo.Models
 {
     public class UserAccount
     {
-        public int Id { get; set; }
-        public string Nama { get; set; } = string.Empty;
-        public string Email { get; set; } = string.Empty;
-        public string Role { get; set; } = string.Empty; // "Admin" atau "Nelayan"
+        public long Id { get; set; }
+        public string Username { get; set; } = "";
+        public string Email { get; set; } = "";
+        public string Role { get; set; } = ""; // "admin" / "nelayan"
     }
 }

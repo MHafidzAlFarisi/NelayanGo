@@ -1,46 +1,61 @@
-﻿using NelayanGo.Models;
-using NelayanGo.ViewModels;
+﻿using System;
 using System.Windows;
-using System.Windows.Controls;
+using NelayanGo.DataServices;
+using NelayanGo.Models;
 
 namespace NelayanGo.Views
 {
     public partial class LoginWindow : Window
     {
-        private LoginViewModel Vm => DataContext as LoginViewModel;
+        private readonly AuthService _auth = new();
 
         public LoginWindow()
         {
             InitializeComponent();
-
-            var vm = new LoginViewModel();
-            vm.LoginSucceeded += OnLoginSucceeded;
-            DataContext = vm;
         }
 
-        private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
+        private void LoginButton_Click(object sender, RoutedEventArgs e)
         {
-            if (Vm != null)
+            var identifier = LoginTextBox.Text?.Trim() ?? "";
+            var password = PasswordBox.Password ?? "";
+
+            if (string.IsNullOrWhiteSpace(identifier) || string.IsNullOrWhiteSpace(password))
             {
-                Vm.Password = PasswordBox.Password;
+                MessageBox.Show("Email/username dan password wajib diisi.");
+                return;
             }
-        }
 
-        private void OnLoginSucceeded(UserAccount user)
-        {
-            // cek role
-            if (user.Role == "Admin")
+            var user = _auth.Login(identifier, password);
+
+            if (user == null)
             {
-                var adminWin = new AdminMainWindow();    // TODO: buat window ini
+                MessageBox.Show("Login gagal. Cek lagi email/username dan password.");
+                return;
+            }
+
+            // (opsional) simpan user login di session global
+            AppSession.CurrentUser = user;
+
+            // Bedakan admin vs nelayan
+            if (string.Equals(user.Role, "admin", StringComparison.OrdinalIgnoreCase))
+            {
+                var adminWin = new DashboardHomeAdmin();   // atau AdminProfileWindow
                 adminWin.Show();
             }
-            else // Petani / User biasa
+            else
             {
-                var petaniWin = new PetaniMainWindow(user); // TODO: buat window ini
-                petaniWin.Show();
+                var main = new DashboardHomeNelayan();                 // dashboard nelayan
+                main.Show();
             }
 
-            this.Close(); // tutup window login
+            this.Close();
+        }
+
+        private void RegisterLink_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            var reg = new RegisterWindow();
+            reg.Show();
+            this.Close();
         }
     }
 }
