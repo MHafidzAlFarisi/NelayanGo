@@ -14,9 +14,7 @@ namespace NelayanGo.ViewModels
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        // BYPASS USER (sementara, sebelum auth jalan)
-        // TODO: ganti ini dengan ID_User dari hasil login
-        public long CurrentUserId { get; } = 1;
+        public long CurrentUserId { get; } = AppSession.CurrentUser?.Id ?? 0;
 
         private ObservableCollection<IkanTangkapanModel> _daftarTangkapan =
             new ObservableCollection<IkanTangkapanModel>();

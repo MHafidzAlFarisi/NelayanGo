@@ -140,5 +140,29 @@ namespace NelayanGo.Views
         {
             NavigationHelper.NavigateFromHeaderClick(sender, "Harga pasar");
         }
+
+        private void LogOutLink_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            var result = MessageBox.Show(
+                "Anda yakin ingin logout?",
+                "Konfirmasi Logout",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Question
+            );
+
+            if (result != MessageBoxResult.Yes)
+                return;
+
+            AppSession.CurrentUser = null;
+
+            var loginWindow = new LoginWindow();
+            loginWindow.Show();
+
+            Application.Current.Windows
+                .OfType<Window>()
+                .Where(w => w != loginWindow)
+                .ToList()
+                .ForEach(w => w.Close());
+        }
     }
 }

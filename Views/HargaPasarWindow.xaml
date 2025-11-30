@@ -74,6 +74,7 @@
                 <TextBlock x:Name="HasilTangkapanLink" Cursor="Hand" MouseLeftButtonDown="HasilTangkapanLink_MouseLeftButtonDown" Text="Hasil Tangkapan" Foreground="White" VerticalAlignment="Center" Margin="0,0,20,0"/>
                 <TextBlock x:Name="MapsLink" Cursor="Hand" MouseLeftButtonDown="MapsLink_MouseLeftButtonDown" Text="Maps" Foreground="White" VerticalAlignment="Center" Margin="0,0,20,0"/>
                 <TextBlock x:Name="HargaPasarLink" Cursor="Hand" MouseLeftButtonDown="HargaPasarLink_MouseLeftButtonDown" Text="Harga Pasar" Foreground="White" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,20,0"/>
+                <TextBlock x:Name="LogOutLink" Cursor="Hand" MouseLeftButtonDown="LogOutLink_MouseLeftButtonDown" Text="Log Out" Foreground="White" VerticalAlignment="Center" Margin="0,0,20,0"/>
             </StackPanel>
 
             <!-- Info Pengguna -->
@@ -107,10 +108,10 @@
                               HeadersVisibility="Column"
                               IsReadOnly="True"
                               GridLinesVisibility="None"
-                              BorderThickness="0">
+                              BorderThickness="0" SelectionChanged="DataGrid_SelectionChanged">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="NAMA IKAN" Binding="{Binding NamaIkan}" Width="*"/>
-                            <DataGridTextColumn Header="HARGA PER KILO" Binding="{Binding HargaPerKilo, StringFormat=N0}" Width="*"/>
+                            <DataGridTextColumn Header="HARGA PER KILO" Binding="{Binding HargaIkan, StringFormat=N0}" Width="*"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </Border>

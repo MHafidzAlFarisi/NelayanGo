@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:NelayanGo.ViewModels"
+        xmlns:oxy="http://oxyplot.org/wpf"
         mc:Ignorable="d"
         Title="NELAYAN GO - Analisis Data" Height="900" Width="1200"
         Background="#F0F0F0">
@@ -31,7 +32,7 @@
             <Setter Property="Margin" Value="0,2,0,2"/>
         </Style>
 
-        <!-- Style Tombol Biru (Perbaikan CornerRadius) -->
+        <!-- Style Tombol Biru -->
         <Style TargetType="{x:Type Button}" x:Key="BlueButton">
             <Setter Property="Background" Value="#42A5F5"/>
             <Setter Property="Foreground" Value="White"/>
@@ -83,12 +84,13 @@
                 <TextBlock x:Name="HasilTangkapanLink" Cursor="Hand" MouseLeftButtonDown="HasilTangkapanLink_MouseLeftButtonDown" Text="Hasil Tangkapan" Foreground="White" VerticalAlignment="Center" Margin="0,0,20,0"/>
                 <TextBlock x:Name="MapsLink" Cursor="Hand" MouseLeftButtonDown="MapsLink_MouseLeftButtonDown" Text="Maps" Foreground="White" VerticalAlignment="Center" Margin="0,0,20,0"/>
                 <TextBlock x:Name="HargaPasarLink" Cursor="Hand" MouseLeftButtonDown="HargaPasarLink_MouseLeftButtonDown" Text="Harga Pasar" Foreground="White" VerticalAlignment="Center" Margin="0,0,20,0"/>
+                <TextBlock x:Name="LogOutLink" Cursor="Hand" MouseLeftButtonDown="LogOutLink_MouseLeftButtonDown" Text="Log Out" Foreground="White" VerticalAlignment="Center" Margin="0,0,20,0"/>
             </StackPanel>
 
             <!-- Info Pengguna -->
             <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,20,0">
                 <Border CornerRadius="50" Width="30" Height="30" Background="White" VerticalAlignment="Center" Margin="0,0,10,0">
-                    <TextBlock Text="👤" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,2"/>
+                    <TextBlock Text="👤" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,4"/>
                 </Border>
                 <StackPanel VerticalAlignment="Center">
                     <TextBlock Text="FIKRI HOIRUL" Foreground="White" FontSize="14" FontWeight="SemiBold"/>
@@ -117,75 +119,53 @@
                     <!-- Tangkapan Setahun -->
                 </Grid.RowDefinitions>
 
-                <!-- KARTU 1: TANGKAPAN HARI INI (Grafik Garis Simulasi) -->
+                <!-- KARTU 1: TANGKAPAN HARI INI -->
                 <Border Grid.Row="0" Background="White" CornerRadius="10" Padding="20" Effect="{StaticResource ShadowDepth1}" Margin="0,0,0,30">
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="3*"/>
                             <!-- Grafik -->
-                            <ColumnDefinition Width="150"/>
+                            <ColumnDefinition Width="2*"/>
                             <!-- Statistik -->
                         </Grid.ColumnDefinitions>
 
-                        <!-- Judul dan Grafik Garis -->
+                        <!-- Judul + Grafik -->
                         <StackPanel Grid.Column="0">
                             <TextBlock Text="TANGKAPAN HARI INI" Style="{StaticResource CardTitle}"/>
-                            <!-- Placeholder Grafik Garis -->
-                            <Border Height="170" BorderBrush="#eee" BorderThickness="1,0,0,1" Margin="0,0,10,0">
-                                <TextBlock Text="[Grafik Garis Simulasi DataHarian]" Foreground="#bbb" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                            </Border>
-                            <!-- Label X Axis Simulasi -->
-                            <Grid Margin="10,5,10,0">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Column="0" Style="{StaticResource AxisLabel}" Text="19.00" HorizontalAlignment="Center"/>
-                                <TextBlock Grid.Column="1" Style="{StaticResource AxisLabel}" Text="20.00" HorizontalAlignment="Center"/>
-                                <TextBlock Grid.Column="2" Style="{StaticResource AxisLabel}" Text="21.00" HorizontalAlignment="Center"/>
-                                <TextBlock Grid.Column="3" Style="{StaticResource AxisLabel}" Text="22.00" HorizontalAlignment="Center"/>
-                                <TextBlock Grid.Column="4" Style="{StaticResource AxisLabel}" Text="23.00" HorizontalAlignment="Center"/>
-                            </Grid>
+                            <oxy:PlotView Model="{Binding PlotHarian}" Height="200"/>
                         </StackPanel>
 
                         <!-- Statistik Harian -->
                         <StackPanel Grid.Column="1" Margin="10,40,0,0">
-                            <TextBlock Text="{Binding StatsHarian}" FontSize="12" LineHeight="18"/>
-                            <Button Content="HASIL TANGKAPAN" 
+                            <TextBlock Text="{Binding StatsHarian}" FontSize="12" LineHeight="18" TextWrapping="Wrap"/>
+                            <Button Content="HASIL TANGKAPAN"
                                     Style="{StaticResource BlueButton}"
                                     Margin="0,15,0,0"
-                                    HorizontalAlignment="Center" Click="Button_Click"/>
+                                    HorizontalAlignment="Center"
+                                    Click="Button_Click"/>
                         </StackPanel>
                     </Grid>
                 </Border>
 
-                <!-- KARTU 2: TANGKAPAN SETAHUN (Grafik Batang Simulasi) -->
+                <!-- KARTU 2: TANGKAPAN SETAHUN -->
                 <Border Grid.Row="1" Background="White" CornerRadius="10" Padding="20" Effect="{StaticResource ShadowDepth1}">
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="3*"/>
                             <!-- Grafik -->
-                            <ColumnDefinition Width="150"/>
+                            <ColumnDefinition Width="2*"/>
                             <!-- Statistik -->
                         </Grid.ColumnDefinitions>
 
-                        <!-- Judul dan Grafik Batang Tahunan -->
+                        <!-- Judul + Grafik -->
                         <StackPanel Grid.Column="0">
                             <TextBlock Text="TANGKAPAN SETAHUN" Style="{StaticResource CardTitle}"/>
-                            <!-- Placeholder Grafik Batang -->
-                            <Border Height="200" BorderBrush="#eee" BorderThickness="1,0,0,1" Margin="0,0,10,0">
-                                <TextBlock Text="[Grafik Batang Simulasi DataTahunan]" Foreground="#bbb" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                            </Border>
-                            <!-- Label X Axis Simulasi -->
-                            <TextBlock Text="Januari - Desember" Style="{StaticResource AxisLabel}" HorizontalAlignment="Center" Margin="0,5,0,0"/>
+                            <oxy:PlotView Model="{Binding PlotTahunan}" Height="220"/>
                         </StackPanel>
 
                         <!-- Statistik Tahunan -->
                         <StackPanel Grid.Column="1" Margin="10,40,0,0">
-                            <TextBlock Text="{Binding StatsTahunan}" FontSize="12" LineHeight="18"/>
+                            <TextBlock Text="{Binding StatsTahunan}" FontSize="12" LineHeight="18" TextWrapping="Wrap"/>
                         </StackPanel>
                     </Grid>
                 </Border>
@@ -211,27 +191,8 @@
                 <!-- KARTU 4: JENIS TANGKAPAN TERBANYAK -->
                 <Border Background="White" CornerRadius="10" Padding="20" Effect="{StaticResource ShadowDepth1}">
                     <StackPanel>
-                        <TextBlock Text="JENIS TANGKAPAN TERBANYAK (TAHUNAN)" Style="{StaticResource CardTitle}"/>
-                        <!-- Placeholder Grafik Batang Kecil -->
-                        <Border Height="200" BorderBrush="#eee" BorderThickness="0,0,0,1" Margin="0,0,0,0">
-                            <TextBlock Text="[Grafik Batang Simulasi DataJenisTangkapan]" Foreground="#bbb" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                        <!-- Label X Axis Simulasi -->
-                        <Grid Margin="10,5,10,0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Style="{StaticResource AxisLabel}" Text="Bandeng" HorizontalAlignment="Center"/>
-                            <TextBlock Grid.Column="1" Style="{StaticResource AxisLabel}" Text="Bawal" HorizontalAlignment="Center"/>
-                            <TextBlock Grid.Column="2" Style="{StaticResource AxisLabel}" Text="Tongkol" HorizontalAlignment="Center"/>
-                            <TextBlock Grid.Column="3" Style="{StaticResource AxisLabel}" Text="Trenggiri" HorizontalAlignment="Center"/>
-                            <TextBlock Grid.Column="4" Style="{StaticResource AxisLabel}" Text="Teri" HorizontalAlignment="Center"/>
-                        </Grid>
+                        <TextBlock Text="JENIS TANGKAPAN TERBANYAK" Style="{StaticResource CardTitle}"/>
+                        <oxy:PlotView Model="{Binding PlotJenis}" Height="220"/>
                     </StackPanel>
                 </Border>
             </StackPanel>

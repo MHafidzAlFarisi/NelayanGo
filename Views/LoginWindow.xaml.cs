@@ -39,7 +39,7 @@ namespace NelayanGo.Views
             // Bedakan admin vs nelayan
             if (string.Equals(user.Role, "admin", StringComparison.OrdinalIgnoreCase))
             {
-                var adminWin = new AdminProfileWindow();   // atau AdminProfileWindow
+                var adminWin = new AdminHargaIkanWindow();   // atau AdminProfileWindow
                 adminWin.Show();
             }
             else

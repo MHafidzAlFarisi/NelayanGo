@@ -96,6 +96,14 @@ namespace NelayanGo.Views
                 return;
             }
 
+            // 🔹 Pastikan user login ada
+            var currentUser = AppSession.CurrentUser;
+            if (currentUser == null)
+            {
+                MessageBox.Show("Session login tidak ditemukan. Silakan login ulang.");
+                return;
+            }
+
             var namaIkan = txtNamaIkan.Text.Trim();
 
             if (!int.TryParse(txtBeratKg.Text, out var beratKg))
@@ -116,7 +124,6 @@ namespace NelayanGo.Views
             var tanggal = dpTanggal.SelectedDate.Value.Date;
             var jamTangkap = tanggal.Add(jam);
 
-            // 🔍 CARI HARGA IKAN DI SUPABASE
             HargaIkanModel? hargaIkan = null;
             try
             {
@@ -151,7 +158,9 @@ namespace NelayanGo.Views
                 TotalHargaIkan = totalHarga,
                 KodeIkan = hargaIkan.KodeIkan,
                 kode_ikan = hargaIkan.KodeIkan,
-                // ID_User akan diisi di ViewModel
+
+                ID_User = currentUser.Id,
+                TanggalInput = tanggal  
             };
 
             DialogResult = true;

@@ -31,8 +31,24 @@ namespace NelayanGo.DataServices
             return ExecuteSelect(sql, param);
         }
 
+        // --- READ: 1 user & 1 tanggal ---
+        public List<IkanTangkapanModel> GetByUserAndDate(long userId, DateTime date)
+        {
+            const string sql = @"
+                SELECT *
+                FROM ""IkanTangkapan""
+                WHERE ""ID_User"" = @userId
+                  AND CAST(""JamTangkap"" AS DATE) = @tgl
+                ORDER BY ""JamTangkap"" DESC;";
+
+            var pUser = new NpgsqlParameter("userId", userId);
+            var pTgl = new NpgsqlParameter("tgl", date.Date);
+
+            return ExecuteSelect(sql, new[] { pUser, pTgl });
+        }
+
         // Helper umum untuk SELECT
-        private List<IkanTangkapanModel> ExecuteSelect(string sql, NpgsqlParameter? param)
+        private List<IkanTangkapanModel> ExecuteSelect(string sql, params NpgsqlParameter[]? parameters)
         {
             var list = new List<IkanTangkapanModel>();
 
@@ -40,23 +56,12 @@ namespace NelayanGo.DataServices
             conn.Open();
 
             using var cmd = new NpgsqlCommand(sql, conn);
-            if (param != null)
-                cmd.Parameters.Add(param);
+            if (parameters != null)
+                cmd.Parameters.AddRange(parameters);
 
             using var reader = cmd.ExecuteReader();
             while (reader.Read())
             {
-                // Urutan kolom (sesuaikan dengan tabel Supabase):
-                // 0: kodetangkapan
-                // 1: created_at
-                // 2: NamaIkan
-                // 3: BeratKg
-                // 4: TotalHargaIkan
-                // 5: kode_ikan
-                // 6: JamTangkap
-                // 7: Lokasi
-                // 8: ID_User
-
                 var item = new IkanTangkapanModel
                 {
                     kodetangkapan = reader.IsDBNull(0) ? 0 : reader.GetInt64(0),
@@ -68,8 +73,6 @@ namespace NelayanGo.DataServices
                     JamTangkap = reader.IsDBNull(6) ? DateTime.MinValue : reader.GetDateTime(6),
                     Lokasi = reader.IsDBNull(7) ? string.Empty : reader.GetString(7),
                     ID_User = reader.IsDBNull(8) ? 0 : reader.GetInt64(8),
-
-                    // kalau model-mu punya field kode_ikan terpisah:
                     kode_ikan = reader.IsDBNull(5) ? 0 : reader.GetInt64(5)
                 };
 
@@ -78,6 +81,7 @@ namespace NelayanGo.DataServices
 
             return list;
         }
+
 
         // --- INSERT ---
         public void Insert(IkanTangkapanModel model)
