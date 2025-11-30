@@ -1,76 +1,97 @@
-﻿using NelayanGo.Models;
+﻿using NelayanGo.DataServices;
+using NelayanGo.Models;
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq; // Diperlukan untuk metode Sum
-using System;
+using System.Linq;
 
 namespace NelayanGo.ViewModels
 {
     public class HargaPasarViewModel : INotifyPropertyChanged
     {
-        // Data untuk tabel DAFTAR HARGA IKAN (Kiri)
-        public ObservableCollection<HargaIkanModel> DaftarHarga { get; set; }
+        private readonly HargaIkanDataService _hargaService = new();
+        private readonly IkanTangkapanDataService _tangkapanService = new();
 
-        // Data untuk tabel PROFIT TANGKAPAN HARI INI (Kanan)
-        public ObservableCollection<ProfitModel> DaftarProfit { get; set; }
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        // Tabel kiri
+        public ObservableCollection<HargaIkanModel> DaftarHarga { get; } = new();
+
+        // Tabel kanan
+        public ObservableCollection<HargaPasarProfitItem> DaftarProfit { get; } = new();
 
         private decimal _totalPendapatan;
-
-        // Properti yang di-bind untuk total pendapatan
         public decimal TotalPendapatan
         {
             get => _totalPendapatan;
-            set
+            private set
             {
-                _totalPendapatan = value;
-                OnPropertyChanged(nameof(TotalPendapatan));
+                if (_totalPendapatan != value)
+                {
+                    _totalPendapatan = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(TotalPendapatan)));
+                }
             }
         }
 
         public HargaPasarViewModel()
         {
-            DaftarHarga = new ObservableCollection<HargaIkanModel>();
-            DaftarProfit = new ObservableCollection<ProfitModel>();
-            LoadData();
+            LoadHargaIkan();
+            LoadProfitHariIni();
         }
 
-        private void LoadData()
+        private void LoadHargaIkan()
         {
-            // 1. Muat Data Harga Ikan (Kiri)
-            DaftarHarga.Add(new HargaIkanModel { NamaIkan = "Tongkol", HargaIkan = 12000 });
-            DaftarHarga.Add(new HargaIkanModel { NamaIkan = "Kakap", HargaIkan = 13000 });
-            DaftarHarga.Add(new HargaIkanModel { NamaIkan = "Bandeng", HargaIkan = 11000 });
-            DaftarHarga.Add(new HargaIkanModel { NamaIkan = "Kerapu", HargaIkan = 15000 });
-            DaftarHarga.Add(new HargaIkanModel { NamaIkan = "Trenggiri", HargaIkan = 14000 });
-            DaftarHarga.Add(new HargaIkanModel { NamaIkan = "Layang", HargaIkan = 13000 });
-            DaftarHarga.Add(new HargaIkanModel { NamaIkan = "Teri", HargaIkan = 10000 });
-
-            // 2. Muat Data Profit (Kanan) - Menggunakan data statis seperti di gambar
-            // Catatan: Dalam aplikasi nyata, data ini harus dihitung dari DaftarHarga dan data tangkapan.
-            DaftarProfit.Add(new ProfitModel { NamaIkan = "Tongkol", BeratTangkapan = 10.00m, Harga = 120000 });
-            DaftarProfit.Add(new ProfitModel { NamaIkan = "Kakap", BeratTangkapan = 10.00m, Harga = 130000 });
-            DaftarProfit.Add(new ProfitModel { NamaIkan = "Bandeng", BeratTangkapan = 10.00m, Harga = 110000 });
-            DaftarProfit.Add(new ProfitModel { NamaIkan = "Kerapu", BeratTangkapan = 10.00m, Harga = 150000 });
-            DaftarProfit.Add(new ProfitModel { NamaIkan = "Trenggiri", BeratTangkapan = 10.00m, Harga = 140000 });
-            DaftarProfit.Add(new ProfitModel { NamaIkan = "Layang", BeratTangkapan = 10.00m, Harga = 130000 });
-            DaftarProfit.Add(new ProfitModel { NamaIkan = "Teri", BeratTangkapan = 10.00m, Harga = 100000 });
-
-            // 3. Hitung Total Pendapatan
-            CalculateTotal();
+            try
+            {
+                DaftarHarga.Clear();
+                var list = _hargaService.GetAll();
+                foreach (var h in list)
+                    DaftarHarga.Add(h);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Gagal memuat harga ikan: {ex.Message}");
+            }
         }
 
-        private void CalculateTotal()
+        private void LoadProfitHariIni()
         {
-            // Menghitung total dari kolom Harga di DaftarProfit
-            // Pastikan Anda telah menginstal System.Linq jika menggunakan metode Sum()
-            TotalPendapatan = DaftarProfit.Sum(p => p.Harga);
-        }
+            try
+            {
+                DaftarProfit.Clear();
+                TotalPendapatan = 0;
 
-        // Boilerplate INotifyPropertyChanged
-        public event PropertyChangedEventHandler? PropertyChanged;
-        protected virtual void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+                var user = AppSession.CurrentUser;
+                if (user == null)
+                {
+                    Console.WriteLine("Tidak ada user login, daftar profit kosong.");
+                    return;
+                }
+
+                var today = DateTime.Today;
+
+                var tangkapanList = _tangkapanService.GetByUserAndDate(user.Id, today);
+
+                foreach (var t in tangkapanList)
+                {
+                    // mapping sesuai model-mu
+                    var item = new HargaPasarProfitItem
+                    {
+                        NamaIkan = t.NamaIkan,
+                        BeratTangkapan = t.BeratKg,               
+                        Harga = Convert.ToDecimal(t.TotalHargaIkan) 
+                    };
+
+                    DaftarProfit.Add(item);
+                }
+
+                TotalPendapatan = DaftarProfit.Sum(p => p.Harga);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Gagal memuat profit tangkapan hari ini: {ex.Message}");
+            }
         }
     }
 }
