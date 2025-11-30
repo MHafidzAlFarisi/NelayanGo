@@ -78,7 +78,6 @@ namespace NelayanGo.Views
             // Update ViewModel (ini akan memicu PropertyChanged)
             _vm.SetLocationFromMap(latlng.Lat, latlng.Lng);
 
-            // PENTING: Update visual marker di peta
             UpdateMarkerPositions();
         }
 

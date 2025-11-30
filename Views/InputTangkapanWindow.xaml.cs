@@ -75,8 +75,6 @@ namespace NelayanGo.Views
             }
         }
 
-        // ... (Kode event handler lain TETAP SAMA, tidak perlu diubah) ...
-
         private void txtNamaIkan_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
         {
             var text = txtNamaIkan.Text?.Trim() ?? "";
@@ -142,7 +140,6 @@ namespace NelayanGo.Views
             {
                 dpTanggal.IsDropDownOpen = !dpTanggal.IsDropDownOpen; // Toggle (buka/tutup)
 
-                // Opsional: Agar DatePicker langsung fokus setelah dibuka
                 dpTanggal.Focus();
             }
         }

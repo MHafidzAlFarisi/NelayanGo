@@ -62,16 +62,6 @@ namespace NelayanGo.DataServices
             using var reader = cmd.ExecuteReader();
             while (reader.Read())
             {
-                // Urutan kolom (sesuaikan dengan tabel Supabase):
-                // 0: kodetangkapan
-                // 1: created_at
-                // 2: NamaIkan
-                // 3: BeratKg
-                // 4: TotalHargaIkan
-                // 5: kode_ikan
-                // 6: JamTangkap
-                // 7: Lokasi
-                // 8: ID_User
 
                 var item = new IkanTangkapanModel
                 {
@@ -85,7 +75,6 @@ namespace NelayanGo.DataServices
                     Lokasi = reader.IsDBNull(7) ? string.Empty : reader.GetString(7),
                     ID_User = reader.IsDBNull(8) ? 0 : reader.GetInt64(8),
 
-                    // kalau model-mu punya field kode_ikan terpisah:
                     kode_ikan = reader.IsDBNull(5) ? 0 : reader.GetInt64(5)
                 };
 

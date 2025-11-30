@@ -42,7 +42,6 @@ namespace NelayanGo.Views
         {
             InitializeComponent();
 
-            // PENTING: Set DataContext agar Binding di XAML bekerja
             this.DataContext = this;
 
             // Load Data Profil untuk Header
@@ -95,7 +94,6 @@ namespace NelayanGo.Views
             }
         }
 
-        // --- EVENT HANDLER YANG HILANG (INI SOLUSI UTAMANYA) ---
         private void ProfileHeader_Click(object sender, MouseButtonEventArgs e)
         {
             NavigationHelper.NavigateFromHeaderClick(sender, "Profil");

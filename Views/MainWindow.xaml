@@ -78,9 +78,6 @@
                     <!-- Right Panel (Details & Info) -->
                 </Grid.ColumnDefinitions>
 
-                <!-- If screen is very narrow, you might want to switch to RowDefinitions via visual states, 
-                     but for now let's stick to columns with min width constraints -->
-
                 <!-- Kiri: FOTO PROFIL -->
                 <StackPanel Grid.Column="0">
                     <Border Height="200" Width="200" Background="#F0F0F0" 
@@ -275,83 +272,6 @@
                                     <TextBlock Style="{StaticResource SeparatorStyle}" Grid.Column="1"/>
                                     <TextBlock Text="{Binding CurrentNelayan.GolonganDarah}" Style="{StaticResource ValueStyle}" Grid.Column="2"/>
                                 </Grid>
-                            </StackPanel>
-                        </Grid>
-                    </Border>
-
-                    <!-- Title Info -->
-                    <Border Grid.Row="3" Background="#1C6BCC" CornerRadius="10,10,0,0" Padding="10">
-                        <TextBlock Text="INFO" Foreground="White" FontFamily="{DynamicResource nunito}" 
-                                   FontSize="18" FontWeight="Bold" TextAlignment="Center"/>
-                    </Border>
-
-                    <!-- Info Cards -->
-                    <Border Grid.Row="4" Background="#E1E1E1" CornerRadius="0,0,10,10" Padding="20">
-                        <!-- Use a Grid with Star sizing to distribute space evenly -->
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="20"/>
-                                <!-- Spacer Row -->
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
-
-                            <!-- Style Resources for Stats -->
-                            <Grid.Resources>
-                                <Style TargetType="TextBlock" x:Key="StatValue">
-                                    <Setter Property="FontFamily" Value="{DynamicResource nunito}"/>
-                                    <Setter Property="FontSize" Value="24"/>
-                                    <Setter Property="FontWeight" Value="Bold"/>
-                                    <Setter Property="HorizontalAlignment" Value="Center"/>
-                                    <Setter Property="TextAlignment" Value="Center"/>
-                                    <Setter Property="TextWrapping" Value="Wrap"/>
-                                </Style>
-                                <Style TargetType="TextBlock" x:Key="StatLabel">
-                                    <Setter Property="FontFamily" Value="{DynamicResource nunito}"/>
-                                    <Setter Property="FontSize" Value="12"/>
-                                    <Setter Property="FontWeight" Value="Bold"/>
-                                    <Setter Property="HorizontalAlignment" Value="Center"/>
-                                    <Setter Property="TextAlignment" Value="Center"/>
-                                    <Setter Property="TextWrapping" Value="Wrap"/>
-                                    <Setter Property="Margin" Value="0,5,0,0"/>
-                                </Style>
-                            </Grid.Resources>
-
-                            <!-- Row 1 Stats -->
-                            <StackPanel Grid.Row="0" Grid.Column="0">
-                                <TextBlock Text="{Binding TotalWaktuAktifHari}" Style="{StaticResource StatValue}"/>
-                                <TextBlock Text="TOTAL WAKTU AKTIF (HARI)" Style="{StaticResource StatLabel}"/>
-                            </StackPanel>
-
-                            <StackPanel Grid.Row="0" Grid.Column="1">
-                                <TextBlock Text="{Binding TotalJarakBerlayarKM}" Style="{StaticResource StatValue}"/>
-                                <TextBlock Text="TOTAL JARAK BERLAYAR (KM)" Style="{StaticResource StatLabel}"/>
-                            </StackPanel>
-
-                            <StackPanel Grid.Row="0" Grid.Column="2">
-                                <TextBlock Text="{Binding TotalBeratTangkapanTON}" Style="{StaticResource StatValue}"/>
-                                <TextBlock Text="TOTAL BERAT TANGKAPAN (TON)" Style="{StaticResource StatLabel}"/>
-                            </StackPanel>
-
-                            <!-- Row 2 Stats -->
-                            <StackPanel Grid.Row="2" Grid.Column="0">
-                                <TextBlock Text="{Binding TotalJumlahBerlayar}" Style="{StaticResource StatValue}"/>
-                                <TextBlock Text="TOTAL JUMLAH BERLAYAR" Style="{StaticResource StatLabel}"/>
-                            </StackPanel>
-
-                            <StackPanel Grid.Row="2" Grid.Column="1">
-                                <TextBlock Text="{Binding TotalJamBerlayarJAM}" Style="{StaticResource StatValue}"/>
-                                <TextBlock Text="TOTAL JAM BERLAYAR (JAM)" Style="{StaticResource StatLabel}"/>
-                            </StackPanel>
-
-                            <StackPanel Grid.Row="2" Grid.Column="2">
-                                <TextBlock Text="{Binding TotalJenisTangkapan}" Style="{StaticResource StatValue}"/>
-                                <TextBlock Text="TOTAL JENIS TANGKAPAN" Style="{StaticResource StatLabel}"/>
                             </StackPanel>
                         </Grid>
                     </Border>

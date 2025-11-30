@@ -1,9 +1,11 @@
-﻿using System;
+﻿using NelayanGo.Helpers;
+using NelayanGo.Models;
+using NelayanGo.ViewModels;
+using System;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Data;
-using NelayanGo.Models;
-using NelayanGo.ViewModels;
+using System.Windows.Input;
 
 namespace NelayanGo.Views
 {
@@ -12,8 +14,8 @@ namespace NelayanGo.Views
         private AdminHargaIkanViewModel _vm;
         private ICollectionView _view;
 
-        private readonly long _currentAdminId = 1;      // TODO: nanti dari auth
-        private readonly string _currentAdminWilayah = "Bantul"; // TODO: nanti dari admin login
+        private readonly long _currentAdminId = 1;      
+        private readonly string _currentAdminWilayah = "Bantul";
 
         public AdminHargaIkanWindow()
         {
@@ -82,7 +84,7 @@ namespace NelayanGo.Views
 
             if (string.IsNullOrWhiteSpace(text))
             {
-                _view.Filter = null;  // tampiikan semua
+                _view.Filter = null; 
             }
             else
             {
@@ -98,5 +100,11 @@ namespace NelayanGo.Views
 
             _view.Refresh();
         }
+
+        private void ProfileHeader_Click(object sender, MouseButtonEventArgs e)
+        {
+            NavigationHelper.NavigateFromHeaderClick(sender, "Admin Profil");
+        }
+
     }
 }

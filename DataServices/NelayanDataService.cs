@@ -6,7 +6,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using NelayanGo.Models;
 using System.Windows;
-using System.Collections.Generic; // Tambahkan ini
+using System.Collections.Generic;
 
 namespace NelayanGo.DataServices
 {
@@ -32,7 +32,7 @@ namespace NelayanGo.DataServices
                     new AuthenticationHeaderValue("Bearer", SupabaseConfig.Key);
         }
 
-        // --- FUNGSI INSERT (YANG SUDAH ADA) ---
+        // --- FUNGSI INSERT ---
         public async Task<bool> InsertProfilNelayan(NelayanModel nelayan)
         {
             try
@@ -60,7 +60,7 @@ namespace NelayanGo.DataServices
             }
         }
 
-        // --- TAMBAHKAN FUNGSI GET INI ---
+        // --- FUNGSI GET ---
         public async Task<NelayanModel?> GetProfilByUserId(long userId)
         {
             try

@@ -11,7 +11,7 @@ namespace NelayanGo.ViewModels
     public class DaftarTangkapanViewModel : INotifyPropertyChanged
     {
         private readonly IkanTangkapanDataService _service = new();
-        private readonly NelayanDataService _profilService = new(); // Tambahkan service profil
+        private readonly NelayanDataService _profilService = new();
 
         public event PropertyChangedEventHandler? PropertyChanged;
 

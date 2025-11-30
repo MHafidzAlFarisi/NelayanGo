@@ -33,13 +33,12 @@ namespace NelayanGo.Views
                 return;
             }
 
-            // (opsional) simpan user login di session global
             AppSession.CurrentUser = user;
 
-            // Bedakan admin vs nelayan
+            // Bedakan admin dan nelayan
             if (string.Equals(user.Role, "admin", StringComparison.OrdinalIgnoreCase))
             {
-                var adminWin = new AdminProfileWindow();   // atau AdminProfileWindow
+                var adminWin = new AdminHargaIkanWindow();
                 adminWin.Show();
             }
             else
