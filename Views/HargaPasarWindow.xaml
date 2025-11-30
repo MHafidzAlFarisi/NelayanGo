@@ -110,7 +110,7 @@
                               BorderThickness="0">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="NAMA IKAN" Binding="{Binding NamaIkan}" Width="*"/>
-                            <DataGridTextColumn Header="HARGA PER KILO" Binding="{Binding HargaPerKilo, StringFormat=N0}" Width="*"/>
+                            <DataGridTextColumn Header="HARGA PER KILO" Binding="{Binding HargaIkan, StringFormat=N0}" Width="*"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </Border>

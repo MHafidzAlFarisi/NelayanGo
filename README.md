@@ -1,4 +1,6 @@
-﻿# ⚓ NelayanGo
+
+# ⚓ NelayanGo
+
 ### Aplikasi desktop untuk pencatatan tangkapan harian tiap nelayan dengan penyediaan forecast cuaca perairan
 
 ## Kelompok 6
@@ -39,7 +41,8 @@ Proyek ini dibangun di atas prinsip PBO. Struktur utama terbagi menjadi lapisan 
 
 ---
 
-## 🚀 Instalasi & Setup (Poin 1.c: Dokumentasi Penggunaan)
+
+## 🚀 Instalasi & Setup
 
 Untuk menjalankan aplikasi ini, ikuti langkah-langkah di bawah ini:
 
@@ -74,7 +77,7 @@ Untuk menjalankan aplikasi ini, ikuti langkah-langkah di bawah ini:
 
 ---
 
-## 🔑 Informasi Akses Demo (Poin 1.b: Akses Demo)
+## 🔑 Informasi Akses Demo 
 
 Untuk keperluan penilaian dan demonstrasi, Anda dapat menggunakan akun yang telah disediakan di bawah ini:
 

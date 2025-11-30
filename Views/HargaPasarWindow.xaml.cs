@@ -33,5 +33,10 @@ namespace NelayanGo.Views
         {
             NavigationHelper.NavigateFromHeaderClick(sender, "Profil");
         }
+
+        private void DataGrid_SelectionChanged()
+        {
+
+        }
     }
 }
