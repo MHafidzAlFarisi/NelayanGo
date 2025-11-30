@@ -39,8 +39,7 @@
             <!-- Binding ke Model Nelayan di dalam ViewModel -->
             <StackPanel VerticalAlignment="Center" Cursor="Hand" MouseLeftButtonDown="ProfileHeader_Click">
             <TextBlock Text="{Binding CurrentNelayan.Nama}" Background="Red" Foreground="White" FontSize="14" Grid.Column="2" Margin="189,10,7,33"/>
-            <TextBlock Text="{Binding CurrentNelayan.KodeIdentik}" Background="Blue" Foreground="White" FontSize="12" Grid.Column="2" Margin="189,29,7,12" />
-            <Image Source="image/profilbiru.png" Height="30" Margin="26,18,85,12" Grid.Column="2"/>
+                <Image Source="image/profilbiru.png" Height="30" Margin="26,18,85,12" Grid.Column="2"/>
                 </StackPanel>
         </Grid>
 
@@ -88,67 +87,55 @@
                 <TextBlock Grid.Row="0" FontFamily="{DynamicResource nunito}" Grid.Column="1" Text=":"/>
                 <TextBlock Grid.Row="0" Padding="5" Grid.Column="2" Text="{Binding CurrentNelayan.Nama}" FontWeight="SemiBold" FontFamily="pack://application:,,,/Resource/Nunito/static/#Nunito"/>
 
-                <!-- BARIS 1: Kode Identik -->
-                <TextBlock Grid.Row="1" Background="White" FontFamily="{DynamicResource nunito}" Padding="5" Grid.Column="0" Text="Kode Identik"/>
-                <TextBlock Grid.Row="1" Background="White" FontFamily="{DynamicResource nunito}" Grid.Column="1" Text=":"/>
-                <TextBlock Grid.Row="1" Background="White" FontFamily="{DynamicResource nunito}" Padding="5" Grid.Column="2" Text="{Binding CurrentNelayan.KodeIdentik}"/>
-
                 <!-- BARIS 2: Wilayah -->
-                <TextBlock Grid.Row="2" FontFamily="{DynamicResource nunito}" Padding="5" Grid.Column="0" Text="Wilayah"/>
-                <TextBlock Grid.Row="2" FontFamily="{DynamicResource nunito}" Grid.Column="1" Text=":"/>
-                <TextBlock Grid.Row="2" FontFamily="{DynamicResource nunito}" Padding="5" Grid.Column="2" Text="{Binding CurrentNelayan.Wilayah}"/>
+                <TextBlock Grid.Row="1" Background="White" FontFamily="{DynamicResource nunito}" Padding="5" Grid.Column="0" Text="Wilayah"/>
+                <TextBlock Grid.Row="1" Background="White" FontFamily="{DynamicResource nunito}" Grid.Column="1" Text=":"/>
+                <TextBlock Grid.Row="1" Background="White" FontFamily="{DynamicResource nunito}" Padding="5" Grid.Column="2" Text="{Binding CurrentNelayan.Wilayah}"/>
 
                 <!-- BARIS 3 : Tahun Bergabung-->
-                <TextBlock Grid.Row="3" Background="White" FontFamily="{DynamicResource nunito}" Padding="5" Grid.Column="0" Text="Tahun Bergabung"/>
-                <TextBlock Grid.Row="3" Background="White" FontFamily="{DynamicResource nunito}" Grid.Column="1" Text=":"/>
-                <TextBlock Grid.Row="3" Background="White" FontFamily="{DynamicResource nunito}" Padding="5" Grid.Column="2" Text="{Binding CurrentNelayan.TahunBergabung}"/>
+                <TextBlock Grid.Row="2" FontFamily="{DynamicResource nunito}" Padding="5" Grid.Column="0" Text="Tahun Bergabung"/>
+                <TextBlock Grid.Row="2" FontFamily="{DynamicResource nunito}" Grid.Column="1" Text=":"/>
+                <TextBlock Grid.Row="2" FontFamily="{DynamicResource nunito}" Padding="5" Grid.Column="2" Text="{Binding CurrentNelayan.TahunBergabung}"/>
 
                 <!--Baris 4 : Status-->
-                <TextBlock Grid.Row="4" FontFamily="{DynamicResource nunito}" Padding="5" Grid.Column="0" Text="Status"/>
-                <TextBlock Grid.Row="4" FontFamily="{DynamicResource nunito}" Grid.Column="1" Text=":"/>
-                <TextBlock Grid.Row="4" FontFamily="{DynamicResource nunito}" Padding="5" Grid.Column="2" Text="{Binding CurrentNelayan.Status}"/>
-
-
+                <TextBlock Grid.Row="3" Background="White" FontFamily="{DynamicResource nunito}" Padding="5" Grid.Column="0" Text="Status"/>
+                <TextBlock Grid.Row="3" Background="White" FontFamily="{DynamicResource nunito}" Grid.Column="1" Text=":"/>
+                <TextBlock Grid.Row="3" Background="White" FontFamily="{DynamicResource nunito}" Padding="5" Grid.Column="2" Text="{Binding CurrentNelayan.Status}"/>
 
                 <!-- BARIS 5: NIK -->
-                <TextBlock Grid.Row="5" Background="White" FontFamily="{DynamicResource nunito}" Padding="5" Grid.Column="0" Text="NIK"/>
-                <TextBlock Grid.Row="5" Background="White" FontFamily="{DynamicResource nunito}" Grid.Column="1" Text=":"/>
-                <TextBlock Grid.Row="5" Background="White" FontFamily="{DynamicResource nunito}" Padding="5" Grid.Column="2" Text="{Binding CurrentNelayan.NIK}"/>
+                <TextBlock Grid.Row="4" FontFamily="{DynamicResource nunito}" Padding="5" Grid.Column="0" Text="NIK"/>
+                <TextBlock Grid.Row="4" FontFamily="{DynamicResource nunito}" Grid.Column="1" Text=":"/>
+                <TextBlock Grid.Row="4" FontFamily="{DynamicResource nunito}" Padding="5" Grid.Column="2" Text="{Binding CurrentNelayan.NIK}"/>
 
                 <!-- BARIS 6: Tanggal Lahir -->
-                <TextBlock Grid.Row="6" FontFamily="{DynamicResource nunito}" Padding="5" Grid.Column="0" Text="Tanggal Lahir"/>
-                <TextBlock Grid.Row="6" FontFamily="{DynamicResource nunito}" Grid.Column="1" Text=":"/>
-                <TextBlock Grid.Row="6" FontFamily="{DynamicResource nunito}" Padding="5" Grid.Column="2" Text="{Binding CurrentNelayan.TanggalLahir}"/>
+                <TextBlock Grid.Row="5" Background="White" FontFamily="{DynamicResource nunito}" Padding="5" Grid.Column="0" Text="Tanggal Lahir"/>
+                <TextBlock Grid.Row="5" Background="White" FontFamily="{DynamicResource nunito}" Grid.Column="1" Text=":"/>
+                <TextBlock Grid.Row="5" Background="White" FontFamily="{DynamicResource nunito}" Padding="5" Grid.Column="2" Text="{Binding CurrentNelayan.TanggalLahir}"/>
 
                 <!-- BARIS 7: Tempat Lahir -->
-                <TextBlock Grid.Row="7" Background="White" FontFamily="{DynamicResource nunito}" Padding="5" Grid.Column="0" Text="Tempat Lahir"/>
-                <TextBlock Grid.Row="7" Background="White" FontFamily="{DynamicResource nunito}" Grid.Column="1" Text=":"/>
-                <TextBlock Grid.Row="7" Background="White" FontFamily="{DynamicResource nunito}" Padding="5" Grid.Column="2" Text="{Binding CurrentNelayan.TempatLahir}"/>
+                <TextBlock Grid.Row="6" FontFamily="{DynamicResource nunito}" Padding="5" Grid.Column="0" Text="Tempat Lahir"/>
+                <TextBlock Grid.Row="6" FontFamily="{DynamicResource nunito}" Grid.Column="1" Text=":"/>
+                <TextBlock Grid.Row="6" FontFamily="{DynamicResource nunito}" Padding="5" Grid.Column="2" Text="{Binding CurrentNelayan.TempatLahir}"/>
 
                 <!--BARIS 8: Alamat KTP-->
-                <TextBlock Grid.Row="8" FontFamily="{DynamicResource nunito}" Padding="5" Grid.Column="0" Text="Alamat KTP"/>
-                <TextBlock Grid.Row="8" FontFamily="{DynamicResource nunito}" Grid.Column="1" Text=":"/>
-                <TextBlock Grid.Row="8" FontFamily="{DynamicResource nunito}" Padding="5" Grid.Column="2" Text="{Binding CurrentNelayan.AlamatKTP}"/>
+                <TextBlock Grid.Row="7" Background="White" FontFamily="{DynamicResource nunito}" Padding="5" Grid.Column="0" Text="Alamat KTP"/>
+                <TextBlock Grid.Row="7" Background="White" FontFamily="{DynamicResource nunito}" Grid.Column="1" Text=":"/>
+                <TextBlock Grid.Row="7" Background="White" FontFamily="{DynamicResource nunito}" Padding="5" Grid.Column="2" Text="{Binding CurrentNelayan.AlamatKTP}"/>
 
                 <!--BARIS 9: Nomor Telepon-->
-                <TextBlock Grid.Row="9" Background="White" FontFamily="{DynamicResource nunito}" Padding="5" Grid.Column="0" Text="Nomor Telepon"/>
-                <TextBlock Grid.Row="9" Background="White" FontFamily="{DynamicResource nunito}" Grid.Column="1" Text=":"/>
-                <TextBlock Grid.Row="9" Background="White" FontFamily="{DynamicResource nunito}" Padding="5" Grid.Column="2" Text="{Binding CurrentNelayan.NomorTelepon}"/>
+                <TextBlock Grid.Row="8" FontFamily="{DynamicResource nunito}" Padding="5" Grid.Column="0" Text="Nomor Telepon"/>
+                <TextBlock Grid.Row="8" FontFamily="{DynamicResource nunito}" Grid.Column="1" Text=":"/>
+                <TextBlock Grid.Row="8" FontFamily="{DynamicResource nunito}" Padding="5" Grid.Column="2" Text="{Binding CurrentNelayan.NomorTelepon}"/>
 
                 <!--BARIS 10: AGAMA-->
-                <TextBlock Grid.Row="10" FontFamily="{DynamicResource nunito}"  Padding="5" Grid.Column="0" Text="Agama"/>
-                <TextBlock Grid.Row="10" FontFamily="{DynamicResource nunito}" Grid.Column="1" Text=":"/>
-                <TextBlock Grid.Row="10" FontFamily="{DynamicResource nunito}" Padding="5" Grid.Column="2" Text="{Binding CurrentNelayan.Agama}"/>
+                <TextBlock Grid.Row="9" Background="White" FontFamily="{DynamicResource nunito}"  Padding="5" Grid.Column="0" Text="Agama"/>
+                <TextBlock Grid.Row="9" Background="White" FontFamily="{DynamicResource nunito}" Grid.Column="1" Text=":"/>
+                <TextBlock Grid.Row="9" Background="White" FontFamily="{DynamicResource nunito}" Padding="5" Grid.Column="2" Text="{Binding CurrentNelayan.Agama}"/>
 
                 <!--BARIS 11: Golongan Darah-->
-                <TextBlock Grid.Row="11" Background="White" FontFamily="{DynamicResource nunito}" Padding="5" Grid.Column="0" Text="Golongan Darah"/>
-                <TextBlock Grid.Row="11" Background="White" FontFamily="{DynamicResource nunito}" Grid.Column="1" Text=":"/>
-                <TextBlock Grid.Row="11" Background="White"  FontFamily="{DynamicResource nunito}" Padding="5" Grid.Column="2" Text="{Binding CurrentNelayan.GolonganDarah}"/>
-
-                <!--BARIS 12: Email-->
-                <TextBlock Grid.Row="12" FontFamily="{DynamicResource nunito}" Padding="5" Grid.Column="0" Text="Email"/>
-                <TextBlock Grid.Row="12" FontFamily="{DynamicResource nunito}" Grid.Column="1" Text=":"/>
-                <TextBlock Grid.Row="12" FontFamily="{DynamicResource nunito}" Padding="5" Grid.Column="2" Text="{Binding CurrentNelayan.Email}"/>
+                <TextBlock Grid.Row="10" FontFamily="{DynamicResource nunito}" Padding="5" Grid.Column="0" Text="Golongan Darah"/>
+                <TextBlock Grid.Row="10" FontFamily="{DynamicResource nunito}" Grid.Column="1" Text=":"/>
+                <TextBlock Grid.Row="10" FontFamily="{DynamicResource nunito}" Padding="5" Grid.Column="2" Text="{Binding CurrentNelayan.GolonganDarah}"/>
 
 
             </Grid>

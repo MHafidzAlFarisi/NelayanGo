@@ -1,78 +1,82 @@
-﻿using NelayanGo.DataServices;
-using NelayanGo.Models;
-using System.ComponentModel; // Diperlukan untuk INotifyPropertyChanged
-using System;
-using System.Collections.ObjectModel;
+﻿using NelayanGo.Models;
+using NelayanGo.DataServices;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
+using System.Windows; // Untuk AppSession (Pastikan namespace-nya sesuai)
 
 namespace NelayanGo.ViewModels
 {
-    // Implement INotifyPropertyChanged untuk notifikasi perubahan ke UI
     public class ViewModelsNelayan : INotifyPropertyChanged
     {
-        private Nelayan? _currentNelayan;
+        private NelayanModel? _currentNelayan;
+        private readonly NelayanDataService _service = new();
 
-        // Properti yang di-bind di XAML: CurrentNelayan
-        public Nelayan? CurrentNelayan
+        public NelayanModel? CurrentNelayan
         {
             get => _currentNelayan;
-            set
-            {
-                _currentNelayan = value;
-                OnPropertyChanged(nameof(CurrentNelayan));
-            }
+            set { _currentNelayan = value; OnPropertyChanged(nameof(CurrentNelayan)); }
         }
+
+        // Properti Statistik (Tetap Dummy/Default dulu)
+        public int TotalWaktuAktifHari { get; set; } = 0;
+        public int TotalJarakBerlayarKM { get; set; } = 0;
+        public int TotalBeratTangkapanTON { get; set; } = 0;
+        public int TotalJumlahBerlayar { get; set; } = 0;
+        public int TotalJamBerlayarJAM { get; set; } = 0;
+        public int TotalJenisTangkapan { get; set; } = 0;
 
         public ViewModelsNelayan()
         {
-            // PENTING: Dalam aplikasi nyata, Anda akan mendapatkan kode ini dari sesi login
-            string initialKode = "NG-001"; // Contoh Kode Identik
-
-            DataServiceNelayan dataService = new DataServiceNelayan();
-            CurrentNelayan = dataService.GetDataNelayan(initialKode);
-
-            // Menetapkan data dummy jika koneksi database gagal atau data tidak ditemukan
-            if (CurrentNelayan == null)
-            {
-                Console.WriteLine($"Menggunakan data dummy untuk nelayan: {initialKode}");
-                CurrentNelayan = GetDummyNelayanData(initialKode);
-            }
+            // Panggil fungsi Load Data secara async
+            LoadDataAsync();
         }
 
-        // Metode untuk membuat data dummy jika koneksi database tidak berfungsi
-        private Nelayan GetDummyNelayanData(string kode)
+        private async void LoadDataAsync()
         {
-            return new Nelayan
+            // Ambil ID User yang sedang login
+            // Pastikan Anda sudah menyimpan user login di AppSession.CurrentUser
+            if (AppSession.CurrentUser != null)
+            {
+                // Parse ID string ke long
+                if (long.TryParse(AppSession.CurrentUser.Id, out long userId))
+                {
+                    var dataAsli = await _service.GetProfilByUserId(userId);
+
+                    if (dataAsli != null)
+                    {
+                        CurrentNelayan = dataAsli; // TAMPILKAN DATA ASLI
+                        return; // Keluar, jangan load dummy
+                    }
+                }
+            }
+
+            // Jika User belum login atau Data tidak ditemukan di DB, baru tampilkan Dummy
+            CurrentNelayan = GetDummyNelayanData();
+        }
+
+        private NelayanModel GetDummyNelayanData()
+        {
+            return new NelayanModel
             {
                 Nama = "Ikan Setiawan (Dummy)",
-                KodeIdentik = kode,
+                KodeIdentik = "NG-001",
                 Wilayah = "Pesisir Utara Jawa",
                 TahunBergabung = "2018",
                 Status = "Aktif",
-                NIK = "3216001234567890",
-                TanggalLahir = "12 Maret 1985",
-                TempatLahir = "Pangandaran",
-                NomorTelepon = "0812-3456-7890",
-                Email = "ikan.setiawan@nelayango.com",
-                Agama = "Islam",
-                GolonganDarah = "O",
-                AlamatKTP = "Desa Bahari, RT 01/RW 02, Pangandaran, Jawa Barat",
-
-                // Data Info
-                TotalWaktuAktifHari = 852,
-                TotalJarakBerlayarKM = 12450,
-                TotalBeratTangkapanTON = 45,
-                TotalJumlahBerlayar = 320,
-                TotalJamBerlayarJAM = 6500,
-                TotalJenisTangkapan = 15
+                NIK = "Data Belum Ada",
+                TanggalLahir = "-",
+                TempatLahir = "-",
+                NomorTelepon = "-",
+                Email = "-",
+                Agama = "-",
+                GolonganDarah = "-",
+                AlamatKTP = "Silakan input data profil Anda",
             };
         }
 
-        // Boilerplate INotifyPropertyChanged
         public event PropertyChangedEventHandler? PropertyChanged;
-
-        protected virtual void OnPropertyChanged(string propertyName)
-        {
+        protected virtual void OnPropertyChanged(string propertyName) =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
     }
 }
