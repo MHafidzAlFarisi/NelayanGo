@@ -1,0 +1,181 @@
+﻿<Window x:Class="NelayanGo.Views.LoginWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="NELAYAN GO - Login"
+        Height="700" Width="1200"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize">
+
+    <Grid>
+
+        <!-- BACKGROUND FOTO PANTAI -->
+        <Grid.Background>
+            <ImageBrush ImageSource="/image/bg.jpg"
+                        Stretch="UniformToFill" />
+        </Grid.Background>
+
+        <!-- LAPISAN BIRU TRANSPARAN -->
+        <Rectangle Fill="#8800479B" />
+
+        <!-- LINGKARAN BESAR TRANSPARAN (DEKORASI) -->
+        <Ellipse Width="900" Height="900"
+                 Fill="#403C76C3"
+                 HorizontalAlignment="Left"
+                 VerticalAlignment="Top"
+                 Margin="-350,-450,0,0" />
+
+        <Ellipse Width="700" Height="700"
+                 Fill="#403C76C3"
+                 HorizontalAlignment="Right"
+                 VerticalAlignment="Bottom"
+                 Margin="0,0,-250,-250" />
+
+        <!-- KARTU LOGIN -->
+        <Border Width="380" Height="460"
+                CornerRadius="28"
+                BorderThickness="1"
+                BorderBrush="#40000000"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center">
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Color="#E0F2FF" Offset="0" />
+                    <GradientStop Color="#6BA3E3" Offset="0.5" />
+                    <GradientStop Color="#215691" Offset="1" />
+                </LinearGradientBrush>
+            </Border.Background>
+
+            <Grid Margin="35">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <!-- logo -->
+                    <RowDefinition Height="Auto"/>
+                    <!-- halo -->
+                    <RowDefinition Height="*"/>
+                    <!-- form -->
+                    <RowDefinition Height="Auto"/>
+                    <!-- link register -->
+                </Grid.RowDefinitions>
+
+                <!-- LOGO + NAMA APP -->
+                <StackPanel Grid.Row="0"
+                            Orientation="Horizontal"
+                            HorizontalAlignment="Center"
+                            Margin="0,0,0,10">
+                    <Border Width="40" Height="40"
+                            CornerRadius="12"
+                            Background="White"
+                            Margin="0,0,10,0">
+                        <Image Source="/image/logo_real.jpg"
+                               Stretch="Uniform"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"/>
+                    </Border>
+
+                    <TextBlock Text="NELAYAN GO"
+                               FontWeight="Bold"
+                               Foreground="#111"
+                               FontSize="14"
+                               VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <!-- TEKS HALO -->
+                <StackPanel Grid.Row="1" Margin="0,10,0,10">
+                    <TextBlock Text="Halo!"
+                               FontSize="32"
+                               FontWeight="Bold"
+                               Foreground="#111"
+                               Margin="0,10,0,0"/>
+                    <TextBlock Text="Silakan login untuk melanjutkan"
+                               FontSize="12"
+                               Foreground="#222"
+                               Margin="0,2,0,0"/>
+                </StackPanel>
+
+                <!-- FORM LOGIN -->
+                <StackPanel Grid.Row="2" Margin="0,10,0,10">
+
+                    <!-- Email / Username -->
+                    <TextBlock Text="Email / Username"
+                               FontSize="12"
+                               Margin="0,5,0,2"
+                               Foreground="#111"/>
+                    <Border Background="#E0F2FF"
+                            CornerRadius="6"
+                            BorderThickness="1"
+                            BorderBrush="#40666666"
+                            Height="38">
+                        <TextBox x:Name="LoginTextBox"
+                                 BorderThickness="0"
+                                 Background="Transparent"
+                                 Padding="10,8"
+                                 VerticalContentAlignment="Center"
+                                 FontSize="12"
+                                 Foreground="#222"/>
+                    </Border>
+
+                    <!-- Password -->
+                    <TextBlock Text="Password"
+                               FontSize="12"
+                               Margin="0,15,0,2"
+                               Foreground="#111"/>
+                    <Border Background="#E0F2FF"
+                            CornerRadius="6"
+                            BorderThickness="1"
+                            BorderBrush="#40666666"
+                            Height="38">
+                        <PasswordBox x:Name="PasswordBox"
+                                     BorderThickness="0"
+                                     Background="Transparent"
+                                     Padding="10,8"
+                                     FontSize="12"
+                                     Foreground="#222"/>
+                    </Border>
+
+                    <!-- TOMBOL LOGIN -->
+                    <Button x:Name="LoginButton"
+                            Content="Login"
+                            Margin="0,25,0,5"
+                            Height="40"
+                            Click="LoginButton_Click"
+                            Foreground="White"
+                            FontWeight="SemiBold"
+                            BorderThickness="0"
+                            Cursor="Hand">
+                        <Button.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                <GradientStop Color="#24437B" Offset="0" />
+                                <GradientStop Color="#062552" Offset="1" />
+                            </LinearGradientBrush>
+                        </Button.Background>
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border Background="{TemplateBinding Background}"
+                                        CornerRadius="20">
+                                    <ContentPresenter HorizontalAlignment="Center"
+                                                      VerticalAlignment="Center"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+
+                </StackPanel>
+
+                <!-- LINK REGISTER -->
+                <TextBlock Grid.Row="3"
+                           TextAlignment="Center"
+                           Margin="0,10,0,0"
+                           MouseDown="RegisterLink_MouseDown"
+                           Cursor="Hand">
+                    <Run Text="Belum punya akun? " Foreground="#222" FontSize="11"/>
+                    <Run Text="Daftar" Foreground="#0B3C82" FontSize="11" TextDecorations="Underline" />
+                </TextBlock>
+
+            </Grid>
+        </Border>
+
+    </Grid>
+</Window>
