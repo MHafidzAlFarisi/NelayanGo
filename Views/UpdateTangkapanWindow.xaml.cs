@@ -6,32 +6,55 @@ using System.Windows;
 using System.Windows.Input;
 using NelayanGo.DataServices;
 using NelayanGo.Models;
+using NelayanGo.Helpers; // Tambahkan ini untuk NavigationHelper
+using System.ComponentModel; // Tambahkan ini untuk INotifyPropertyChanged
 
 namespace NelayanGo.Views
 {
-    public partial class UpdateTangkapanWindow : Window
+    public partial class UpdateTangkapanWindow : Window, INotifyPropertyChanged
     {
         private readonly IkanTangkapanModel _original;
         private readonly HargaIkanDataService _hargaService = new();
+        private readonly NelayanDataService _profilService = new(); // Service untuk profil user
 
         private List<HargaIkanModel> _allHargaIkan = new();
 
         public IkanTangkapanModel? UpdatedModel { get; private set; }
 
+        // --- PROPERTI BINDING HEADER ---
+        private NelayanModel? _currentNelayan;
+        public NelayanModel? CurrentNelayan
+        {
+            get => _currentNelayan;
+            set
+            {
+                _currentNelayan = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CurrentNelayan)));
+            }
+        }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+
         public UpdateTangkapanWindow(IkanTangkapanModel model)
         {
             InitializeComponent();
 
+            // PENTING: Set DataContext agar Binding di XAML bekerja
+            this.DataContext = this;
+
+            // Load Data Profil untuk Header
+            LoadUserProfile();
+
             _original = model;
 
-            // Prefill
+            // Prefill Data
             txtNamaIkan.Text = _original.NamaIkan;
             txtLokasi.Text = _original.Lokasi;
             dpTanggal.SelectedDate = _original.JamTangkap.Date;
             txtJam.Text = _original.JamTangkap.ToString("HH:mm");
             txtBeratKg.Text = _original.BeratKg.ToString(CultureInfo.InvariantCulture);
 
-            // Timer jam / tanggal (optional)
+            // Timer jam
             var timer = new System.Windows.Threading.DispatcherTimer();
             timer.Interval = TimeSpan.FromSeconds(1);
             timer.Tick += (s, e) =>
@@ -41,7 +64,7 @@ namespace NelayanGo.Views
             };
             timer.Start();
 
-            // Load semua harga ikan untuk suggestion
+            // Load Harga
             try
             {
                 _allHargaIkan = _hargaService.GetAll();
@@ -51,6 +74,30 @@ namespace NelayanGo.Views
                 MessageBox.Show($"Gagal memuat daftar harga ikan:\n{ex.Message}");
             }
         }
+
+        // --- LOGIKA LOAD USER PROFILE ---
+        private async void LoadUserProfile()
+        {
+            if (AppSession.CurrentUser != null && long.TryParse(AppSession.CurrentUser.Id, out long userId))
+            {
+                var profil = await _profilService.GetProfilByUserId(userId);
+                if (profil != null)
+                    CurrentNelayan = profil;
+                else
+                    CurrentNelayan = new NelayanModel { Nama = AppSession.CurrentUser.Username, KodeIdentik = "Belum Input Data" };
+            }
+            else
+            {
+                CurrentNelayan = new NelayanModel { Nama = "Tamu", KodeIdentik = "---" };
+            }
+        }
+
+        // --- EVENT HANDLER YANG HILANG (INI SOLUSI UTAMANYA) ---
+        private void ProfileHeader_Click(object sender, MouseButtonEventArgs e)
+        {
+            NavigationHelper.NavigateFromHeaderClick(sender, "Profil");
+        }
+
         private void BtnSimpan_Click(object sender, RoutedEventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txtNamaIkan.Text) ||
@@ -65,7 +112,7 @@ namespace NelayanGo.Views
 
             var namaIkan = txtNamaIkan.Text.Trim();
 
-            if (!int.TryParse(txtBeratKg.Text, out var beratKg) || beratKg <= 0)
+            if (!double.TryParse(txtBeratKg.Text, NumberStyles.Any, CultureInfo.InvariantCulture, out var beratKg) || beratKg <= 0)
             {
                 MessageBox.Show("Berat KG harus angka > 0.");
                 return;
@@ -83,7 +130,7 @@ namespace NelayanGo.Views
             var tanggal = dpTanggal.SelectedDate.Value.Date;
             var jamTangkap = tanggal.Add(jam);
 
-            // 🔍 Ambil harga ikan dari master HargaIkan (Supabase)
+            // Ambil harga ikan
             HargaIkanModel? hargaIkan = null;
             try
             {
@@ -106,25 +153,22 @@ namespace NelayanGo.Views
                 return;
             }
 
-            // ✅ Hitung total harga BERDASARKAN berat & harga dari master
-            var totalHargaDecimal = hargaIkan.HargaIkan * beratKg;
+            // Hitung total harga
+            var totalHargaDecimal = hargaIkan.HargaIkan * (decimal)beratKg;
             var totalHarga = (long)totalHargaDecimal;
-
 
             UpdatedModel = new IkanTangkapanModel
             {
-                // primary key & relasi tetap
                 kodetangkapan = _original.kodetangkapan,
                 ID_User = _original.ID_User,
                 KodeIkan = hargaIkan.KodeIkan,
                 kode_ikan = hargaIkan.KodeIkan,
 
-                // data lainnya
                 TanggalInput = _original.TanggalInput,
                 NamaIkan = namaIkan,
                 Lokasi = txtLokasi.Text.Trim(),
                 JamTangkap = jamTangkap,
-                BeratKg = beratKg,
+                BeratKg = (int)beratKg, // Cast ke int jika model pakai int
                 TotalHargaIkan = totalHarga
             };
 
@@ -137,7 +181,6 @@ namespace NelayanGo.Views
             DialogResult = false;
             Close();
         }
-
 
         private void txtNamaIkan_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
         {

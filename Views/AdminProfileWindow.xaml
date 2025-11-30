@@ -419,7 +419,7 @@
                         <StackPanel Grid.Column="0"
                                     VerticalAlignment="Center">
                             <TextBlock Style="{StaticResource InfoNumber}"
-                                       Text="{Binding CurrentAdmin.TotalWaktuAktifHari}"/>
+                                       Text="{Binding TotalWaktuAktifHari}"/>
                             <TextBlock Style="{StaticResource InfoLabel}"
                                        Text="TOTAL WAKTU AKTIF (HARI)"/>
                         </StackPanel>
@@ -428,7 +428,7 @@
                         <StackPanel Grid.Column="1"
                                     VerticalAlignment="Center">
                             <TextBlock Style="{StaticResource InfoNumber}"
-                                       Text="{Binding CurrentAdmin.TotalHargaIkanDiinput}"/>
+                                       Text="{Binding TotalHargaIkanDiinput}"/>
                             <TextBlock Style="{StaticResource InfoLabel}"
                                        Text="TOTAL HARGA IKAN YANG DIINPUT"/>
                         </StackPanel>
@@ -437,7 +437,7 @@
                         <StackPanel Grid.Column="2"
                                     VerticalAlignment="Center">
                             <TextBlock Style="{StaticResource InfoNumber}"
-                                       Text="{Binding CurrentAdmin.TotalNelayanDiWilayah}"/>
+                                       Text="{Binding TotalNelayanDiWilayah}"/>
                             <TextBlock Style="{StaticResource InfoLabel}"
                                        Text="TOTAL NELAYAN DI BANTUL"/>
                         </StackPanel>

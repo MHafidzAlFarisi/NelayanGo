@@ -10,10 +10,12 @@ namespace NelayanGo.Views
     /// </summary>
     public partial class AnalisisWindow : Window
     {
+
         public AnalisisWindow()
         {
             InitializeComponent();
         }
+
         private void HomeLink_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             // Cukup panggil helper, dan berikan tujuan sebagai string

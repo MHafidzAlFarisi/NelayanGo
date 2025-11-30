@@ -1,114 +1,214 @@
 ﻿using NelayanGo.Models;
+using NelayanGo.DataServices;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq; // Diperlukan untuk metode Sum
+using System.Linq;
 using System;
-using System.Collections.Generic; // Diperlukan untuk inisialisasi koleksi
+using System.Collections.Generic;
+using System.Globalization;
+using System.Windows;
+using System.Threading.Tasks;
 
 namespace NelayanGo.ViewModels
 {
     public class AnalisisViewModel : INotifyPropertyChanged
     {
-        // Data untuk Grafik Garis (Tangkapan Hari Ini)
-        public ObservableCollection<TangkapanHarianPoint> DataHarian { get; set; }
-        // Data untuk Grafik Batang (Tangkapan Setahun)
-        public ObservableCollection<TangkapanTahunanBar> DataTahunan { get; set; }
-        // Data untuk Grafik Batang Kecil (Jenis Tangkapan Terbanyak)
-        public ObservableCollection<JenisTangkapanBar> DataJenisTangkapan { get; set; }
+        private readonly IkanTangkapanDataService _service = new();
+        private readonly NelayanDataService _profilService = new();
 
-        // Statistik
-        private string _statsHarian = string.Empty;
-        private string _statsTahunan = string.Empty;
+        private NelayanModel? _currentNelayan;
+        public NelayanModel? CurrentNelayan
+        {
+            get => _currentNelayan;
+            set { _currentNelayan = value; OnPropertyChanged(nameof(CurrentNelayan)); }
+        }
 
+        // ... (Properti Lainnya Tetap Sama, disingkat agar fokus) ...
+        public ObservableCollection<TangkapanHarianPoint> DataHarian { get; set; } = new();
+        public ObservableCollection<TangkapanTahunanBar> DataTahunan { get; set; } = new();
+        public ObservableCollection<JenisTangkapanBar> DataJenisTangkapan { get; set; } = new();
+
+        private string _statsHarian = "-";
         public string StatsHarian
         {
             get => _statsHarian;
             set { _statsHarian = value; OnPropertyChanged(nameof(StatsHarian)); }
         }
+
+        private string _statsTahunan = "-";
         public string StatsTahunan
         {
             get => _statsTahunan;
             set { _statsTahunan = value; OnPropertyChanged(nameof(StatsTahunan)); }
         }
-        public decimal ProfitHarian { get; set; }
 
-        // PERBAIKAN IDE0028: Sederhanakan inisialisasi koleksi
+        private decimal _profitHarian;
+        public decimal ProfitHarian
+        {
+            get => _profitHarian;
+            set { _profitHarian = value; OnPropertyChanged(nameof(ProfitHarian)); }
+        }
+
         public AnalisisViewModel()
         {
-            DataHarian = new(LoadDailyData());
-            DataTahunan = new(LoadYearlyData());
-            DataJenisTangkapan = new(LoadCatchTypeData());
+            // [PENTING] Set nilai awal agar tidak kosong/blank saat loading
+            CurrentNelayan = new NelayanModel
+            {
+                Nama = "Memuat...",
+                KodeIdentik = "..."
+            };
 
-            // Format Statistik
-            StatsHarian = GenerateDailyStats();
-            StatsTahunan = GenerateYearlyStats();
-
-            ProfitHarian = 500000m; // Rp. 500.000
+            LoadRealData();
+            LoadUserProfile();
         }
 
-        // PERBAIKAN CA1822: Ubah ke static karena tidak mengakses data instance
-        private static string GenerateDailyStats()
+        private async void LoadUserProfile()
         {
-            return $"Jumlah : 45 kg\n" +
-                   $"Rerata : 9 kg\n" +
-                   $"Waktu mulai : 19.00\n" +
-                   $"Waktu selesai : --\n" +
-                   $"Durasi : 5:00:00";
+            // Cek apakah ada user yang login di sesi ini
+            if (AppSession.CurrentUser != null)
+            {
+                string usernameLogin = AppSession.CurrentUser.Username;
+
+                if (long.TryParse(AppSession.CurrentUser.Id, out long userId))
+                {
+                    // Ambil data profil asli dari database
+                    var profil = await _profilService.GetProfilByUserId(userId);
+
+                    if (profil != null)
+                    {
+                        // Jika ada profil, tampilkan
+                        CurrentNelayan = profil;
+                    }
+                    else
+                    {
+                        // Jika profil belum diisi, tampilkan Username dari Login
+                        CurrentNelayan = new NelayanModel
+                        {
+                            Nama = usernameLogin,
+                            KodeIdentik = "Belum Input Data"
+                        };
+                    }
+                }
+            }
+            else
+            {
+                // Jika tidak ada sesi login (misal debug langsung ke window ini)
+                CurrentNelayan = new NelayanModel
+                {
+                    Nama = "Tamu (Debug)",
+                    KodeIdentik = "---"
+                };
+            }
         }
 
-        // PERBAIKAN CA1822: Ubah ke static karena tidak mengakses data instance
-        private static string GenerateYearlyStats()
+        // ... (Sisa fungsi LoadRealData, ProcessDailyData, dll SAMA PERSIS seperti sebelumnya) ...
+        // ... (Pastikan fungsi-fungsi tersebut tetap ada di file Anda) ...
+
+        public void LoadRealData()
         {
-            return $"Jumlah : 25.425 ton\n" +
-                   $"Rerata : 2.311 ton\n" +
-                   $"Jangkauan : 1.936 ton\n" +
-                   $"Minimum : 1.353 ton\n" +
-                   $"Maximum : 3.289 ton\n" +
-                   $"Quartil 1 : 2.543 ton\n" +
-                   $"Quartil 2 : 2.786 ton\n" +
-                   $"Quartil 3 : 2.468 ton";
+            try
+            {
+                long userId = 1;
+                if (AppSession.CurrentUser != null && long.TryParse(AppSession.CurrentUser.Id, out long parsedId))
+                {
+                    userId = parsedId;
+                }
+
+                var rawData = _service.GetByUser(userId);
+                if (rawData == null || !rawData.Any())
+                {
+                    StatsHarian = "Belum ada data.";
+                    return;
+                }
+
+                ProcessDailyData(rawData);
+                ProcessYearlyData(rawData);
+                ProcessCatchTypeData(rawData);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error Load Analisis: {ex.Message}");
+            }
         }
 
-        // Load Data methods (dipisah untuk kebersihan)
-        private static List<TangkapanHarianPoint> LoadDailyData() => new List<TangkapanHarianPoint>
+        private void ProcessDailyData(List<IkanTangkapanModel> rawData)
         {
-            new TangkapanHarianPoint { Jam = "19.00", BeratKg = 5 },
-            new TangkapanHarianPoint { Jam = "20.00", BeratKg = 18 },
-            new TangkapanHarianPoint { Jam = "21.00", BeratKg = 7 },
-            new TangkapanHarianPoint { Jam = "22.00", BeratKg = 15 },
-            new TangkapanHarianPoint { Jam = "23.00", BeratKg = 10 }
-        };
+            var today = DateTime.Now.Date;
+            var todaysCatch = rawData.Where(x => x.JamTangkap.Date == today).ToList();
 
-        private static List<TangkapanTahunanBar> LoadYearlyData() => new List<TangkapanTahunanBar>
+            var grouped = todaysCatch
+                .GroupBy(x => x.JamTangkap.Hour)
+                .Select(g => new TangkapanHarianPoint
+                {
+                    Jam = $"{g.Key:00}.00",
+                    BeratKg = g.Sum(x => x.BeratKg)
+                })
+                .OrderBy(x => x.Jam)
+                .ToList();
+
+            DataHarian.Clear();
+            foreach (var item in grouped) DataHarian.Add(item);
+
+            if (todaysCatch.Any())
+            {
+                double totalBerat = todaysCatch.Sum(x => x.BeratKg);
+                double rerata = totalBerat / todaysCatch.Count;
+                ProfitHarian = todaysCatch.Sum(x => (decimal)x.TotalHargaIkan);
+
+                StatsHarian = $"Jumlah : {totalBerat} kg\n" +
+                              $"Rerata : {rerata:F1} kg\n" +
+                              $"Total : Rp {ProfitHarian:N0}";
+            }
+            else
+            {
+                StatsHarian = "Tidak ada tangkapan hari ini.";
+                ProfitHarian = 0;
+            }
+        }
+
+        private void ProcessYearlyData(List<IkanTangkapanModel> rawData)
         {
-            new TangkapanTahunanBar { Bulan = "Januari", BeratTon = 2500 },
-            new TangkapanTahunanBar { Bulan = "Februari", BeratTon = 1800 },
-            new TangkapanTahunanBar { Bulan = "Maret", BeratTon = 2800 },
-            new TangkapanTahunanBar { Bulan = "April", BeratTon = 3000 },
-            new TangkapanTahunanBar { Bulan = "Mei", BeratTon = 2400 },
-            new TangkapanTahunanBar { Bulan = "Juni", BeratTon = 2600 },
-            new TangkapanTahunanBar { Bulan = "Juli", BeratTon = 1500 },
-            new TangkapanTahunanBar { Bulan = "Agustus", BeratTon = 1800 },
-            new TangkapanTahunanBar { Bulan = "September", BeratTon = 2500 },
-            new TangkapanTahunanBar { Bulan = "Oktober", BeratTon = 2200 },
-            new TangkapanTahunanBar { Bulan = "November", BeratTon = 1300 },
-            new TangkapanTahunanBar { Bulan = "Desember", BeratTon = 1800 }
-        };
+            var thisYear = DateTime.Now.Year;
+            var yearsCatch = rawData.Where(x => x.JamTangkap.Year == thisYear).ToList();
 
-        private static List<JenisTangkapanBar> LoadCatchTypeData() => new List<JenisTangkapanBar>
+            var grouped = yearsCatch
+                .GroupBy(x => x.JamTangkap.Month)
+                .Select(g => new TangkapanTahunanBar
+                {
+                    Bulan = CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(g.Key),
+                    BeratTon = (double)g.Sum(x => x.BeratKg) / 1000.0
+                })
+                .ToList();
+
+            DataTahunan.Clear();
+            foreach (var item in grouped) DataTahunan.Add(item);
+
+            if (yearsCatch.Any())
+            {
+                double totalTon = yearsCatch.Sum(x => x.BeratKg) / 1000.0;
+                StatsTahunan = $"Total Tahun Ini : {totalTon:F3} ton";
+            }
+        }
+
+        private void ProcessCatchTypeData(List<IkanTangkapanModel> rawData)
         {
-            new JenisTangkapanBar { NamaIkan = "Bandeng", TotalKg = 2800 },
-            new JenisTangkapanBar { NamaIkan = "Bawal", TotalKg = 2500 },
-            new JenisTangkapanBar { NamaIkan = "Tongkol", TotalKg = 2000 },
-            new JenisTangkapanBar { NamaIkan = "Trenggiri", TotalKg = 1800 },
-            new JenisTangkapanBar { NamaIkan = "Teri", TotalKg = 1700 }
-        };
+            var grouped = rawData
+                .GroupBy(x => x.NamaIkan)
+                .Select(g => new JenisTangkapanBar
+                {
+                    NamaIkan = g.Key,
+                    TotalKg = g.Sum(x => x.BeratKg)
+                })
+                .OrderByDescending(x => x.TotalKg)
+                .Take(5)
+                .ToList();
 
-        // Boilerplate INotifyPropertyChanged
+            DataJenisTangkapan.Clear();
+            foreach (var item in grouped) DataJenisTangkapan.Add(item);
+        }
+
         public event PropertyChangedEventHandler? PropertyChanged;
-        protected virtual void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+        protected virtual void OnPropertyChanged(string name)
+            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
     }
 }

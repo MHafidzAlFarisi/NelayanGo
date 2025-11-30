@@ -1,22 +1,27 @@
 ﻿using NelayanGo.Models;
+using NelayanGo.DataServices; // Tambahkan namespace DataServices
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq; // Diperlukan untuk metode Sum
+using System.Linq;
 using System;
 
 namespace NelayanGo.ViewModels
 {
     public class HargaPasarViewModel : INotifyPropertyChanged
     {
-        // Data untuk tabel DAFTAR HARGA IKAN (Kiri)
-        public ObservableCollection<HargaIkanModel> DaftarHarga { get; set; }
+        private readonly NelayanDataService _profilService = new(); // Service profil
 
-        // Data untuk tabel PROFIT TANGKAPAN HARI INI (Kanan)
+        public ObservableCollection<HargaIkanModel> DaftarHarga { get; set; }
         public ObservableCollection<ProfitModel> DaftarProfit { get; set; }
 
-        private decimal _totalPendapatan;
+        private NelayanModel? _currentNelayan;
+        public NelayanModel? CurrentNelayan
+        {
+            get => _currentNelayan;
+            set { _currentNelayan = value; OnPropertyChanged(nameof(CurrentNelayan)); }
+        }
 
-        // Properti yang di-bind untuk total pendapatan
+        private decimal _totalPendapatan;
         public decimal TotalPendapatan
         {
             get => _totalPendapatan;
@@ -31,12 +36,30 @@ namespace NelayanGo.ViewModels
         {
             DaftarHarga = new ObservableCollection<HargaIkanModel>();
             DaftarProfit = new ObservableCollection<ProfitModel>();
+
+            LoadUserProfile(); // Load Header
             LoadData();
+        }
+
+        private async void LoadUserProfile()
+        {
+            if (AppSession.CurrentUser != null && long.TryParse(AppSession.CurrentUser.Id, out long userId))
+            {
+                var profil = await _profilService.GetProfilByUserId(userId);
+                if (profil != null)
+                    CurrentNelayan = profil;
+                else
+                    CurrentNelayan = new NelayanModel { Nama = AppSession.CurrentUser.Username, KodeIdentik = "Belum Input Data" };
+            }
+            else
+            {
+                CurrentNelayan = new NelayanModel { Nama = "Tamu", KodeIdentik = "---" };
+            }
         }
 
         private void LoadData()
         {
-            // 1. Muat Data Harga Ikan (Kiri)
+            // Data Dummy Harga & Profit (Sama seperti sebelumnya)
             DaftarHarga.Add(new HargaIkanModel { NamaIkan = "Tongkol", HargaIkan = 12000 });
             DaftarHarga.Add(new HargaIkanModel { NamaIkan = "Kakap", HargaIkan = 13000 });
             DaftarHarga.Add(new HargaIkanModel { NamaIkan = "Bandeng", HargaIkan = 11000 });
@@ -45,8 +68,6 @@ namespace NelayanGo.ViewModels
             DaftarHarga.Add(new HargaIkanModel { NamaIkan = "Layang", HargaIkan = 13000 });
             DaftarHarga.Add(new HargaIkanModel { NamaIkan = "Teri", HargaIkan = 10000 });
 
-            // 2. Muat Data Profit (Kanan) - Menggunakan data statis seperti di gambar
-            // Catatan: Dalam aplikasi nyata, data ini harus dihitung dari DaftarHarga dan data tangkapan.
             DaftarProfit.Add(new ProfitModel { NamaIkan = "Tongkol", BeratTangkapan = 10.00m, Harga = 120000 });
             DaftarProfit.Add(new ProfitModel { NamaIkan = "Kakap", BeratTangkapan = 10.00m, Harga = 130000 });
             DaftarProfit.Add(new ProfitModel { NamaIkan = "Bandeng", BeratTangkapan = 10.00m, Harga = 110000 });
@@ -55,18 +76,14 @@ namespace NelayanGo.ViewModels
             DaftarProfit.Add(new ProfitModel { NamaIkan = "Layang", BeratTangkapan = 10.00m, Harga = 130000 });
             DaftarProfit.Add(new ProfitModel { NamaIkan = "Teri", BeratTangkapan = 10.00m, Harga = 100000 });
 
-            // 3. Hitung Total Pendapatan
             CalculateTotal();
         }
 
         private void CalculateTotal()
         {
-            // Menghitung total dari kolom Harga di DaftarProfit
-            // Pastikan Anda telah menginstal System.Linq jika menggunakan metode Sum()
             TotalPendapatan = DaftarProfit.Sum(p => p.Harga);
         }
 
-        // Boilerplate INotifyPropertyChanged
         public event PropertyChangedEventHandler? PropertyChanged;
         protected virtual void OnPropertyChanged(string propertyName)
         {

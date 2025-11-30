@@ -52,7 +52,10 @@ namespace NelayanGo.Views
 
                 // Buka Input Data
                 var inputDataWindow = new InputDataNelayanWindow(user.Id);
-                inputDataWindow.Show();
+
+                // PERBAIKAN: Gunakan ShowDialog() agar InputDataNelayanWindow bisa menggunakan 'DialogResult'
+                // Jika menggunakan .Show(), baris 'DialogResult = true' di InputDataNelayanWindow akan error.
+                inputDataWindow.ShowDialog();
 
                 this.Close();
             }
