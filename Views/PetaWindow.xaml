@@ -4,39 +4,18 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:NelayanGo.ViewModels"
+        xmlns:gmap="clr-namespace:GMap.NET.WindowsPresentation;assembly=GMap.NET.WindowsPresentation"
         mc:Ignorable="d"
         Title="NELAYAN GO - Maps &amp; Cuaca" Height="750" Width="1200"
         Background="#F0F0F0">
 
     <Window.DataContext>
-        <!-- ViewModel tetap PetaCuacaViewModel -->
         <vm:PetaCuacaViewModel/>
     </Window.DataContext>
 
     <Window.Resources>
         <!-- Style untuk efek bayangan sederhana -->
         <DropShadowEffect x:Key="ShadowDepth1" BlurRadius="5" ShadowDepth="2" Direction="270" Opacity="0.1"/>
-
-        <!-- Style untuk Tombol Peta (Zoom, Expand) -->
-        <Style TargetType="Button" x:Key="MapButton">
-            <Setter Property="Width" Value="30"/>
-            <Setter Property="Height" Value="30"/>
-            <Setter Property="Background" Value="White"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Margin" Value="0,0,0,1"/>
-            <Setter Property="Foreground" Value="#333"/>
-            <Setter Property="FontSize" Value="16"/>
-            <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type Button}">
-                        <Border Background="{TemplateBinding Background}" CornerRadius="3">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
 
         <!-- Style untuk Kartu Cuaca -->
         <Style TargetType="{x:Type Border}" x:Key="WeatherCard">
@@ -50,34 +29,26 @@
         <Style TargetType="{x:Type TextBlock}" x:Key="CoordLabel">
             <Setter Property="Foreground" Value="#333"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="Margin" Value="0,10,0,0"/>
-        </Style>
-
-        <!-- Style untuk Nilai Koordinat -->
-        <Style TargetType="{x:Type TextBlock}" x:Key="CoordValue">
-            <Setter Property="Foreground" Value="#666"/>
-            <Setter Property="FontSize" Value="13"/>
-            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="Margin" Value="0,10,0,5"/>
         </Style>
     </Window.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="60"/>
-            <!-- 0: Header -->
+            <!-- Header -->
             <RowDefinition Height="*"/>
-            <!-- 1: Konten Utama -->
+            <!-- Konten -->
         </Grid.RowDefinitions>
 
         <!-- === HEADER (ROW 0) === -->
         <Grid Grid.Row="0" Background="#0361A0">
+            <!-- ... (Header Code sama seperti sebelumnya, disingkat agar fokus ke konten) ... -->
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="200"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="250"/>
             </Grid.ColumnDefinitions>
-
-            <!-- Logo dan Navigasi (tetap sama) -->
             <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="20,0,0,0">
                 <TextBlock Text="N" FontFamily="Segoe UI" Foreground="White" FontSize="20" FontWeight="Bold" Margin="0,0,5,0"/>
                 <TextBlock Text="NELAYAN GO" FontFamily="Segoe UI" Foreground="White" FontSize="20" FontWeight="SemiBold"/>
@@ -89,9 +60,6 @@
                 <TextBlock x:Name="HargaPasarLink" Cursor="Hand" MouseLeftButtonDown="HargaPasarLink_MouseLeftButtonDown" Text="Harga Pasar" Foreground="White" VerticalAlignment="Center" Margin="0,0,20,0"/>
             </StackPanel>
             <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,20,0">
-                <Border CornerRadius="50" Width="30" Height="30" Background="White" VerticalAlignment="Center" Margin="0,0,10,0">
-                    <TextBlock Text="👤" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,2"/>
-                </Border>
                 <StackPanel VerticalAlignment="Center">
                     <TextBlock Text="FIKRI HOIRUL" Foreground="White" FontSize="14" FontWeight="SemiBold"/>
                     <TextBlock Text="TGL-32" Foreground="White" FontSize="12"/>
@@ -99,81 +67,74 @@
             </StackPanel>
         </Grid>
 
-        <!-- === KONTEN UTAMA (ROW 1 - PETA & CUACA) === -->
+        <!-- === KONTEN UTAMA (ROW 1) === -->
         <Grid Grid.Row="1" Margin="20">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <!-- Kolom Peta -->
-                <ColumnDefinition Width="300"/>
-                <!-- Kolom Cuaca -->
+                <ColumnDefinition Width="320"/>
+                <!-- Kolom Cuaca (Sedikit diperlebar) -->
             </Grid.ColumnDefinitions>
 
             <!-- KIRI: PETA DAN KOORDINAT -->
             <Border Grid.Column="0" Background="White" CornerRadius="10" Padding="15" Effect="{StaticResource ShadowDepth1}">
                 <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                        <!-- Peta Simulasi -->
                         <RowDefinition Height="Auto"/>
-                        <!-- Koordinat -->
+                        <!-- Mode Selector -->
+                        <RowDefinition Height="*"/>
+                        <!-- Peta -->
+                        <RowDefinition Height="Auto"/>
+                        <!-- Input Koordinat -->
                     </Grid.RowDefinitions>
 
-                    <!-- Area Peta (Placeholder) -->
-                    <!-- Jika menggunakan GMap.NET/WebView2, ganti dengan kontrol tersebut -->
-                    <Border Grid.Row="0" BorderBrush="#ccc" BorderThickness="1" CornerRadius="5" Margin="0,0,0,10">
-                        <Grid Background="LightGray">
-                            <!-- Peta Statis (Simulasi Visual) -->
-                            <Image Source="https://placehold.co/850x450/93b8d6/white?text=PETA+INTERAKTIF" Stretch="UniformToFill" Opacity="0.8"/>
+                    <!-- 1. Mode Selector -->
+                    <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,10">
+                        <TextBlock Text="Pilih Mode Klik Peta: " FontWeight="Bold" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                        <RadioButton Content="Set Posisi Awal" IsChecked="True" GroupName="MapMode" Checked="Radio_Checked_Awal" Margin="0,0,15,0"/>
+                        <RadioButton Content="Set Tujuan" GroupName="MapMode" Checked="Radio_Checked_Tujuan"/>
+                    </StackPanel>
 
-                            <!-- Kontrol Peta Simulasi (Zoom/Pan) -->
-                            <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10">
-                                <Border Background="White" CornerRadius="5" Effect="{StaticResource ShadowDepth1}" Padding="5">
-                                    <StackPanel>
-                                        <Button Style="{StaticResource MapButton}" Content="➕"/>
-                                        <Button Style="{StaticResource MapButton}" Content="➖"/>
-                                        <Button Style="{StaticResource MapButton}" Content="🔍"/>
-                                        <Button Style="{StaticResource MapButton}" Content=""/>
-                                    </StackPanel>
-                                </Border>
-                            </StackPanel>
-                        </Grid>
+                    <!-- 2. PETA (GMap Control) -->
+                    <Border Grid.Row="1" BorderBrush="#ccc" BorderThickness="1" CornerRadius="5" Margin="0,0,0,15" ClipToBounds="True">
+                        <!-- GMapControl menggantikan Image placeholder -->
+                        <gmap:GMapControl x:Name="MainMap" 
+                                          MouseDoubleClick="MainMap_MouseDoubleClick"/>
                     </Border>
 
-                    <!-- Area Koordinat dan Tombol -->
-                    <StackPanel Grid.Row="1">
-                        <TextBlock Text="Koordinat Posisi Sekarang" Style="{StaticResource CoordLabel}"/>
-                        <TextBlock Text="{Binding KoordinatPosisiSekarang}" Style="{StaticResource CoordValue}"/>
+                    <!-- 3. Area Input Koordinat -->
+                    <StackPanel Grid.Row="2">
+                        <!-- Koordinat Awal -->
+                        <TextBlock Text="Koordinat Posisi Awal (Latitude, Longitude)" Style="{StaticResource CoordLabel}"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="10"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox Grid.Column="0" Text="{Binding StartLat, UpdateSourceTrigger=PropertyChanged}" Padding="5" TextChanged="Coordinate_TextChanged"/>
+                            <TextBox Grid.Column="2" Text="{Binding StartLng, UpdateSourceTrigger=PropertyChanged}" Padding="5" TextChanged="Coordinate_TextChanged"/>
+                            <Button Grid.Column="3" Content="📍 Lokasi Saya" Click="BtnCurrentLoc_Click" Margin="10,0,0,0" Padding="10,5" Background="#0361A0" Foreground="White" BorderThickness="0">
+                                <Button.Resources>
+                                    <Style TargetType="Border">
+                                        <Setter Property="CornerRadius" Value="5"/>
+                                    </Style>
+                                </Button.Resources>
+                            </Button>
+                        </Grid>
 
-                        <TextBlock Text="Koordinat Tujuan" Style="{StaticResource CoordLabel}"/>
-                        <TextBlock Text="{Binding KoordinatTujuan}" Style="{StaticResource CoordValue}"/>
-
-                        <!-- Tombol Pilih Lokasi (Menggunakan Style Button yang mendukung CornerRadius) -->
-                        <Button Content="Pilih Lokasi" Command="{Binding PilihLokasiCommand}"
-                                FontWeight="SemiBold">
-                            <Button.Style>
-                                <Style TargetType="{x:Type Button}">
-                                    <Setter Property="Background" Value="#0361A0"/>
-                                    <Setter Property="Foreground" Value="White"/>
-                                    <Setter Property="BorderThickness" Value="0"/>
-                                    <Setter Property="Padding" Value="10"/>
-                                    <Setter Property="FontWeight" Value="SemiBold"/>
-                                    <Setter Property="Template">
-                                        <Setter.Value>
-                                            <ControlTemplate TargetType="{x:Type Button}">
-                                                <Border Background="{TemplateBinding Background}" CornerRadius="5">
-                                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                                </Border>
-                                            </ControlTemplate>
-                                        </Setter.Value>
-                                    </Setter>
-                                    <Style.Triggers>
-                                        <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter Property="Background" Value="#024C80"/>
-                                        </Trigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Button.Style>
-                        </Button>
+                        <!-- Koordinat Tujuan -->
+                        <TextBlock Text="Koordinat Tujuan (Latitude, Longitude)" Style="{StaticResource CoordLabel}" Margin="0,15,0,5"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="10"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox Grid.Column="0" Text="{Binding EndLat, UpdateSourceTrigger=PropertyChanged}" Padding="5" TextChanged="Coordinate_TextChanged"/>
+                            <TextBox Grid.Column="2" Text="{Binding EndLng, UpdateSourceTrigger=PropertyChanged}" Padding="5" TextChanged="Coordinate_TextChanged"/>
+                        </Grid>
                     </StackPanel>
                 </Grid>
             </Border>
@@ -183,62 +144,70 @@
                 <TextBlock Text="Cuaca" FontSize="20" FontWeight="Bold" Foreground="#333" Margin="0,0,0,5"/>
 
                 <!-- Kartu Cuaca Awal -->
-                <TextBlock Text="Cuaca awal" FontSize="14" FontWeight="SemiBold" Margin="0,10,0,0"/>
+                <TextBlock Text="Cuaca Awal" FontSize="14" FontWeight="SemiBold" Margin="0,10,0,0"/>
                 <Border Style="{StaticResource WeatherCard}">
                     <Grid DataContext="{Binding CuacaAwal}">
                         <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <!-- Ikon & Suhu -->
                             <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
+                            <!-- Detail -->
                         </Grid.ColumnDefinitions>
 
-                        <!-- Suhu dan Kelembaban -->
-                        <StackPanel Grid.Column="0">
-                            <TextBlock Text="{Binding IconEmoji}" FontSize="30" Margin="0,0,0,5"/>
-                            <TextBlock Text="{Binding Suhu}" FontSize="24" FontWeight="Bold"/>
-                            <TextBlock Text="{Binding Presipitasi}" FontSize="11" Foreground="#666"/>
-                            <TextBlock Text="{Binding Humidity}" FontSize="11" Foreground="#666"/>
+                        <!-- Suhu -->
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="0,0,15,0">
+                            <TextBlock Text="{Binding IconEmoji}" FontSize="36" HorizontalAlignment="Center"/>
+                            <TextBlock Text="{Binding Suhu}" FontSize="28" FontWeight="Bold" HorizontalAlignment="Center" Foreground="#333"/>
+                            <TextBlock Text="Precip: 10%" FontSize="10" Foreground="Gray" HorizontalAlignment="Center"/>
                         </StackPanel>
 
-                        <!-- Angin -->
-                        <Border Grid.Column="1" Background="#0361A0" CornerRadius="5" Padding="10" HorizontalAlignment="Stretch">
-                            <StackPanel>
-                                <TextBlock Text="💨" FontSize="30" Foreground="White" HorizontalAlignment="Center" Margin="0,0,0,5"/>
-                                <TextBlock Text="{Binding KecepatanAngin}" FontSize="16" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center"/>
-                                <TextBlock Text="{Binding ArahAngin}" FontSize="11" Foreground="#ccc" HorizontalAlignment="Center"/>
-                                <TextBlock Text="Arah mata angin" FontSize="10" Foreground="#ccc" HorizontalAlignment="Center"/>
+                        <!-- Detail Angin (Kotak Biru) -->
+                        <Border Grid.Column="1" Background="#0361A0" CornerRadius="8" Padding="10">
+                            <StackPanel VerticalAlignment="Center">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,5">
+                                    <TextBlock Text="💨" Foreground="White" FontSize="16" Margin="0,0,5,0"/>
+                                    <TextBlock Text="{Binding KecepatanAngin}" FontSize="18" FontWeight="Bold" Foreground="White"/>
+                                </StackPanel>
+                                <TextBlock Text="{Binding ArahAngin}" FontSize="12" Foreground="#ddd" HorizontalAlignment="Center" TextWrapping="Wrap"/>
+                                <TextBlock Text="Kelembapan:" FontSize="10" Foreground="#ccc" HorizontalAlignment="Center" Margin="0,5,0,0"/>
+                                <TextBlock Text="{Binding Humidity}" FontSize="12" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center"/>
                             </StackPanel>
                         </Border>
                     </Grid>
                 </Border>
 
                 <!-- Kartu Cuaca Tujuan -->
-                <TextBlock Text="Cuaca Tujuan" FontSize="14" FontWeight="SemiBold" Margin="0,10,0,0"/>
-                <Border Style="{StaticResource WeatherCard}">
+                <TextBlock Text="Cuaca Tujuan" FontSize="14" FontWeight="SemiBold" Margin="0,15,0,0"/>
+                <Border Style="{StaticResource WeatherCard}" Background="#0361A0">
+                    <!-- Background Biru -->
                     <Grid DataContext="{Binding CuacaTujuan}">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
-                        <!-- Suhu dan Kelembaban -->
-                        <StackPanel Grid.Column="0">
-                            <TextBlock Text="{Binding IconEmoji}" FontSize="30" Margin="0,0,0,5"/>
-                            <TextBlock Text="{Binding Suhu}" FontSize="24" FontWeight="Bold"/>
-                            <TextBlock Text="{Binding Presipitasi}" FontSize="11" Foreground="#666"/>
-                            <TextBlock Text="{Binding Humidity}" FontSize="11" Foreground="#666"/>
+                        <!-- Suhu (Teks Putih karena background biru) -->
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="0,0,15,0">
+                            <TextBlock Text="{Binding IconEmoji}" FontSize="36" HorizontalAlignment="Center"/>
+                            <TextBlock Text="{Binding Suhu}" FontSize="28" FontWeight="Bold" HorizontalAlignment="Center" Foreground="White"/>
+                            <TextBlock Text="Precip: 5%" FontSize="10" Foreground="#ddd" HorizontalAlignment="Center"/>
                         </StackPanel>
 
-                        <!-- Angin -->
-                        <Border Grid.Column="1" Background="#0361A0" CornerRadius="5" Padding="10" HorizontalAlignment="Stretch">
-                            <StackPanel>
-                                <TextBlock Text="💨" FontSize="30" Foreground="White" HorizontalAlignment="Center" Margin="0,0,0,5"/>
-                                <TextBlock Text="{Binding KecepatanAngin}" FontSize="16" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center"/>
-                                <TextBlock Text="{Binding ArahAngin}" FontSize="11" Foreground="#ccc" HorizontalAlignment="Center"/>
-                                <TextBlock Text="Arah mata angin" FontSize="10" Foreground="#ccc" HorizontalAlignment="Center"/>
+                        <!-- Detail Angin (Kotak Putih Transparan) -->
+                        <Border Grid.Column="1" Background="#33FFFFFF" CornerRadius="8" Padding="10">
+                            <StackPanel VerticalAlignment="Center">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,5">
+                                    <TextBlock Text="💨" Foreground="White" FontSize="16" Margin="0,0,5,0"/>
+                                    <TextBlock Text="{Binding KecepatanAngin}" FontSize="18" FontWeight="Bold" Foreground="White"/>
+                                </StackPanel>
+                                <TextBlock Text="{Binding ArahAngin}" FontSize="12" Foreground="White" HorizontalAlignment="Center" TextWrapping="Wrap"/>
+                                <TextBlock Text="Kelembapan:" FontSize="10" Foreground="#ddd" HorizontalAlignment="Center" Margin="0,5,0,0"/>
+                                <TextBlock Text="{Binding Humidity}" FontSize="12" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center"/>
                             </StackPanel>
                         </Border>
                     </Grid>
                 </Border>
+
             </StackPanel>
         </Grid>
     </Grid>
