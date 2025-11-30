@@ -16,10 +16,10 @@
     <Window.Resources>
         <!-- Bayangan kartu -->
         <DropShadowEffect x:Key="ShadowDepth1"
-                          BlurRadius="5"
-                          ShadowDepth="2"
-                          Direction="270"
-                          Opacity="0.1"/>
+                                  BlurRadius="5"
+                                  ShadowDepth="2"
+                                  Direction="270"
+                                  Opacity="0.1"/>
 
         <!-- Style untuk label kolom kiri -->
         <Style x:Key="ProfileLabel" TargetType="TextBlock">
@@ -104,10 +104,9 @@
                            Foreground="White"
                            FontSize="15"
                            Margin="0,0,30,0"/>
-                <TextBlock Text="Profil Admin"
+                <TextBlock Text="Log Out"
                            Foreground="White"
-                           FontSize="15"
-                           FontWeight="Bold"/>
+                           FontSize="15"/>
             </StackPanel>
 
             <!-- Profil admin kanan -->
@@ -140,7 +139,7 @@
         </Grid>
 
         <!-- ================= KONTEN PROFIL ADMIN ================= -->
-        <Grid Grid.Row="1" Margin="30">
+        <Grid Grid.Row="1" Margin="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <!-- profil + data -->

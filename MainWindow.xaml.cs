@@ -20,7 +20,7 @@ namespace NelayanGo
         public MainWindow()
         {
             InitializeComponent();
-            var inputWindow = new InputTangapanWindow();
+            var inputWindow = new DaftarTangkapanWindow();
             inputWindow.Show();
         }
     }

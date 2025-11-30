@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.13.35931.197
+# Visual Studio Version 18
+VisualStudioVersion = 18.3.11206.111 d18.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NelayanGo", "NelayanGo.csproj", "{72B1D8BC-DD2B-4820-94D8-0E24BD52EDB9}"
 EndProject
@@ -17,13 +17,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		AnalisisDataModel.cs = AnalisisDataModel.cs
 		AnalisisViewModel.cs = AnalisisViewModel.cs
 		AnalisisWindow.xaml.cs = AnalisisWindow.xaml.cs
-		DaftarTangapanViewModel.cs = DaftarTangapanViewModel.cs
-		DaftarTangapanWindow.xaml.cs = DaftarTangapanWindow.xaml.cs
 		DaftarTangkapan.cs = DaftarTangkapan.cs
 		HargaIkanModel.cs = HargaIkanModel.cs
 		HargaPasarViewModel.cs = HargaPasarViewModel.cs
 		HargaPasarWindow.xaml.cs = HargaPasarWindow.xaml.cs
-		InputTangapanWindow.xaml.cs = InputTangapanWindow.xaml.cs
 		PetaWindow.xaml.cs = PetaWindow.xaml.cs
 		ProfitModel.cs = ProfitModel.cs
 	EndProjectSection
