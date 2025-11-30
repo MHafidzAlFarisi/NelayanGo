@@ -6,8 +6,11 @@ using System.Windows;
 using System.Windows.Input;
 using NelayanGo.DataServices;
 using NelayanGo.Models;
-using NelayanGo.Helpers; // Tambahkan ini untuk NavigationHelper
-using System.ComponentModel; // Tambahkan ini untuk INotifyPropertyChanged
+using NelayanGo.Helpers; 
+using System.ComponentModel; 
+using GMap.NET;
+using GMap.NET.MapProviders;
+using GMap.NET.WindowsPresentation;
 
 namespace NelayanGo.Views
 {
@@ -96,6 +99,26 @@ namespace NelayanGo.Views
         private void ProfileHeader_Click(object sender, MouseButtonEventArgs e)
         {
             NavigationHelper.NavigateFromHeaderClick(sender, "Profil");
+        }
+        private void IconLokasi_Click(object sender, MouseButtonEventArgs e)
+        {
+            // 1. Buat instance window peta picker
+            PilihLokasiWindow mapDialog = new PilihLokasiWindow();
+
+            // 2. Tampilkan sebagai Dialog (Pop-up modal)
+            // ShowDialog akan mem-pause code di sini sampai window ditutup
+            bool? result = mapDialog.ShowDialog();
+
+            // 3. Cek apakah user menekan tombol "PILIH LOKASI INI" (DialogResult = true)
+            if (result == true)
+            {
+                // 4. Ambil koordinat dari property public di window tersebut
+                string koordinat = mapDialog.SelectedCoordinateString;
+
+                // 5. Masukkan ke TextBox
+                txtLokasi.Text = koordinat;
+            }
+            
         }
 
         private void BtnSimpan_Click(object sender, RoutedEventArgs e)

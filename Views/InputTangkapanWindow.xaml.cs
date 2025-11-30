@@ -146,6 +146,26 @@ namespace NelayanGo.Views
                 dpTanggal.Focus();
             }
         }
+        private void IconLokasi_Click(object sender, MouseButtonEventArgs e)
+        {
+            // 1. Buat instance window peta picker
+            PilihLokasiWindow mapDialog = new PilihLokasiWindow();
+
+            // 2. Tampilkan sebagai Dialog (Pop-up modal)
+            // ShowDialog akan mem-pause code di sini sampai window ditutup
+            bool? result = mapDialog.ShowDialog();
+
+            // 3. Cek apakah user menekan tombol "PILIH LOKASI INI" (DialogResult = true)
+            if (result == true)
+            {
+                // 4. Ambil koordinat dari property public di window tersebut
+                string koordinat = mapDialog.SelectedCoordinateString;
+
+                // 5. Masukkan ke TextBox
+                txtLokasi.Text = koordinat;
+            }
+
+        }
 
         private void BatalButton_Click(object sender, RoutedEventArgs e) { DialogResult = false; Close(); }
     }

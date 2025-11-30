@@ -207,11 +207,13 @@
                                      Grid.Column="0"
                                      Style="{StaticResource InputField}"/>
 
-                                <TextBlock Grid.Column="1"
+                                <TextBlock
                                        Text="📍"
                                        FontSize="20"
-                                       VerticalAlignment="Center"
-                                       Margin="-35,0,10,0"/>
+                                       VerticalAlignment="Bottom"
+                                       Margin="763,0,8,4"
+                                       Cursor="Hand"
+                                       MouseLeftButtonDown="IconLokasi_Click"/>
                             </Grid>
                         </StackPanel>
                     </ScrollViewer>

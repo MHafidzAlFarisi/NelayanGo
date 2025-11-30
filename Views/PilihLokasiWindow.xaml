@@ -1,0 +1,37 @@
+<Window x:Class="NelayanGo.Views.PilihLokasiWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:gmap="clr-namespace:GMap.NET.WindowsPresentation;assembly=GMap.NET.WindowsPresentation"
+        Title="Pilih Lokasi Tangkapan" Height="500" Width="800"
+        WindowStartupLocation="CenterScreen">
+
+    <Grid>
+        <gmap:GMapControl x:Name="MapControl" 
+                          Loaded="MapControl_Loaded"
+                          MouseDoubleClick="MapControl_MouseDoubleClick"/>
+
+        <Border VerticalAlignment="Bottom" 
+                HorizontalAlignment="Center" 
+                Margin="0,0,0,20" 
+                Background="White" 
+                Padding="15,10" 
+                CornerRadius="8"
+                BorderBrush="#ccc" BorderThickness="1">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock x:Name="txtKoordinatInfo" 
+                           Text="Klik ganda pada peta untuk memilih titik" 
+                           VerticalAlignment="Center" 
+                           Margin="0,0,20,0"
+                           FontWeight="SemiBold"/>
+
+                <Button Content="PILIH LOKASI INI" 
+                        Click="BtnPilih_Click"
+                        Background="#42A5F5" 
+                        Foreground="White"
+                        Padding="15,5"
+                        BorderThickness="0"
+                        FontWeight="Bold"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>
