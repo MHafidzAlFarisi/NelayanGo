@@ -1,6 +1,4 @@
-
 # ⚓ NelayanGo
-
 ### Aplikasi desktop untuk pencatatan tangkapan harian tiap nelayan dengan penyediaan forecast cuaca perairan
 
 ## Kelompok 6
@@ -12,10 +10,10 @@
 NelayanGo adalah aplikasi *desktop* berbasis **C# WPF** yang dirancang untuk mendigitalisasi proses pencatatan hasil tangkapan harian bagi nelayan. Aplikasi ini terintegrasi dengan data cuaca perairan *real-time* untuk membantu nelayan mengoptimalkan jadwal dan keamanan pelayaran.
 
 ## ✨ Fitur Utama
-1.  **Pencatatan Tangkapan Harian:** Input data jenis ikan, berat, dan lokasi tangkapan per sesi pelayaran.
-2.  **Prakiraan Cuaca Perairan:** Integrasi dengan OpenWeatherMap API untuk menampilkan *forecast* cuaca, kecepatan angin, dan suhu di area tangkapan.
-3.  **Manajemen Pengguna:** Modul Login dan Logout yang terintegrasi dengan sistem autentikasi Supabase.
-4.  **Laporan Sederhana:** Tampilan riwayat tangkapan yang memudahkan nelayan memonitor profitabilitas.
+1.  **Pencatatan Tangkapan Harian:** Input tangkapan harian dengan perhitungan harga otomatis bagi user.
+2.  **Prakiraan Cuaca Perairan:** Perkiraan cuaca, kecepatan angin, dan suhu.
+3.  **Manajemen Pengguna:** Login dan register bagi user dan adanya role admin untuk harga ikan.
+4.  **Laporan Sederhana:** Dashboard dengan statistik tangkapan dan riwayat tangkapan.
 
 ---
 
@@ -33,13 +31,14 @@ NelayanGo adalah aplikasi *desktop* berbasis **C# WPF** yang dirancang untuk men
 
 Proyek ini dibangun di atas prinsip PBO. Struktur utama terbagi menjadi lapisan **Model**, **View**, dan **Controller** (atau ViewModel dalam konteks WPF).
 
-* **Implementasi Utama:** (Merujuk pada Class Diagram yang Anda unggah)
-    * **Inheritance:** Terdapat kelas **`User`** yang diwarisi oleh kelas **`Nelayan`** dan **`Admin`** (jika ada).
-    * **Encapsulation:** Penggunaan *properties* dengan *access modifier* `private` untuk melindungi data sensitif (misal: *connection string*, *password hash*).
-    * **Abstraction:** Menggunakan *Interfaces* (misal: `IDataService`) untuk menjamin *loosely coupled code* antar komponen.
+* **Implementasi Utama:**
+    * **Class & Object:** Diterapkan pada model-model seperti pada HargaIkanModel.
+    * **Inheritance:** Diterapkan pada pewarisan kelas seperti pada LoginWindow dengan Window.      
+    * **Polymorphism:** Diterapkan pada event click dengan behavior yang berbeda untuk tiap window.
+    * **Encapsulation:** Diterapkan pada getter dan setter seperti pada IkanTangkapanModel.
+    * **Abstraction:** Diterapkan pada pemisahan UI dengan logika kompleks seperti pada HargaIkanDataService.
 
 ---
-
 
 ## 🚀 Instalasi & Setup
 
@@ -57,20 +56,31 @@ Untuk menjalankan aplikasi ini, ikuti langkah-langkah di bawah ini:
     git clone https://github.com/MHafidzAlFarisi/NelayanGo.git
     cd NelayanGo
     ```
-2.  **Konfigurasi Environment:**
+2.  **Buat Database:**
+    Buat Database dengan kolom seperti di gambar:
+    <img width="453" height="804" alt="image" src="https://github.com/user-attachments/assets/496840bf-46df-4f08-95b3-106f3a8da4b4" />
+ 
+4.  **Konfigurasi Environment:**
     Buat file baru di direktori root bernama **`.env`** atau gunakan file `.env.example` yang tersedia. Isi dengan *credentials* API Anda:
 
     ```
     # Konfigurasi Supabase
     SUPABASE_URL=https://hnamnhkbtnvbowmreddz.supabase.co
     SUPABASE_KEY=[ANON PUBLIC KEY SUPABASE ANDA]
+    SUPABASE_HOST=aws-1-ap-southeast-2.pooler.supabase.com
+    SUPABASE_PORT=5432
+    SUPABASE_USER=postgres.hnamnhkbtnvbowmreddz
+    SUPABASE_PASSWORD=[PASSWORD SUPABASE ANDA]
+    SUPABASE_DB=postgres
 
     # Konfigurasi OpenWeatherMap
+
     OPENWEATHER_API_KEY=[API KEY OPENWEATHERMAP ANDA]
     ```
 
-3.  **Buka dan Compile:**
+5.  **Buka dan Compile:**
     * Buka file solusi (`NelayanGo.sln`) di Visual Studio.
+    * Install NuGet Package GMap.NET.WinPresentation, Microsoft.Windows.Compatibility, OxyPlot.Wpf, dan supabase.
     * Pastikan semua *dependency* C# telah ter-*resolve*.
     * **Run** aplikasi (F5).
 
@@ -83,5 +93,5 @@ Untuk keperluan penilaian dan demonstrasi, Anda dapat menggunakan akun yang tela
 | Role | Username | Password | Keterangan |
 | :--- | :--- | :--- | :--- |
 | **Nelayan (User Biasa)** | **heinz** | `1` | Digunakan untuk *logbook* dan melihat *forecast* cuaca. |
-| **Admin (Opsional)** | **admin** | `admin123` | Digunakan untuk [Jelaskan Fungsi Admin, misal: melihat seluruh data tangkapan]. |
+| **Admin (Opsional)** | **admin** | `admin123` | Digunakan untuk menambah Harga Ikan. |
 
