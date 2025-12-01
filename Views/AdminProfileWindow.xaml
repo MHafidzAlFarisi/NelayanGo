@@ -73,25 +73,28 @@
 
             <!-- LOGO: kotak + N + tulisan NELAYAN GO -->
             <StackPanel Grid.Column="0"
-                        Orientation="Horizontal"
-                        VerticalAlignment="Center"
-                        Margin="20,0,0,0">
+            Orientation="Horizontal"
+            VerticalAlignment="Center"
+            Margin="20,0,0,0">
+
+                <!-- Logo pakai image -->
                 <Border Width="40" Height="40"
-                        CornerRadius="8"
-                        Background="#0B3C82"
-                        Margin="0,0,10,0">
-                    <TextBlock Text="N"
-                               Foreground="White"
-                               FontWeight="Bold"
-                               FontSize="20"
-                               HorizontalAlignment="Center"
-                               VerticalAlignment="Center"/>
+            CornerRadius="12"
+            Background="White"
+            Margin="0,0,10,0">
+                    <Image Source="/image/logo_real.jpg"
+               Stretch="Uniform"
+               HorizontalAlignment="Center"
+               VerticalAlignment="Center"/>
                 </Border>
+
+                <!-- Tulisan NELAYAN GO -->
                 <TextBlock Text="NELAYAN GO"
-                           Foreground="White"
-                           FontSize="20"
-                           FontWeight="SemiBold"
-                           VerticalAlignment="Center"/>
+               FontFamily="Segoe UI"
+               Foreground="White"
+               FontSize="20"
+               FontWeight="SemiBold"
+               VerticalAlignment="Center"/>
             </StackPanel>
 
             <!-- NAV tengah: tulis 'Harga Ikan' dan 'Profil Admin' (rata kiri) -->

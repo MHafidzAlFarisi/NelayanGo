@@ -49,10 +49,31 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="250"/>
             </Grid.ColumnDefinitions>
-            <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="20,0,0,0">
-                <TextBlock Text="N" FontFamily="Segoe UI" Foreground="White" FontSize="20" FontWeight="Bold" Margin="0,0,5,0"/>
-                <TextBlock Text="NELAYAN GO" FontFamily="Segoe UI" Foreground="White" FontSize="20" FontWeight="SemiBold"/>
+            <StackPanel Grid.Column="0"
+            Orientation="Horizontal"
+            VerticalAlignment="Center"
+            Margin="20,0,0,0">
+
+                <!-- Logo pakai image -->
+                <Border Width="40" Height="40"
+            CornerRadius="12"
+            Background="White"
+            Margin="0,0,10,0">
+                    <Image Source="/image/logo_real.jpg"
+               Stretch="Uniform"
+               HorizontalAlignment="Center"
+               VerticalAlignment="Center"/>
+                </Border>
+
+                <!-- Tulisan NELAYAN GO -->
+                <TextBlock Text="NELAYAN GO"
+               FontFamily="Segoe UI"
+               Foreground="White"
+               FontSize="20"
+               FontWeight="SemiBold"
+               VerticalAlignment="Center"/>
             </StackPanel>
+
             <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
                 <TextBlock x:Name="HomeLink" Cursor="Hand" MouseLeftButtonDown="HomeLink_MouseLeftButtonDown" Text="Home" Foreground="White" VerticalAlignment="Center" Margin="20,0,20,0"/>
                 <TextBlock x:Name="HasilTangkapanLink" Cursor="Hand" MouseLeftButtonDown="HasilTangkapanLink_MouseLeftButtonDown" Text="Hasil Tangkapan" Foreground="White" VerticalAlignment="Center" Margin="0,0,20,0"/>

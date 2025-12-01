@@ -62,11 +62,31 @@
                 <ColumnDefinition Width="250"/>
             </Grid.ColumnDefinitions>
 
-            <!-- Logo -->
-            <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="20,0,0,0">
-                <TextBlock Text="N" FontFamily="Segoe UI" Foreground="White" FontSize="20" FontWeight="Bold" Margin="0,0,5,0"/>
-                <TextBlock Text="NELAYAN GO" FontFamily="Segoe UI" Foreground="White" FontSize="20" FontWeight="SemiBold"/>
+            <StackPanel Grid.Column="0"
+            Orientation="Horizontal"
+            VerticalAlignment="Center"
+            Margin="20,0,0,0">
+
+                <!-- Logo pakai image -->
+                <Border Width="40" Height="40"
+            CornerRadius="12"
+            Background="White"
+            Margin="0,0,10,0">
+                    <Image Source="/image/logo_real.jpg"
+               Stretch="Uniform"
+               HorizontalAlignment="Center"
+               VerticalAlignment="Center"/>
+                </Border>
+
+                <!-- Tulisan NELAYAN GO -->
+                <TextBlock Text="NELAYAN GO"
+               FontFamily="Segoe UI"
+               Foreground="White"
+               FontSize="20"
+               FontWeight="SemiBold"
+               VerticalAlignment="Center"/>
             </StackPanel>
+
 
             <!-- Navigasi -->
             <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
