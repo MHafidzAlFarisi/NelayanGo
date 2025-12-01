@@ -1,4 +1,4 @@
-# ⚓ NelayanGo
+#  NelayanGo
 ### Aplikasi desktop untuk pencatatan tangkapan harian tiap nelayan dengan penyediaan forecast cuaca perairan
 
 ## Kelompok 6
@@ -6,14 +6,14 @@
 - Anggota 2: Muhammad Hafidz Al Farisi (23/519650/TK/57256)
 - Anggota 3: Nicholas Shane Pangihutan Siahaan (23/520590/TK/57399)
 
-## 📝 Deskripsi Proyek
+##  Deskripsi Proyek
 NelayanGo adalah aplikasi *desktop* berbasis **C# WPF** yang dirancang untuk mendigitalisasi proses pencatatan hasil tangkapan harian bagi nelayan. Aplikasi ini terintegrasi dengan data cuaca perairan *real-time* untuk membantu nelayan mengoptimalkan jadwal dan keamanan pelayaran.
 
 Alur Penggunaan:
 
 <img width="958" height="475" alt="image" src="https://github.com/user-attachments/assets/8e0ede79-5fc4-4312-ab10-fe0db9cf1c19" />
 
-## ✨ Fitur Utama
+##  Fitur Utama
 1.  **Pencatatan Tangkapan Harian:** Input tangkapan harian dengan perhitungan harga otomatis bagi user.
 2.  **Prakiraan Cuaca Perairan:** Perkiraan cuaca, kecepatan angin, dan suhu.
 3.  **Manajemen Pengguna:** Login dan register bagi user dan adanya role admin untuk harga ikan.
@@ -21,7 +21,7 @@ Alur Penggunaan:
 
 ---
 
-## 🛠️ Teknologi yang Digunakan (Tech Stack)
+##  Teknologi yang Digunakan (Tech Stack)
 
 | Kategori | Teknologi | Keterangan |
 | :--- | :--- | :--- |
@@ -31,7 +31,7 @@ Alur Penggunaan:
 | **API Layer** | Supabase | Menyediakan layanan *Backend-as-a-Service* (BaaS), termasuk autentikasi dan *RESTful API* untuk interaksi data *real-time*. |
 | **API Pihak Ketiga** | OpenWeatherMap API | Sumber data eksternal untuk menyediakan data cuaca perairan. |
 
-## 📐 Struktur Pemrograman Berorientasi Objek (PBO)
+##  Struktur Pemrograman Berorientasi Objek (PBO)
 
 Proyek ini dibangun di atas prinsip PBO. Struktur utama terbagi menjadi lapisan **Model**, **View**, dan **Controller** (atau ViewModel dalam konteks WPF).
 
@@ -44,7 +44,7 @@ Proyek ini dibangun di atas prinsip PBO. Struktur utama terbagi menjadi lapisan 
 
 ---
 
-## 🚀 Instalasi & Setup
+##  Instalasi & Setup
 
 Untuk menjalankan aplikasi ini, ikuti langkah-langkah di bawah ini:
 
@@ -91,7 +91,7 @@ Untuk menjalankan aplikasi ini, ikuti langkah-langkah di bawah ini:
 
 ---
 
-## 🔑 Informasi Akses Demo 
+##  Informasi Akses Demo 
 
 Untuk keperluan penilaian dan demonstrasi, Anda dapat menggunakan akun yang telah disediakan di bawah ini:
 
